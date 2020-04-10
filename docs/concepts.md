@@ -198,9 +198,52 @@ If you find yourself constantly writing code that has actions such as `setName`,
 `setLoading` and `setError` with corresponding reducers `name`, `price`, `loading` and `error`
 that only react to one action, you're probably following an anti-pattern and doing something wrong.
 
-You'll see a better example of this below when we talk about listeners. 
+You'll see a better example to illustrate this point in the next section about listeners.
+
+One last thing, just like actions, reducers as well are [pure functions](https://en.wikipedia.org/wiki/Pure_function).
+That means no matter how many times you call a reducer with the same input, it should always
+give the same output.
+
+More importantly, **reducers must never modify their inputs**. In practice this means that for example
+instead of adding an element to an array via `state.push(newThing)`, you instead create and return a new
+array that contains this new element with `[...state, newThing]`. 
+
+For example, a simple todo list that stores strings in an array:
+  
+```javascript
+const logic = kea({
+    actions: () => ({
+        addTodo: (todo) => ({ todo }),
+        removeTodo: (index) => ({ index }),
+        updateTodo: (index, todo) => ({ index, todo }),
+    }),
+    reducers: () => ({
+        // defaults to [], an empty array
+        todos: [[], { 
+            addTodo: (state, { todo }) => {
+                // make a new array and add `todo` at the end
+                return [...state, todo]
+            },
+            removeTodo: (state, { index }) => {
+                // filter out the `todo` at the given `index`
+                return state.filter((todo, i) => i !== index)
+            },
+            updateTodo: (state, { index, todo }) => {
+                // swap out the `todo` in the array at the given `index`
+                return state.map((t, i) => i === index ? todo : n)
+            }   
+        }]
+    })
+})
+```
+
+This may seem weird and slow at first, but writing *immutable* code like this greatly improves
+performance in React. If you really do want to write mutable code,
+feel free to wrap your reducers with [immer](https://github.com/immerjs/immer).   
 
 ## Listeners
+
+
 - this is where side-effects happen
 - listeners wait for an event to be dispatched and do what needs to happen after
 - it's an anti-pattern to just use a listener and only call `setThis` actions
