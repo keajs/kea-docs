@@ -34,8 +34,7 @@ import { Provider } from 'react-redux' // 👈 add this
 import './index.css'
 import App from './App'
 
-resetContext({
-    // 👈 add this
+resetContext({ // 👈 add this    
     createStore: {
         // additional options (e.g. middleware, reducers, ...)
     },
@@ -44,8 +43,7 @@ resetContext({
     ],
 })
 
-ReactDOM.render(
-    // 👈 and update this
+ReactDOM.render( // 👈 and update this    
     <Provider store={getContext().store}>
         <App />
     </Provider>,
