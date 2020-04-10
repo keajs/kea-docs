@@ -9,7 +9,7 @@ and how to they all fit together.
 
 Would be cool to add some images that better illustrate all these concepts.
 
-# Logic
+## Logic
 
 All Kea code lives inside a `logic`, which is created by calling `kea()`
 
@@ -21,16 +21,16 @@ const logic = kea({ ... })
 
 Why do we call it `logic`? 
 
-Well, we had to call it something and everything else was already taken 😅. 
+Well, we had to call it something and everything else was already taken 😅.
 
-More seriously, this name implies that what `kea()` returns is a complex object, 
-which contains a piece of your state along with logic to manipulate it.  
+More seriously, the name `logic` implies that calling `kea()` return complex objects, 
+which not only contain a piece of your state, but also all the logic that will manipulate it.  
 
 It's a useful convention and we suggest sticking to it. Feel free to call your logic with
 names that make sense, such as `accountLogic`, `dashboardLogic`, etc.
 
 
-# Actions
+## Actions
 
 The first thing you do in a logic is to define some actions:
 
@@ -59,8 +59,8 @@ For example, every key press on your keyboard dispatches a `keyPress` event with
 your operating system to listen to them and convert them to the 1970's steampunk sci-fi
 novel you hope to finish one day.
 
-Actions themselves are just plain functions. The one legit responsibility that they actually have is to convert their arguments into a `payload`
-object. See here:
+Actions themselves are simple and [pure functions](https://en.wikipedia.org/wiki/Pure_function). The only 
+thing they must do is to convert their arguments into a `payload` object. See here:
 
 ```jsx
 const logic = kea({
@@ -85,12 +85,13 @@ function BigButton () {
 }
 ```
 
-As you can see, you call `addToCounter` with one argument, `1000`. 
+In the code above, you call `addToCounter` with one argument, `1000`. 
 
-The action then converts it to a `payload` of `{ amount: 1000 }`.
+The action then converts it to a `payload` of `{ amount: 1000 }`. This payload will later be used in
+reducers, listeners and other friendly plugins.
 
 Since kea actions are [compatible with Redux](https://redux.js.org/basics/actions), calling
-`addCounter(1000)` actually creates and dispatchs an object that also has the `type` key and looks 
+`addCounter(1000)` actually creates and dispatchs an object that also has a `type` key and looks 
 something like this:
 
 ```javascript
@@ -98,7 +99,7 @@ addToCounter(1000) === { type: 'add to counter', payload: { amount: 1000 } }
 ```
 
 There's one shorthand that can be useful. In case your actions take no arguments, just pass `true`
-(or anything that's not a function) instead of a function that creates the payload from the arguments:
+(or anything that's not a function) instead of an arguments-to-payload serializer:
 
 ```jsx
 const logic = kea({
@@ -114,22 +115,22 @@ const logic = kea({
 The `payload` will then be `{ value: true }`... but you'll just ignore it anyway, won't you? 🤔
 
 
-# Reducers
+## Reducers
 - reducers change state in response to actions
 - they are not just to have 1:1 relationship a'la `stuff` & `setStuff`
 - reducers can react to many differet actions and set stuff accordingly, `isLoading` example
 - defaults for reducers are either inline `[default, {reducer}]` or in `defaults: {}`
 
-# Listeners
+## Listeners
 - this is where side-effects happen
 - listeners wait for an event to be dispatched and do what needs to happen after
 - it's an anti-pattern to just use a listener and only call `setThis` actions
 
-# Selectors
+## Selectors
 - are basically computed properties
 - every reducer gets a selector automatically
 
-# Values
+## Values
 - shorthand for calling selectors on the current store state
 - used in listeners
 
