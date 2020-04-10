@@ -29,13 +29,13 @@ This is how your `index.js` would look like if you used `create-react-app`:
 ```javascript
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { resetContext, getContext } from 'kea' // :point_left: add this
-import { Provider } from 'react-redux' // :point_left: add this
+import { resetContext, getContext } from 'kea' // 👈 add this
+import { Provider } from 'react-redux' // 👈 add this
 import './index.css'
 import App from './App'
 
 resetContext({
-    // :point_left: add this
+    // 👈 add this
     createStore: {
         // additional options (e.g. middleware, reducers, ...)
     },
@@ -45,7 +45,7 @@ resetContext({
 })
 
 ReactDOM.render(
-    // :point_left: and update this
+    // 👈 and update this
     <Provider store={getContext().store}>
         <App />
     </Provider>,
