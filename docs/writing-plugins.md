@@ -39,7 +39,7 @@ kea({
 })
 ```
 
-The first step in authoring a plugin is to create a blank plugin and add it to the plugins array in resetContext.
+The first step in authoring a plugin is to create a blank plugin and add it to the plugins array in `resetContext`.
 
 Here's a sample skeleton structure for a plugin, extracted from the code on the [plugins API page](https://kea.js.org/api/plugins). See that page for all that you can do with plugins.
 
@@ -75,7 +75,7 @@ resetContext({
 })
 ```
 
-This time we're only interested in the afterLogic event. We will take the input from our "requests" object and extend the logic with the actions that we generate from it.
+This time we're only interested in the `afterLogic` event. We will take the input from our "requests" object and extend the logic with the actions that we generate from it.
 
 ```javascript
 const requestsPlugin = (/* { options } */) => ({
