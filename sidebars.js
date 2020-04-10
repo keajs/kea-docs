@@ -1,5 +1,5 @@
 module.exports = {
   someSidebar: {
-    Guide: ["installation", "history", "concepts", "writing-plugins"],
+    Guide: ["installation", "history", "concepts", "debugging", "writing-plugins"],
   },
 };

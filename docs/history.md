@@ -1,6 +1,6 @@
 ---
 id: history
-title: A brief history of Kea
+title: A Brief History of Kea
 sidebar_label: History
 ---
 
