@@ -1,5 +1,5 @@
 module.exports = {
   someSidebar: {
-    Docusaurus: ["installation", "history", "writing-plugins"],
+    Guide: ["installation", "history", "concepts", "writing-plugins"],
   },
 };
