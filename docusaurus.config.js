@@ -4,8 +4,8 @@ module.exports = {
     url: 'https://kea.js.org',
     baseUrl: '/',
     favicon: 'img/favicon.ico',
-    organizationName: 'facebook', // Usually your GitHub org/user name.
-    projectName: 'docusaurus', // Usually your repo name.
+    organizationName: 'keajs',
+    projectName: 'kea',
     themeConfig: {
         navbar: {
             title: 'Kea',
@@ -66,11 +66,7 @@ module.exports = {
                         },
                         {
                             label: 'GitHub',
-                            href: 'https://github.com/facebook/docusaurus',
-                        },
-                        {
-                            label: 'Twitter',
-                            href: 'https://twitter.com/docusaurus',
+                            href: 'https://github.com/keajs',
                         },
                     ],
                 },
