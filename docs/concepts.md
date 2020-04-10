@@ -71,8 +71,9 @@ const logic = kea({
 })
 ```
 
-Eventually you want to call `addToCounter` in your React component. 
-Use the `useActions` hook to yank it out of the logic:
+Let's skip ahead a few steps and call `addToCounter` in a React component.
+ 
+For this you use the `useActions` hook like so:
 
 ```jsx
 function BigButton () {
@@ -121,7 +122,7 @@ The `payload` will then be `{ value: true }`... but you'll just ignore it anyway
 Reducers store your data and change it in response to actions. 
 They are based on the [reducer](https://redux.js.org/basics/reducers) concept from Redux.
 
-Here's an example of a funky counter:
+Here's an example of a basic counter:
 
 ```javascript
 const logic = kea({
@@ -140,11 +141,17 @@ const logic = kea({
 })
 ```
 
-In this example we create three actions: `increment`, `setCounter` and `reset`. We also create a 
-reducer `counter`, which reacts to these three actions in a predictable way.
+When defining reducers in kea you write [pure functions](https://en.wikipedia.org/wiki/Pure_function) 
+that take two arguments: the current `state` of the reducer and the `payload` of the action that was 
+just dispatched. You then combine the two and return a new state.
 
-Please note that the *only way* to change the counter is through actions. You can't just
-run in there and call `reducers.counter += 1` somewhere. You **must** always go through an action.
+In the example above we have three actions: `increment`, `setCounter` and `reset`. We also have a 
+reducer called `counter` that will update its value in response to those actions.
+It will be `0` by default.
+
+Please note that the *only way* to change the value of `counter` is by dispatching actions and reacting
+to them. You can't just jump in there and call `reducers.counter += 1` somewhere. All data manipulation 
+*must* always go through an action.
 
 While this may *feel* limiting at first, there is method to madness here. Pushing all state changes
 through actions makes for stable and predictable apps that run better, crash less often and
@@ -154,13 +161,62 @@ Casual readers of other [easy](https://easy-peasy.now.sh/) state management libr
 protest that you need to write the name of the action twice to get the job done. *Think of the extra
 keystrokes* I hear them say.
 
-There's method to this madness as well. 
+There's method to this madness as well. First, you should always optimise for [read-time convenience
+over write-time convenience](https://medium.com/marius-andra-blog/two-strategies-for-writing-better-code-1be0dc240698).
+Second, being explicit with the relationships between actions and reducers makes for very composable
+code.
+
+Suppose we extend this logic and also store a `name`. We still want the page to have a global `reset`
+button that clears both pieces of data. The code would look like this:
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        setName: (name) => ({ name }),
+        increment: (amount) => ({ amount }),
+        setCounter: (counter) => ({ counter }),
+        reset: true
+    }),
+    reducers: () => ({
+        counter: [0, { 
+            increment: (state, { amount }) => state + amount,
+            setCounter: (_, { counter }) => counter,
+            reset: () => 0
+        }],
+        name: ['', {
+            setName: (_, { name }) => name,
+            reset: () => ''
+        }]
+    })
+})
+```
+
+This example is contrived of course, but should illustrate the point nicely. 
+
+In general, you want your actions and reducers to mix together freely. 
+If you find yourself constantly writing code that has actions such as `setName`, `setPrice`, 
+`setLoading` and `setError` with corresponding reducers `name`, `price`, `loading` and `error`
+that only react to one action, you're probably following an anti-pattern and doing something wrong.
+
+You'll see a better example of this below when we talk about listeners. 
+
+## Listeners
+- this is where side-effects happen
+- listeners wait for an event to be dispatched and do what needs to happen after
+- it's an anti-pattern to just use a listener and only call `setThis` actions
+
+## Selectors
+- are basically computed properties
+- every reducer gets a selector automatically
+
+## Values
+- shorthand for calling selectors on the current store state
+- used in listeners
+
 
 TODO: continue writing here...
 
 ...
-
-Back in React-land, you fetch the `counter` with `useValues` like so:
 
 ```jsx
 function SuperCounter () {
@@ -176,24 +232,4 @@ function SuperCounter () {
     )
 }
 ```
-
-
-
-- reducers change state in response to actions
-- they are not just to have 1:1 relationship a'la `stuff` & `setStuff`
-- reducers can react to many differet actions and set stuff accordingly, `isLoading` example
-- defaults for reducers are either inline `[default, {reducer}]` or in `defaults: {}`
-
-## Listeners
-- this is where side-effects happen
-- listeners wait for an event to be dispatched and do what needs to happen after
-- it's an anti-pattern to just use a listener and only call `setThis` actions
-
-## Selectors
-- are basically computed properties
-- every reducer gets a selector automatically
-
-## Values
-- shorthand for calling selectors on the current store state
-- used in listeners
 
