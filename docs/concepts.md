@@ -66,12 +66,13 @@ thing they must do is to convert their arguments into a `payload` object. See he
 const logic = kea({
     actions: () => ({
         // take in `amount`, give back `{ amount }`
-        addToCounter: (amount) => ({ amount }),
+        addToCounter: (amount) => ({ amount })
     })
 })
 ```
 
-Eventually you want to call `addToCounter` in your React component:
+Eventually you want to call `addToCounter` in your React component. 
+Use the `useActions` hook to yank it out of the logic:
 
 ```jsx
 function BigButton () {
@@ -85,7 +86,7 @@ function BigButton () {
 }
 ```
 
-In the code above, you call `addToCounter` with one argument, `1000`. 
+In the code above, clicking the button calls `addToCounter` with one argument, `1000`. 
 
 The action then converts it to a `payload` of `{ amount: 1000 }`. This payload will later be used in
 reducers, listeners and other friendly plugins.
@@ -116,6 +117,68 @@ The `payload` will then be `{ value: true }`... but you'll just ignore it anyway
 
 
 ## Reducers
+
+Reducers store your data and change it in response to actions. 
+They are based on the [reducer](https://redux.js.org/basics/reducers) concept from Redux.
+
+Here's an example of a funky counter:
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        increment: (amount) => ({ amount }),
+        setCounter: (counter) => ({ counter }),
+        reset: true
+    }),
+    reducers: () => ({
+        counter: [0, { 
+            increment: (state, { amount }) => state + amount,
+            setCounter: (_, { counter }) => counter,
+            reset: () => 0
+        }]
+    })
+})
+```
+
+In this example we create three actions: `increment`, `setCounter` and `reset`. We also create a 
+reducer `counter`, which reacts to these three actions in a predictable way.
+
+Please note that the *only way* to change the counter is through actions. You can't just
+run in there and call `reducers.counter += 1` somewhere. You **must** always go through an action.
+
+While this may *feel* limiting at first, there is method to madness here. Pushing all state changes
+through actions makes for stable and predictable apps that run better, crash less often and
+even do your laundry. We all want that, don't we?
+
+Casual readers of other [easy](https://easy-peasy.now.sh/) state management libraries might
+protest that you need to write the name of the action twice to get the job done. *Think of the extra
+keystrokes* I hear them say.
+
+There's method to this madness as well. 
+
+TODO: continue writing here...
+
+...
+
+Back in React-land, you fetch the `counter` with `useValues` like so:
+
+```jsx
+function SuperCounter () {
+    const { increment } = useActions(logic)
+    const { counter } = useValues(logic)
+
+    return (
+        <div>
+            Counter: {counter}<br/>
+            <button onClick={() => increment(100)}>Add 100 😕</button>
+            <button onClick={() => increment(999)}>Add 999 🤩</button>
+        </div>
+    )
+}
+```
+
+
+
 - reducers change state in response to actions
 - they are not just to have 1:1 relationship a'la `stuff` & `setStuff`
 - reducers can react to many differet actions and set stuff accordingly, `isLoading` example
