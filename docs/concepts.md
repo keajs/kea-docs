@@ -4,10 +4,7 @@ title: The Concepts of Kea
 sidebar_label: Concepts
 ---
 
-**WIP!** This doc aims to go in more detail what are the different parts of kea
-and how to they all fit together.
-
-Would be cool to add some images that better illustrate all these concepts.
+This doc describes the different parts of Kea and how to they all fit together.
 
 ## Logic
 
@@ -241,12 +238,197 @@ This may seem weird and slow at first, but writing *immutable* code like this gr
 performance in React. If you really do want to write mutable code,
 feel free to wrap your reducers with [immer](https://github.com/immerjs/immer).   
 
+The other thing you can't do in a reducer is to dispatch an action as a response to another action.
+For this you use listeners.
+
 ## Listeners
 
+Kea prohibits you from writing impure code with side effects (e.g. API calls) in actions and reducers. 
+So what are you to do if you live in the real world like most of us?  
 
-- this is where side-effects happen
-- listeners wait for an event to be dispatched and do what needs to happen after
-- it's an anti-pattern to just use a listener and only call `setThis` actions
+Enter listeners.
+
+As the name implies, listeners *listen* for actions and then run some code. Here's an example:
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        loadUsers: true,
+    }),
+
+    listeners: () => ({
+        loadUsers: async () => {
+            const users = await api.get('users')
+            // do something with the users?
+        } 
+    })
+})
+```
+
+When the `loadUsers` action is dispatched, we, *ahem,* load the users.
+
+Q: What should we do with the `users` once we have them? <br/>
+A: We store them in a `reducer` of course!
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        loadUsers: true,
+        setUsers: (users) => ({ users })
+    }),
+
+    reducers: () => ({
+        users: [[], {
+            setUsers: (_, { users }) => users
+        }]  
+    }),
+
+    listeners: ({ actions }) => ({
+        loadUsers: async () => {
+            const users = await api.get('users')
+            actions.setUsers(users)
+        } 
+    })
+})
+```
+
+If you're used to React Hooks or some other [easy](https://easy-peasy.now.sh/) state management solution, 
+then the above code might seem overly verbose to you. *"Why must we write `loadUsers` and `setUsers` 
+twice?"* I might hear some of you ask.
+
+There's a point to being this explicit. If you're following good patterns, it often makes 
+sense to use the actions that you're listening to in a reducer or vice-versa, mainly to track
+second order effects.
+
+To illustrate this point, let's try adding a `loading` state to our logic.
+
+Here's one bad and *naïve* way you could do it. 
+
+```javascript
+// NB! This code follows bad patterns, don't do this.
+const logic = kea({
+    actions: () => ({
+        loadUsers: true,
+        setUsers: (users) => ({ users }),
+        setLoading: (loading) => ({ loading })
+    }),
+
+    reducers: () => ({
+        users: [[], {
+            setUsers: (_, { users }) => users
+        }],
+        loading: [false, { // DO NOT DO THIS
+            setLoading: (_, { loading }) => loading
+        }]      
+    }),
+
+    listeners: ({ actions }) => ({
+        loadUsers: async () => {
+            actions.setLoading(true) // DO NOT DO THIS
+            const users = await api.get('users')
+            actions.setUsers(users)
+            actions.setLoading(false) // DO NOT DO THIS
+        } 
+    })
+})
+```
+
+If you read the `reducers` section above, you'll know that it's an anti-pattern to only have
+`setThis` and `setThat` actions which do nothing more that to update `this` or `that`.
+
+Let's clean this up. Instead of explicitly setting state, let's instead react to actions.
+
+Remember that we start `loading` when the `loadUsers` action is dispatched and we stop `loading` 
+when the `setUsers` action gets dispatched. Let's build off of that:
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        loadUsers: true,
+        setUsers: (users) => ({ users }),
+    }),
+
+    reducers: () => ({
+        users: [[], {
+            setUsers: (_, { users }) => users
+        }],
+        loading: [false, {
+            loadUsers: () => true,
+            setUsers: () => false,
+        }]      
+    }),
+
+    listeners: ({ actions }) => ({
+        loadUsers: async () => {
+            const users = await api.get('users')
+            actions.setUsers(users)
+        } 
+    })
+})
+```
+
+That's already pretty sweet. But what if we get an error instead?
+
+I would suggest you follow this pattern then:
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        loadUsers: true,
+        loadUsersSuccess: (users) => ({ users }),
+        loadUsersFailure: (error) => ({ error }),
+    }),
+
+    reducers: () => ({
+        users: [[], {
+            loadUsersSuccess: (_, { users }) => users
+        }],
+        usersLoading: [false, {
+            loadUsers: () => true,
+            loadUsersSuccess: () => false,
+            loadUsersFailure: () => false
+        }],
+        usersError: [null, {
+            loadUsers: () => null,
+            loadUsersFailure: (_, { error }) => error
+        }]      
+    }),
+
+    listeners: ({ actions }) => ({
+        loadUsers: async () => {
+            try {
+                const users = await api.get('users')
+                actions.loadUsersSuccess(users)
+            } catch (error) {
+                actions.loadUsersFailure(error.message)            
+            }   
+        } 
+    })
+})
+```
+
+Please note that for consistency, I renamed some other variables here.
+
+
+## Loaders
+
+The pattern above is so common that there's a way to abstract it even further.
+
+Using the kea-loaders plugin, the above code will look like this:
+
+```javascript
+const logic = kea({
+    loaders: () => ({
+        users: [[], {
+            loadUsers: async () => await api.get('users')
+        }]
+    })
+})
+```
+
+The code above is identical to the block before it. It also creates three reducers: 
+`users`, `usersLoading` and `usersError`, along with three actions: `loadUsers`,
+`loadUsersSuccess` and `loadUsersFailure`.
 
 ## Selectors
 - are basically computed properties
