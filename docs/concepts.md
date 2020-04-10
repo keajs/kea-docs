@@ -21,7 +21,7 @@ const logic = kea({ ... })
 
 Why do we call it `logic`? 
 
-Well, we had to call it something and everything else was already taken :D. 
+Well, we had to call it something and everything else was already taken 😅. 
 
 More seriously, this name implies that what `kea()` returns is a complex object, 
 which contains a piece of your state along with logic to manipulate it.  
