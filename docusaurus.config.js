@@ -1,6 +1,6 @@
 module.exports = {
     title: 'Kea',
-    tagline: 'Production ready State Management for React',
+    tagline: 'Production Ready State Management for React',
     url: 'https://kea.js.org',
     baseUrl: '/',
     favicon: 'img/favicon.ico',

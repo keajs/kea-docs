@@ -4,6 +4,11 @@ title: A Brief History of Kea
 sidebar_label: History
 ---
 
+:::note
+This section is "nice to know... maybe". 
+Feel free to skip directly to the [core concepts](/docs/concepts) if you're on a tight schedule.
+:::
+
 The Kea project began when I first started to use [Redux](https://redux.js.org/) in a [React](https://reactjs.org/) app in 2015\.
 
 Redux was fine, but I kept writing very similar code over and over again. Eventually I looked for ways to simplify things. I wrote several helper functions that automatised most of these repetitive tasks.
