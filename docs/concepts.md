@@ -642,7 +642,7 @@ That's it.
 
 In practice, other than in React via `useValues`, you also access `values` in listeners. For example:
 
-```javascript
+```jsx
 const logic = kea({
     actions: () => ({
         setUsername: (username) => ({ username }),
