@@ -598,9 +598,32 @@ A few things to keep in mind with selectors:
   `sortedRecordsForSelectedMonth`, it can be defined either before or after `recordsForSelectedMonth`.
   As long as you don't have circular dependencies, the order doesn't matter.
 
+At the end of the day, `selectors` themselves are simple functions, which just take as input
+the redux store's current state, traverse it and return the value you're looking for:
 
+```javascript
+logic.selector = state => state.path.to.logic
+logic.selectors.month = state => logic.selector(state).month
+
+logic.selectors.month(store.getState()) === '2020-04'
+```
+
+It is good practice to have as many selectors as possible, each of which sort or filter the *raw* data
+stored in your reducers further than the last.
+
+It is bad practice to have listeners do this filtering. For example, you should **not** write code,
+where on the action `selectUser(id)`, you run a listener that takes the stored value of `users`,
+filters it to finds the selected user and then calls another action `setUser` to store this value
+in the `user` reducer.
+ 
+Instead, on `selectUser(id)`, store `selectedUserId` in a reducer. Then create a new selector `user`
+that combines `selectedUserId` and `users` to dynamically find the selected user.
+
+You'll have a lot less bugs this way. 😉
 
 ## Values
+
+
 - shorthand for calling selectors on the current store state
 - used in listeners
 
