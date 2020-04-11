@@ -615,7 +615,11 @@ It is bad practice to have listeners do this filtering. For example, you should 
 where on the action `selectUser(id)`, you run a listener that takes the stored value of `users`,
 filters it to finds the selected user and then calls another action `setUser` to store this value
 in the `user` reducer.
- 
+
+Such an approach will violate the [single source of truth](https://en.wikipedia.org/wiki/Single_source_of_truth)
+principle. You will end up with two copies of this one user in your store. If you change something in `user`, 
+should you also change the same data in `users`?
+
 Instead, on `selectUser(id)`, store `selectedUserId` in a reducer. Then create a new selector `user`
 that combines `selectedUserId` and `users` to dynamically find the selected user.
 
@@ -644,42 +648,17 @@ In practice, other than in React via `useValues`, you also access `values` in li
 
 ```jsx
 const logic = kea({
-    actions: () => ({
-        setUsername: (username) => ({ username }),
-        fetchDetails: true,
-        setDetails: (details) => ({ details }),
-    }),
-    reducers: ({
-        username: ['', {
-            setUsername: (_, { name }) => name
-        }],
-        details: [null, {
-            setUsername: () => null, // clear if changing name
-            fetchDetails: () => null, // clear if reloading
-            setDetails: (_, { details }) => details,
-        }]
-    }),
+    // ... actions and reducers skipped
+
     listeners: ({ actions, values }) => ({
         fetchDetails: async () => {
-            const { username } = values // get the username
-            const details = await api.fetchDetails({ username })
+            const details = await api.fetchDetails({ 
+                username: values.username 
+            })
             actions.setDetails(details)
         }
     })
 })
-
-function UserDetails () {
-    const { username, details } = useValues(logic)
-    const { setUsername, fetchDetails } = useActions(logic)
-    
-    return (
-        <div>
-            <input value={username} onChange={e => setUsername(e.target.value)} />
-            <button onClick={fetchDetails}>Fetch Details</button>
-            <div>Details: {details}</div>
-        </div>
-    ) 
-}
 ```
 
 
