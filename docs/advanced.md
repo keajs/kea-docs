@@ -263,17 +263,99 @@ const counterLogic = kea({
 })
 ```
 
-
-
-
-
 ## Keyed logic
+
+If you give your logic a `key`, you can have multiple independent copies of it. The key is derived 
+from `props`:
+
+```javascript
+const userLogic = kea({
+    key: (props) => props.id, // 🔑 the key
+
+    actions: () => ({
+        loadUser: true,
+        userLoaded: (user) => ({ user })
+    }),
+  
+    reducers: () => ({
+        user: [null, {
+            userLoaded: (_, { user }) => user
+        }]
+    }),
+
+    // more on events in a section below. 
+    events: ({ actions }) => ({
+        afterMount: [actions.loadUser]
+    }),
+
+    listeners: ({ props }) => ({
+        loadUser: async () => {
+            const user = await api.getUser({ id: props.id }),
+            actions.userLoaded(user)
+        }
+    })
+})
+```
+
+Now every time you call `userLogic({ id: 1 })` with a new `id`, a completely independent
+logic will be built and mounted.
+
+This is really handy when you have data that's passed as a props in React, such as:
+
+```jsx
+function User({ id }) {
+    const { user } = useValues(userLogic({ id }))
+
+    return user 
+        ? <div>{user.name} ({user.email})</div> 
+        : <div>Loading...</div>
+}
+```
+
+No matter how many times `<User id={1} />` is rendered by React, it'll always be connected
+to the same logic. 
+
+If you render `<User id={2} />`, it'll however get its own independent copy of this same base logic. 
+
+
 
 ## Defaults
 
 ## Extending logic
 
 ## Breakpoints in listeners
+
+
+## Events
+
+
+
+```javascript
+const usersLogic = kea({
+    actions: () => ({
+        fetchUsers: true,
+        usersLoaded: (user) => ({ user })
+    }),
+  
+    reducers: () => ({
+        users: [null, {
+            usersLoaded: (_, { user }) => user
+        }]
+    }),
+
+    events: ({ actions }) => ({
+        beforeMount: () => {
+            // can't do much here as calling actions 
+        },
+        afterMount: [actions.fetchUsers]
+        afterMount: [actions.fetchUsers]
+        afterMount: [actions.fetchUsers]
+    }),
+
+    listeners: {}, // fetchUser makes an API call
+})
+```
+
 
 ## Mounting and Events
 
