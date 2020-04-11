@@ -1,12 +1,12 @@
 ---
 id: history
-title: A Brief History of Kea
+title: History
 sidebar_label: History
 ---
 
 :::note
 This section is "nice to know... maybe". 
-Feel free to skip directly to the [core concepts](/docs/concepts) if you're on a tight schedule.
+Feel free to skip directly to the [quickstart](/docs/quickstart) or the [core concepts](/docs/concepts) if you're on a tight schedule.
 :::
 
 The Kea project began when I first started to use [Redux](https://redux.js.org/) in a [React](https://reactjs.org/) app in 2015\.

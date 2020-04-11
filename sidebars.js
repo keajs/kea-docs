@@ -1,5 +1,5 @@
 module.exports = {
   someSidebar: {
-    Kea: ["installation", "history", "concepts", "advanced", "react", "debugging", "writing-plugins"],
+    Kea: ["installation", "history", "quickstart", "concepts", "advanced", "react", "debugging", "writing-plugins"],
   },
 };

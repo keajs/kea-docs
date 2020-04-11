@@ -623,9 +623,63 @@ You'll have a lot less bugs this way. 😉
 
 ## Values
 
+The last of Kea's core concepts is `values`. You have already seen used with
+`useValues` in React components:
 
-- shorthand for calling selectors on the current store state
-- used in listeners
+```javascript
+const { month } = useValues(logic)
+```
+
+Values are just a shorthand for accessing selectors with the store's latest state already applied.
+
+Basically: 
+
+```javascript
+logic.values.month === logic.selectors.month(store.getState()) 
+```
+
+That's it.
+
+In practice, other than in React via `useValues`, you also access `values` in listeners. For example:
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        setUsername: (username) => ({ username }),
+        fetchDetails: true,
+        setDetails: (details) => ({ details }),
+    }),
+    reducers: ({
+        username: ['', {
+            setUsername: (_, { name }) => name
+        }],
+        details: [null, {
+            setUsername: () => null, // clear if changing name
+            fetchDetails: () => null, // clear if reloading
+            setDetails: (_, { details }) => details,
+        }]
+    }),
+    listeners: ({ actions, values }) => ({
+        fetchDetails: async () => {
+            const { username } = values // get the username
+            const details = await api.fetchDetails({ username })
+            actions.setDetails(details)
+        }
+    })
+})
+
+function UserDetails () {
+    const { username, details } = useValues(logic)
+    const { setUsername, fetchDetails } = useActions(logic)
+    
+    return (
+        <div>
+            <input value={username} onChange={e => setUsername(e.target.value)} />
+            <button onClick={fetchDetails}>Fetch Details</button>
+            <div>Details: {details}</div>
+        </div>
+    ) 
+}
+```
 
 
-TODO: continue writing here...
