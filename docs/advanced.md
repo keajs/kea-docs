@@ -318,17 +318,122 @@ to the same logic.
 If you render `<User id={2} />`, it'll however get its own independent copy of this same base logic. 
 
 
-
 ## Defaults
+
+There are two ways to pass defaults to reducers. We've been using this style until now:
+
+```javascript
+const logic = kea({
+    // ... actions: () => ({ increment, decrement })
+
+    reducers: () => ({
+        counter: [0, {
+            increment: (state, { amount }) => state + amount,
+            decrement: (state, { amount }) => state - amount
+        }]
+    }),
+})
+```
+
+If you choose, you can set your defaults explicitly in a `defaults` object:
+
+```javascript
+const logic = kea({
+    // ... actions: () => ({ increment, decrement })
+  
+    defaults: {
+        counter: 0
+    },
+
+    reducers: () => ({
+        counter: {
+            increment: (state, { amount }) => state + amount,
+            decrement: (state, { amount }) => state - amount
+        }
+    })
+})
+```
+
+In case you pass both, the value in the `defaults` object will take precedence.
+
+You can also pass selectors as defaults:
+
+```javascript
+const counterLogic = kea({ ... })
+
+const logic = kea({
+    defaults: () => ({ // must be a function to evaluate lazily
+        counterCopy: counterLogic.selectors.counter
+    }),
+
+    reducers: () => ({
+        counterCopy: [counterLogic.selectors.counter, {
+            increment: (state, { amount }) => state + amount,
+            decrement: (state, { amount }) => state - amount
+        }]
+    })
+})
+```
+
+You can take it one level deeper and return a selector that computes the defaults:
+
+```javascript
+const logic = kea({
+    defaults: () => (state, props) => ({
+        // simple value
+        simpleDefault: 0,
+        // returning a selector
+        directName: someLogic.selectors.storedName
+        // returning a value through a selector
+        connectedName: someLogic.selectors.storedObject(state, props).name,
+    })
+})
+```
+
 
 ## Extending logic
 
+Up until a logic has been built and mounted, you can extend it:
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        increment: (amount = 1) => ({ amount }),
+        decrement: (amount = 1) => ({ amount })
+    }),
+    
+    reducers: () => ({
+        counter: [0, {
+            increment: (state, { amount }) => state + amount,
+            decrement: (state, { amount }) => state - amount
+        }]
+    }),
+})
+
+logic.extend({
+    reducers: () => ({
+        negativeCounter: [0, {
+            increment: (state, { amount }) => state - amount,
+            decrement: (state, { amount }) => state + amount
+        }]
+    }),
+})
+
+// later in React
+const { counter, negativeCounter } = useValues(logic)
+```
+
+Extending logic is especially powerful when writing plugins. For example to dynamically
+add actions, reducers or listeners to a logic.
+
+
 ## Breakpoints in listeners
 
+TODO
 
 ## Events
 
-
+TODO
 
 ```javascript
 const usersLogic = kea({
@@ -359,4 +464,8 @@ const usersLogic = kea({
 
 ## Mounting and Events
 
+TODO
+
 ## Mixing with Redux
+
+TODO
