@@ -298,7 +298,7 @@ const logic = kea({
     }),
 
     listeners: () => ({
-        loadUsers: async () => {
+        loadUsers: async (payload) => {
             const users = await api.get('users')
             // do something with the users?
         } 
@@ -307,6 +307,8 @@ const logic = kea({
 ```
 
 When the `loadUsers` action is dispatched, we, *ahem,* load the users.
+
+The listener will get the action's `payload` as its first argument, but we will ignore it in this case. 
 
 Q: What should we do with the `users` once we have them? <br/>
 A: We store them in a `reducer` of course!
