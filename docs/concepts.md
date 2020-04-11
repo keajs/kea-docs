@@ -447,7 +447,6 @@ const logic = kea({
 Please note that for aesthetics, I renamed `loading` to `usersLoading` and 
 `setUsers` to `loadUsersSuccess`.
 
-
 ## Loaders
 
 The pattern above is so common that there's a way to abstract it even further.
@@ -468,7 +467,104 @@ The code above is identical to the block before it. It also creates three reduce
 `users`, `usersLoading` and `usersError`, along with three actions: `loadUsers`,
 `loadUsersSuccess` and `loadUsersFailure`.
 
+See the documentation for kea-loaders to find out more.
+
 ## Selectors
+
+Selectors combine multiple reducers into one combined value.
+They are powered by [reselect](https://github.com/reduxjs/reselect) under the hood.
+
+Let's take this example:
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        setMonth: (month) => ({ month }),
+        setRecords: (records) => ({ records })
+    }),
+    reducers: () => ({
+        month: ['2020-04', {
+            setMonth: (_, { month }) => month
+        }],
+        records: [[], {
+            setRecords: (_, { records }) => records
+        }]  
+    })
+})
+``` 
+
+It's a pretty simple logic that just stores two values, `records` and `month`. Our pointy-haired
+boss now tasked us with showing all records that belong to the selected month. How do we do this? 
+
+A *naïve* solution in pure react would look like this: 
+
+```jsx
+fuction RecordsForThisMonth() {
+    const { month, records } = useValues(logic)
+    const recordsForSelectedMonth = records.filter(r => r.month === month)
+
+    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)</ul>
+}
+```
+
+At the end of the day this gets the job done, but there's an obvious problem here: performance.
+Every time we render this component, we have to do all the work of filtering the records.
+
+What if we could pre-calculate this list?
+
+If you've read the React docs, you know that [`useMemo`](https://reactjs.org/docs/hooks-reference.html#usememo)
+is the answer:
+
+
+```jsx
+fuction RecordsForThisMonth() {
+    const { month, records } = useValues(logic)
+
+    const recordsForSelectedMonth = useMemo(() => {
+        return records.filter(r => r.month === month)
+    }, [records, month])
+
+    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)</ul>
+}
+```
+
+This works, but it introduces another, more subtle problem: it breaks 
+the [separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns) principle.
+
+With Kea, your React components should be pretty dumb. They should not know the internal structure
+of your `records` array. Instead they should just fetch the values they need directly from `logic`.
+
+This means we have to move this filtering of `records` into the `logic` itself.
+That's where selectors come in:
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        setMonth: (month) => ({ month }),
+        setRecords: (records) => ({ records })
+    }),
+    reducers: () => ({
+        month: ['2020-04', {
+            setMonth: (_, { month }) => month
+        }],
+        records: [[], {
+            setRecords: (_, { records }) => records
+        }]  
+    }),
+    selectors: ({ selectors }) => ({
+        recordsForSelectedMonth: [
+            () => [selectors.month, selectors.records],
+            (month, records) => {
+                return records.filter(r => r.month === month)
+            }
+        ]
+    })
+})
+``` 
+
+
+
+
 - are basically computed properties
 - every reducer gets a selector automatically
 
