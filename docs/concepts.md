@@ -1,10 +1,14 @@
 ---
 id: concepts
-title: The Concepts of Kea
-sidebar_label: Concepts
+title: Core Concepts
+sidebar_label: Core Concepts
 ---
 
 This doc describes the different parts of Kea and how to they all fit together.
+After reading this, you'll know 80% of what there is to know about Kea.
+
+Then read the sections [advanced concepts](/docs/advanced) and [using with React](/docs/react) to
+get the remaining 20%. 
 
 ## Logic
 
@@ -18,10 +22,10 @@ const logic = kea({ ... })
 
 Why do we call it `logic`? 
 
-Well, we had to call it something and everything else was already taken 😅.
+Well, we had to call it something and everything else was already taken. 😅
 
 More seriously, the name `logic` implies that calling `kea()` return complex objects, 
-which not only contain a piece of your state, but also all the logic that will manipulate it.  
+which not only contain a piece of your state, but also all the logic that manipulates it.  
 
 It's a useful convention and we suggest sticking to it. Feel free to call your logic with
 names that make sense, such as `accountLogic`, `dashboardLogic`, etc.
@@ -56,8 +60,8 @@ For example, every key press on your keyboard dispatches a `keyPress` event with
 your operating system to listen to them and convert them to the 1970's steampunk sci-fi
 novel you hope to finish one day.
 
-Actions themselves are simple and [pure functions](https://en.wikipedia.org/wiki/Pure_function). The only 
-thing they must do is to convert their arguments into a `payload` object. See here:
+Actions themselves are simple and [pure functions](https://en.wikipedia.org/wiki/Pure_function). The *only 
+thing* they are allowed to do is to convert their arguments into a `payload` object. See here:
 
 ```jsx
 const logic = kea({
@@ -73,6 +77,11 @@ Let's skip ahead a few steps and call `addToCounter` in a React component.
 For this you use the `useActions` hook like so:
 
 ```jsx
+import React from 'react'
+import { kea, useActions } from 'kea'
+
+const logic = kea({ ... }) // code from above
+
 function BigButton () {
     const { addToCounter } = useActions(logic)
 
@@ -86,7 +95,7 @@ function BigButton () {
 
 In the code above, clicking the button calls `addToCounter` with one argument, `1000`. 
 
-The action then converts it to a `payload` of `{ amount: 1000 }`. This payload will later be used in
+The action then converts it to a `payload` of `{ amount: 1000 }`, which will later be used in
 reducers, listeners and other friendly plugins.
 
 Since kea actions are [compatible with Redux](https://redux.js.org/basics/actions), calling
@@ -97,8 +106,8 @@ something like this:
 addToCounter(1000) === { type: 'add to counter', payload: { amount: 1000 } }
 ```
 
-There's one shorthand that can be useful. In case your actions take no arguments, just pass `true`
-(or anything that's not a function) instead of an arguments-to-payload serializer:
+There's one shorthand that can be useful. In case your actions take no arguments (e.g. `loadUsers`), 
+just pass `true`, or anything else that's not a function, instead of an arguments-to-payload serializer:
 
 ```jsx
 const logic = kea({
@@ -111,8 +120,22 @@ const logic = kea({
 })
 ```
 
-The `payload` will then be `{ value: true }`... but you'll just ignore it anyway, won't you? 🤔
+The `payload` then will be `{ value: true }`... but you'll just ignore it anyway, won't you? 🤔
 
+One more thing. It's **strongly** recommended to *always* return an object 
+as a payload from your actions:
+ 
+```jsx
+const logic = kea({
+    actions: () => ({
+        addToCounter: (amount) => ({ amount }), // ❤️ DO this!
+        badBadAddToCounter: amount => amount    // 💔 DO NOT do this!
+    })
+})
+```
+
+While it may not feel like such a big deal, knowing that the payload is *always* an object
+will save you a lot of worry later on. This is experience talking here. 😉
 
 ## Reducers
 
@@ -161,7 +184,7 @@ keystrokes* I hear them say.
 There's method to this madness as well. First, you should always optimise for [read-time convenience
 over write-time convenience](https://medium.com/marius-andra-blog/two-strategies-for-writing-better-code-1be0dc240698).
 Second, being explicit with the relationships between actions and reducers makes for very composable
-code.
+code. This is best illustrated with an example.
 
 Suppose we extend this logic and also store a `name`. We still want the page to have a global `reset`
 button that clears both pieces of data. The code would look like this:
@@ -188,24 +211,28 @@ const logic = kea({
 })
 ```
 
-This example is contrived of course, but should illustrate the point nicely. 
+This example is contrived of course, but should illustrate the point about composability. 
+You can have any reducer depend on any action, even ones defined in other logic files! 
+(More on that later)
 
-In general, you want your actions and reducers to mix together freely. 
-If you find yourself constantly writing code that has actions such as `setName`, `setPrice`, 
+Most of the time you want your actions and reducers to mix together freely, like they're still
+living in 2019 without a care in the world.
+
+If, however, you find yourself constantly writing code that has actions such as `setName`, `setPrice`, 
 `setLoading` and `setError` with corresponding reducers `name`, `price`, `loading` and `error`
-that only react to one action, you're probably following an anti-pattern and doing something wrong.
+and a 1:1 mapping between them, you're probably following an anti-pattern and doing something wrong.
 
-You'll see a better example to illustrate this point in the next section about listeners.
+You'll see a more complete example to illustrate this point in the next section about listeners.
 
 One last thing, just like actions, reducers as well are [pure functions](https://en.wikipedia.org/wiki/Pure_function).
 That means no matter how many times you call a reducer with the same input, it should always
 give the same output.
 
-More importantly, **reducers must never modify their inputs**. In practice this means that for example
+More importantly, **reducers must never modify their inputs**. In practice this means that
 instead of adding an element to an array via `state.push(newThing)`, you instead create and return a new
-array that contains this new element with `[...state, newThing]`. 
+array that contains this new element with `[...state, newThing]`.
 
-For example, a simple todo list that stores strings in an array:
+For example, here's todo list that stores strings in an array:
   
 ```javascript
 const logic = kea({
@@ -238,17 +265,17 @@ This may seem weird and slow at first, but writing *immutable* code like this gr
 performance in React. If you really do want to write mutable code,
 feel free to wrap your reducers with [immer](https://github.com/immerjs/immer).   
 
-The other thing you can't do in a reducer is to dispatch an action as a response to another action.
-For this you use listeners.
+The other thing you can't do in a reducer is to dispatch an action as a response to another action
+or to call an API endpoint. For this you use listeners.
 
 ## Listeners
 
 Kea prohibits you from writing impure code with side effects (e.g. API calls) in actions and reducers. 
-So what are you to do if you live in the real world like most of us?  
+But what are you to do if you live in the real world like *most* of us?  
 
 Enter listeners.
 
-As the name implies, listeners *listen* for actions and then run some code. Here's an example:
+As the name implies, listeners *listen* for dispatched actions and then run some code. Here's an example:
 
 ```javascript
 const logic = kea({
@@ -277,17 +304,17 @@ const logic = kea({
         setUsers: (users) => ({ users })
     }),
 
-    reducers: () => ({
-        users: [[], {
-            setUsers: (_, { users }) => users
-        }]  
-    }),
-
     listeners: ({ actions }) => ({
         loadUsers: async () => {
             const users = await api.get('users')
             actions.setUsers(users)
         } 
+    }),
+
+    reducers: () => ({
+        users: [[], {
+            setUsers: (_, { users }) => users
+        }]  
     })
 })
 ```
@@ -297,12 +324,13 @@ then the above code might seem overly verbose to you. *"Why must we write `loadU
 twice?"* I might hear some of you ask.
 
 There's a point to being this explicit. If you're following good patterns, it often makes 
-sense to use the actions that you're listening to in a reducer or vice-versa, mainly to track
-second order effects.
+sense to use the actions that you're listening to in a reducer or vice-versa, usually to track
+second or third order states.
 
-To illustrate this point, let's try adding a `loading` state to our logic.
+To illustrate this point, let's track the `loading` state in our logic.
+Obviously we need a `loading` reducer to store this value, but what about the actions?
 
-Here's one bad and *naïve* way you could do it. 
+Well, here's one bad and *naïve* way you could do it:
 
 ```javascript
 // NB! This code follows bad patterns, don't do this.
@@ -333,13 +361,15 @@ const logic = kea({
 })
 ```
 
-If you read the `reducers` section above, you'll know that it's an anti-pattern to only have
-`setThis` and `setThat` actions which do nothing more that to update `this` or `that`.
+If you read the `reducers` section above, you'll remember that it's an anti-pattern to only have
+`setThis` and `setThat` actions that only update `this` or `that`.
 
-Let's clean this up. Instead of explicitly setting state, let's instead react to actions.
+The better approach to explicitly setting the `loading` state is to have it react to actions.
 
-Remember that we start `loading` when the `loadUsers` action is dispatched and we stop `loading` 
-when the `setUsers` action gets dispatched. Let's build off of that:
+When do we start loading? When do we stop loading? When the `loadUsers` and `setUsers` actions are
+called.
+
+Let's built off of that:
 
 ```javascript
 const logic = kea({
@@ -367,9 +397,16 @@ const logic = kea({
 })
 ```
 
-That's already pretty sweet. But what if we get an error instead?
+That's already pretty sweet... but what if our API is [running off a potato](https://www.google.com/search?q=raspberry+pi+potato) 
+and occasionally throws an error (e.g. timeout)? 
 
-I would suggest you follow this pattern then:
+Currently if that happens, `setUsers` will never be dispatched and we'll be `loading` forever!
+Surely that's *sub-optimal* and we can do better!
+
+When we add a third reducer to track the `error`, the beauty of explicitly declaring actions and
+having reducers and listeners react to them suddenly becomes clear. 😍
+
+The following code demonstrates this well:
 
 ```javascript
 const logic = kea({
@@ -407,14 +444,15 @@ const logic = kea({
 })
 ```
 
-Please note that for consistency, I renamed some other variables here.
+Please note that for aesthetics, I renamed `loading` to `usersLoading` and 
+`setUsers` to `loadUsersSuccess`.
 
 
 ## Loaders
 
 The pattern above is so common that there's a way to abstract it even further.
 
-Using the kea-loaders plugin, the above code will look like this:
+Using the kea-loaders plugin, the above code can be simplified to this:
 
 ```javascript
 const logic = kea({
@@ -440,21 +478,3 @@ The code above is identical to the block before it. It also creates three reduce
 
 
 TODO: continue writing here...
-
-...
-
-```jsx
-function SuperCounter () {
-    const { increment } = useActions(logic)
-    const { counter } = useValues(logic)
-
-    return (
-        <div>
-            Counter: {counter}<br/>
-            <button onClick={() => increment(100)}>Add 100 😕</button>
-            <button onClick={() => increment(999)}>Add 999 🤩</button>
-        </div>
-    )
-}
-```
-
