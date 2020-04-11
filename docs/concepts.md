@@ -235,7 +235,7 @@ array that contains this new element with `[...state, newThing]`.
 For example, here's todo list that stores strings in an array:
   
 ```javascript
-const logic = kea({
+const todosLogic = kea({
     actions: () => ({
         addTodo: (todo) => ({ todo }),
         removeTodo: (index) => ({ index }),
@@ -267,6 +267,20 @@ feel free to wrap your reducers with [immer](https://github.com/immerjs/immer).
 
 The other thing you can't do in a reducer is to dispatch an action as a response to another action
 or to call an API endpoint. For this you use listeners.
+
+To use the values stored in reducers in React, use the `useValues` hook:
+
+```jsx
+import React from 'react'
+import { useValues } from 'kea'
+
+function Todos() {
+    const { todos } = useValues(todosLogic)
+
+    return <ul>{todos.map(todo => <li>{todo}</li>)}</ul>
+}
+```
+
 
 ## Listeners
 
@@ -562,11 +576,29 @@ const logic = kea({
 })
 ``` 
 
+Then get the value of `recordsForSelectedMonth` directly in your component:
+
+```jsx
+fuction RecordsForThisMonth() {
+    const { recordsForSelectedMonth } = useValues(logic)
+
+    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)</ul>
+}
+```
+
+A few things to keep in mind with selectors:
+
+* All reducers automatically get a selector with the same name. Thus you can directly
+  use the values of reducers as the input in new selectors, like we did above with
+  `selectors.month` and `selectors.records`.
+* Selectors are recalculated only if the value of their inputs changes. In the example above,
+  no matter how often your components ask for `recordsForSelectedMonth`, they will get
+  a cached response as long as `month` and `records` haven't changed since last time.
+* The order of selectors doesn't matter. If you add another selector called
+  `sortedRecordsForSelectedMonth`, it can be defined either before or after `recordsForSelectedMonth`.
+  As long as you don't have circular dependencies, the order doesn't matter.
 
 
-
-- are basically computed properties
-- every reducer gets a selector automatically
 
 ## Values
 - shorthand for calling selectors on the current store state
