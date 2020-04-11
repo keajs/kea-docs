@@ -11,8 +11,8 @@ Please read [Core Concepts](/docs/concepts) to go in depth.
 That page describes not only *what* you can do in Kea, but also *why*. It's required
 reading if you are starting to use Kea in an actual app.
 
-There's nothing below that's not covered in [Core Concepts](/docs/concepts), so feel free 
-to skip this and go straight for the juicy bits.
+There's nothing on this page that's not covered in [Core Concepts](/docs/concepts), so feel free 
+to skip this and go straight for the [juicy bits](/docs/concepts).
 :::
 
 
@@ -42,7 +42,7 @@ const logic = kea({
 ```
 
 Think of actions as events that are dispatched onto a queue. On their own they do nothing.
-Reducer and listeners (explained below) wait for actions and react accordingly.
+Reducers and listeners (explained below) wait for actions and react accordingly.
 
 Actions are functions that take whatever arguments you choose and return a `payload`. 
 This payload should always be an object: `(amount) => ({ amount })`.
@@ -63,9 +63,11 @@ function BigButton () {
 }
 ```
 
+Clicking this button dispatches an action with the payload `{ amount: 1000 }`
+
 ## Reducers
 
-Reducers store state and modify it in response to actions:
+Reducers hold your state and modify it in response to actions:
 
 ```javascript
 const logic = kea({
@@ -82,21 +84,25 @@ const logic = kea({
 })
 ```
 
-In a reducer you describe what actions modify its state along with functions that describe
-the updates. Those functions get as arguments the current `state` of the reducer 
-and the `payload` of the action.
+To create a reducer, you provide it with a list of actions that modify its state (the keys of the object above) and how
+(the values of the same object).
 
-Inside a reducer you must never mutate values. When dealing with complex objects, 
+Each change is described by a function that gets two arguments: the current `state` of the reducer and the `payload` of 
+the action that was dispatched. 
+
+Reducers must **never** mutate values. When dealing with complex objects, 
 always create and return a new object that incorporates the required changes.
 
 ```javascript
-const addTodo = (state, todo) => [...state, todo] // ❤️❤️❤️ Always do this!
-const addTodo = (state, todo) => state.push(todo) // ☠️☠️☠️ NEVER do this!
+{
+  addTodo: (state, { todo }) => [...state, todo], // ❤️❤️❤️ Always do this!
+  addTodo: (state, { todo }) => state.push(todo), // ☠️☠️☠️ NEVER do this!
+}
 ```
 
 You are also not allowed to make API calls or dispatch actions inside a reducer.
 
-To access the stored values in React, use the `useValues` hook:
+To access the data stored in reducers from React, use the `useValues` hook:
 
 ```jsx
 import { useValues } from 'kea'
@@ -134,9 +140,15 @@ const logic = kea({
 })
 ```
 
+Listeners and reducers can and should reuse actions whenever possible. That's why actions are defined separately.
+For example you can add a `isLoading` reducer that sets its state to `true` when the `loadUsers` action is dispatched
+and to `false` when `setUsers` is dispatched after.
+
 ## Selectors
 
-Selectors combine reducers and other selectors into new precalculated values.
+Selectors combine reducers and other selectors into new pre-calculated values.
+
+Each reducer has a selector made for it automatically, which you can use as input in new selectors:
 
 ```javascript
 const logic = kea({
@@ -163,21 +175,31 @@ const logic = kea({
 })
 ```
 
-Selectors are recalculated only when their input changes. Use them to memoize complex
-operations.
+Get the output of a selector in React with `useValues`, just like with reducers:
 
-Each reducer automatically has a selector made for it.
+```javascript
+const { recordsForSelectedMonth } = useValues(logic)
+```
 
-Selectors are functions that take the redux store's current state as an argument and return
+Selectors are recalculated only when their input changes. They are perfect for memoizing complex operations.
+
+Selectors are actually functions that take the redux store's current state as an argument and return
 whatever value you're looking for:
  
 ```javascript
+logic.selectors.month = state => state.path.to.logic.in.redux.month
 logic.selectors.month(store.getState()) == '2020-04'
 ```  
 
 ## Values
 
-Values are a shorthand to access the current state of selectors. They're useful in listeners:
+Values are a shorthand to access the current state of selectors. 
+
+```javascript
+logic.values.month === logic.selectors.month(store.getState())
+```
+
+You mostly use them in listeners to fetch some value:
 
 ```javascript
 const logic = kea({
@@ -185,7 +207,7 @@ const logic = kea({
 
     listeners: ({ actions, values }) => ({
         fetchDetails: async () => {
-            const { username } = values // get the username
+            const { username } = values // 👈 get the latest username
             const details = await api.fetchDetails({ username })
             actions.setDetails(details)
         }
@@ -193,7 +215,7 @@ const logic = kea({
 })
 ```
 
-Use `useValues` to access values in React.
+This is where the hook `useValues` gets its name.
 
 ```jsx
 import { useValues } from 'kea'
@@ -207,5 +229,5 @@ function Counter() {
 
 ## Next Steps
 
-We strongly recommend you read [Core Concepts](/docs/concepts) next to get a better
+I strongly recommend you read [Core Concepts](/docs/concepts) next to get a better
 understanding of why everything works how it does.

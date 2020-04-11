@@ -4,12 +4,13 @@ title: Installation
 sidebar_label: Installation
 ---
 
-Installing `kea` is rather straightforward. You need to add the `kea` package, reset kea's context and 
+Installing `kea` is rather straightforward. You need to install some packages, reset kea's context and 
 wrap your app with react-redux's `<Provider />` tag.
 
 ## Install the packages
 
-In addition to `kea` you will also need `redux`, `react-redux` and `reselect`. 
+In addition to `kea` you will also need [`redux`](https://redux.js.org/), 
+[`react-redux`](https://react-redux.js.org/) and [`reselect`](https://github.com/reduxjs/reselect). 
 
 ```shell
 # if you're using yarn
@@ -56,7 +57,7 @@ ReactDOM.render( // 👈 and update this
 )
 ```
 
-And you're done! Feel free to use `kea()` calls anywhere in your code!
+That's it! Feel free to use `kea()` calls anywhere in your code!
 
 ## A note about call order (pre-1.0)
 

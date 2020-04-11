@@ -30,7 +30,7 @@ Several of them said very nice things about it.
 Then things got complicated.
 
 Changes in React and React-Redux (mostly hooks) combined with community feedback through unsolvable 
-feature requests forced me to take a step back and have a fresh look at what was Kea and where was 
+feature requests forced me to take a step back and have a fresh look at what was "Kea" and where was 
 it heading. It was time for a refactor... Which turned into a rewrite... Which took on a life of 
 its own... and kept [expanding and expanding and expanding](https://github.com/keajs/kea/blob/master/docs/CHANGES-1.0.md).
 
