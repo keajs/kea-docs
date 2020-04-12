@@ -517,30 +517,33 @@ kea({
 
 ## Events
 
-You can hook into the lifecycle of your logic with `events`.
+When running `kea({})`, nothing happens directly. It's only when your logic is actually called
+upon (for example via `useValues(logic)`) that it gets **mounted**. When your logic is no longer
+needed (for example the React component is removed from the page), your logic is **unmounted**.
+
+You can hook into these events with the `events` object:
 
 ```javascript
-kea({
-  events: ({ actions, values }) => ({
-    beforeMount: () => {
-      console.log('run before the plugin is mounted')
-    },
-    afterMount: () => {
-      console.log('run after the plugin is mounted')
-    },
-    beforeUnmount: () => {
-      console.log('run before the plugin is unmounted')
-    },
-    afterUnmount: () => {
-      console.log('run after the plugin is unmounted')
-    }
-  })
+const logic = kea({
+    events: ({ actions, values }) => ({
+        beforeMount: () => {
+            console.log('run before the logic is mounted')
+        },
+        afterMount: () => {
+            console.log('run after the logic is mounted')
+        },
+        beforeUnmount: () => {
+            console.log('run before the logic is unmounted')
+        },
+        afterUnmount: () => {
+            console.log('run after the logic is unmounted')
+        }
+    })
 })
 ```
 
-The useful ones are `afterMount` and `beforeUnmount`, as when they are called
-you have access to all the `actions`, `values`, etc of the logic. In `beforeMount` and
-`afterUnmount` they exist, but do nothing.
+The useful events are `afterMount` and `beforeUnmount`, as when they are called
+you have access to all the `actions`, `values`, etc of the logic.
 
 All events accept either a function or an array of functions. If your actions have no arguments,
 you can put them in the array directly without making a new function:
@@ -563,9 +566,55 @@ const usersLogic = kea({
 ```
 
 
-## Mounting and Events
+## Usage without or before React
 
-TODO
+When you use kea with React, there's a lot that is handled for you behind the scenes.
+Logic is mounted automatically with your `<Component />` and unmounted when it's no longer needed.
+
+Sometimes however, you wish to manually mount logic. For example to already start loading data in
+your router before transitioning to a component... or in `getStaticProps` in next.js.
+
+Perhaps you even want to use Kea without React.
+
+In any case, just call `mount` on your logic and get as a reply a function that will `unmount` it:
+
+```javascript
+// create the counter logic from the examples above
+const logic = kea({ ... })
+
+// connect its reducers to redux
+const unmount = logic.mount()
+
+logic.values.counter
+// => 0
+
+logic.actions.increment()
+// => { type: 'increment ...', payload: { amount: 1 } }
+
+logic.values.counter
+// => 1
+
+// remove reducers from redux
+unmount()
+
+logic.values.counter
+// => throw new Error()!
+```
+
+In case you need to pass props to your logic, do that before calling `mount()`:
+
+```javascript
+// create the counter logic from the examples above
+const logic = kea({ key: props => props.id, ... })
+
+const unmount = logic({ id: 123 }).mount()
+
+// do what needs to be done
+
+unmount()
+```
+
+There are a few other options you can use. See the [logic API](/docs/api/logic) for more.
 
 ## Mixing with Redux
 
