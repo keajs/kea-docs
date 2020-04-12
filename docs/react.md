@@ -98,3 +98,63 @@ const MyConnectedComponent = logic(MyComponent)
  
 ### `connect`
 
+In case you don't want to hook up everything in a `logic` to your `Component` or if you
+want to mix and match values from multiple logics, use `connect` to create a new logic with only
+the actions and values you need. Then wrap your `Component` in that.
+
+```jsx
+import { connect } from 'kea'
+
+const logic = connect({ 
+    actions: [
+        menuLogic, [
+            'openMenu',
+            'closeMenu'
+        ]
+    ],
+    values: [
+        menuLogic, [
+            'isOpen as isMenuOpen'
+        ],
+        accountLogic, [
+            'currentUser'
+        ]
+    ]
+})
+
+class MyComponent extends Component { ... }
+
+const MyConnectedComponent = logic(MyComponent)
+```
+
+In case you don't fear experimental JS syntax, you can use [legacy decorators](https://babeljs.io/docs/en/babel-plugin-proposal-decorators#legacy)
+and simplify your code down a bit:
+
+```jsx
+import { connect } from 'kea'
+
+@connect({ 
+    actions: [
+        menuLogic, [
+            'openMenu',
+            'closeMenu'
+        ]
+    ],
+    values: [
+        menuLogic, [
+            'isOpen as isMenuOpen'
+        ],
+        accountLogic, [
+            'currentUser'
+        ]
+    ]
+})
+class MyComponent extends Component {
+    render () {
+        const { currentUser } = this.props
+        const { closeMenu } = this.actions
+
+        return <button onClick={closeMenu}>{currentUser.name}</button>
+    }
+}
+```

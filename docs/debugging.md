@@ -1,6 +1,6 @@
 ---
 id: debugging
-title: Debugging Kea
+title: Debugging
 sidebar_label: Debugging
 ---
 
