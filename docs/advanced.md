@@ -569,7 +569,7 @@ const usersLogic = kea({
 ## Usage without or before React
 
 When you use kea with React, there's a lot that is handled for you behind the scenes.
-Logic is mounted automatically with your `<Component />` and unmounted when it's no longer needed.
+For example logic is mounted automatically with your `<Component />` and unmounted when it's no longer needed.
 
 Sometimes however, you wish to manually mount logic. For example to already start loading data in
 your router before transitioning to a component... or in `getStaticProps` in next.js.
@@ -615,7 +615,3 @@ unmount()
 ```
 
 There are a few other options you can use. See the [logic API](/docs/api/logic) for more.
-
-## Mixing with Redux
-
-TODO

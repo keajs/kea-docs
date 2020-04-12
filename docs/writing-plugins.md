@@ -5,7 +5,7 @@ title: Writing plugins
 
 :::tip
 
-NB! See the [plugins API page](https://kea.js.org/api/plugins) for a list of everything that plugins can do.
+NB! See the [plugins API page](/docs/api/plugins) for a list of everything that plugins can do.
 
 :::
 

@@ -1,6 +1,6 @@
 module.exports = {
   someSidebar: {
-    Guide: ["installation", "history", "quickstart", "concepts", "advanced", "react", "debugging", "writing-plugins"],
+    Guide: ["installation", "history", "quickstart", "concepts", "advanced", "react", "debugging", "writing-plugins", "migrating-redux"],
     Examples: ['examples/github'],
     'Side Effects': ['effects/listeners', 'effects/sagas', 'effects/thunks'],
     'Plugins': ['plugins/loaders', 'plugins/localstorage', 'plugins/router', 'plugins/websockets'],
