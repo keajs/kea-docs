@@ -19,7 +19,7 @@ automatically unmounted when your component is removed from React.
 
 Fetch actions from a logic.
    
-```javascript
+```jsx
 import { kea, useActions } from 'kea'
 
 const logic = kea({ ... })
@@ -35,7 +35,7 @@ function MyComponent () {
 
 Fetch values from a logic.
 
-```javascript
+```jsx
 import { kea, useValues } from 'kea'
 
 const logic = kea({ ... })
@@ -64,23 +64,37 @@ the code. Doing so might call the internal hooks in an unspecified order. Use
     
 ## Class Components
 
-* logic(Component)
-* connect
+### `logic(Component)`
 
-...
+If you wrap your `Component` inside a `logic`, it'll get all the `values` and `actions` as props.
 
 ```jsx
-function SuperCounter () {
-    const { increment } = useActions(logic)
-    const { counter } = useValues(logic)
+const logic = kea({
+    actions: () => ({
+        doSomething: true,
+        doSomethingElse: true,
+    }),
+    reduceres: () => ({
+        firstOne: ['default', { doSomething: () => 'did it' }],
+        secondOne: ['default', { doSomething: () => 'did it' }]
+    })
+})
 
-    return (
-        <div>
-            Counter: {counter}<br/>
-            <button onClick={() => increment(100)}>Add 100 😕</button>
-            <button onClick={() => increment(999)}>Add 999 🤩</button>
-        </div>
-    )
+class MyComponent extends Component {
+    render () {
+        const { firstOne, secondOne } = this.props
+        
+        // The following two lines are equivalent as
+        // `this.actions` is a shorthand for `this.props.actions`
+        const { doSomething, doSomethingElse } = this.actions
+        const { doSomething, doSomethingElse } = this.props.actions
+        
+        return <div />
+    }
 }
+
+const MyConnectedComponent = logic(MyComponent)
 ```
+ 
+### `connect`
 
