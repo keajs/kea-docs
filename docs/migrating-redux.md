@@ -3,15 +3,75 @@ id: migrating-redux
 title: Migrating from Redux
 ---
 
-## Migrating existing Redux applications
+Since kea is built on Redux, it is very easy to connect it to an existing Redux application.
 
-Since kea is just redux, it is very easy to connect it to an existing redux application.
+## Using Redux actions
+
+You can use regular Redux actions in reducers and listeners. Just use their `type` as a key:
+    
+```javascript
+import { kea } from 'kea'
+
+import { LOCATION_CHANGE } from 'connected-react-router'
+
+const logic = kea({
+    actions: () => ({
+        doit: true
+    }),
+    
+    reducers: ({ actions }) => ({
+        myValue: [false, {
+            'REDUX_ACTION': () => false,    // use redux's action type
+            [LOCATION_CHANGE]: () => false, // use it through a variable
+            doit: () => true,               // local action
+            [actions.doit]: () => true      // longer way to write
+        }]
+    }),
+    
+    listeners: () => ({
+        'REDUX_ACTION': (payload) => {
+            // when the location change event is triggered
+        },
+        [LOCATION_CHANGE]: (payload) => {
+            // when the location change event is triggered
+        }
+    })
+})
+```
 
 ## Reading non-Kea state
 
-You may pull in data from any part of the Redux state tree with `connect`. See the 
-[kea api docs](/docs/api/kea) for all options for connect.
+You can use regular reselect selectors in your `selectors` blocks:
 
+```javascript
+const logic = kea({
+    selectors: ({ selectors }) => ({
+        someValue: [
+            () => [state => state.rails.i18nLocale, selectors.name],
+            (i18nLocale, name) => `${name} in ${i18nLocale} is "John"`
+        ]
+    })
+})
+```
+
+In listeners you have access to the `store` object:
+
+```javascript
+const railsContext = state => state.rails // selector
+
+const logic = kea({
+    listeners: ({ store }) => ({
+        someAction: () => {
+            const { i18nLocale } = railsContext(store.getState())
+            store.dispatch({ type: 'REDUX_ACTION' })
+        }
+    })
+})
+```
+
+## Converting Redux actions and selectors into Kea actions and values
+
+You may pull in data from any part of the Redux state tree with `connect`. 
 Instead of passing a logic to fetch from, pass a selector:
 
 ```javascript
@@ -35,24 +95,9 @@ const logic = kea({
         ]
     }
 
-    // ...
+    // then use `currentUserId` and others as they were local values
 })
 ```
-
-Obviously you can use regular redux selectors in your `selectors` blocks:
-
-```javascript
-const logic = kea({
-    selectors: ({ selectors }) => ({
-        someValue: [
-            () => [state => state.rails.i18nLocale, selectors.name],
-            (i18nLocale, name) => `${name} in ${i18nLocale} is "John"`
-        ]
-    })
-})
-```
-
-## Using non-Kea actions
 
 Similarly, use an object of action creators and select the ones you need:
 
@@ -79,40 +124,14 @@ const logic = kea({
         ]
     }
 
-    // ..
+    // they will be automatically binded to dispatch
 })
 ```    
+:::note
+See the 
+[kea api docs](/docs/api/kea) for all options for connect.
+:::
 
-You can use regular redux actions in reducers and listeners freely.
-Just use their type and replace `actions.something` with `ACTION_TYPE_CONSTANT`, like so:
-    
-```javascript
-import { kea } from 'kea'
-
-import { LOCATION_CHANGE } from 'connected-react-router'
-import { SOME_ACTION } from './actions'
-
-const logic = kea({
-    actions: () => ({
-        doit: true
-    }),
-    
-    reducers: ({ actions }) => ({
-        myValue: [false, {
-            [SOME_ACTION]: () => false,
-            'REDUX_ACTION': () => false,
-            doit: () => true,
-            [actions.doit]: () => true
-        }]
-    }),
-    
-    listeners: () => ({
-        [LOCATION_CHANGE]: (payload) => {
-            // when the location change event is triggered
-        }
-    })
-})
-```
 
 ## Using Kea actions and selectors elsewhere
 
