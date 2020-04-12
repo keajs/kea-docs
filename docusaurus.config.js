@@ -1,5 +1,5 @@
 module.exports = {
-    title: 'Kea',
+    title: 'Kea 2.0',
     tagline: 'Production Ready State Management for React',
     url: 'https://kea.js.org',
     baseUrl: '/',
@@ -8,7 +8,7 @@ module.exports = {
     projectName: 'kea',
     themeConfig: {
         navbar: {
-            title: 'Kea',
+            title: 'Kea 2.0',
             logo: {
                 alt: 'Kea Logo',
                 src: 'img/logo.svg',
