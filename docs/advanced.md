@@ -11,7 +11,7 @@ Here are some more things you can do with Kea. Learn these to fully master the f
 Kea is said to be a *really scalable* state management library. This power comes from its ability
 to link together actions and values from different logics.
 
-### The new way of connecting logic (2.0+)
+### The new way (v2.0+)
 
 Wiring logic together is easier than you think. Suppose we have these two logics:
 
@@ -125,7 +125,7 @@ const dashboardLogic = kea({
 
 Feel free to even call `usersLogic.actions.loadUsers()` if it makes sense!
 
-### The old way of connecting logic (1.0 and before)
+### The old way (v1.0 and prior)
 
 While the "new way" of connecting logic might now seem self-evident, there's actually a lot that's
 happening under the hood. 
@@ -517,31 +517,48 @@ kea({
 
 ## Events
 
-TODO
+You can hook into the lifecycle of your logic with `events`.
+
+```javascript
+kea({
+  events: ({ actions, values }) => ({
+    beforeMount: () => {
+      console.log('run before the plugin is mounted')
+    },
+    afterMount: () => {
+      console.log('run after the plugin is mounted')
+    },
+    beforeUnmount: () => {
+      console.log('run before the plugin is unmounted')
+    },
+    afterUnmount: () => {
+      console.log('run after the plugin is unmounted')
+    }
+  })
+})
+```
+
+The useful ones are `afterMount` and `beforeUnmount`, as when they are called
+you have access to all the `actions`, `values`, etc of the logic. In `beforeMount` and
+`afterUnmount` they exist, but do nothing.
+
+All events accept either a function or an array of functions. If your actions have no arguments,
+you can put them in the array directly without making a new function:
 
 ```javascript
 const usersLogic = kea({
-    actions: () => ({
-        fetchUsers: true,
-        usersLoaded: (user) => ({ user })
-    }),
-  
-    reducers: () => ({
-        users: [null, {
-            usersLoaded: (_, { user }) => user
-        }]
-    }),
-
-    events: ({ actions }) => ({
-        beforeMount: () => {
-            // can't do much here as calling actions 
-        },
-        afterMount: [actions.fetchUsers]
-        afterMount: [actions.fetchUsers]
-        afterMount: [actions.fetchUsers]
-    }),
-
-    listeners: {}, // fetchUser makes an API call
+    events: ({ actions, values }) => ({
+        afterMount: [
+            actions.fetchUsers,
+            () => actions.fetchDetails(values.user.id)
+        ],
+        
+        // these four lines do the same:
+        beforeUnmount: actions.cleanup, 
+        beforeUnmount: [actions.cleanup],
+        beforeUnmount: () => actions.cleanup(),
+        beforeUnmount: [() => actions.cleanup()],
+    })
 })
 ```
 
