@@ -4,11 +4,9 @@ title: Listeners
 sidebar_label: Listeners
 ---
 
-# Listeners
-
 Please help write this section or read more about[kea-listeners on github](https://github.com/keajs/kea-listeners)!
 
-## Installation
+# Installation
 
 First install the[`kea-listeners`](https://github.com/keajs/kea-listeners)package:
 
@@ -32,7 +30,7 @@ resetContext({
 })
 ```
 
-## Sample usage
+# Sample usage
 
 ```javascript
 kea({

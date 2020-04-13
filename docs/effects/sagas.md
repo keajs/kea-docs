@@ -4,8 +4,6 @@ title: Sagas
 sidebar_label: Sagas
 ---
 
-# Sagas
-
 Kea has first class support for sagas via the [`kea-saga`](https://github.com/keajs/kea-saga) plugin.
 
 Read more about Sagas on the [redux-saga](https://redux-saga.js.org/) homepage.
@@ -15,7 +13,7 @@ Read more about Sagas on the [redux-saga](https://redux-saga.js.org/) homepage.
 **Breaking changes with 1.0!** If you're upgrading from 0.x, please [read this](https://github.com/keajs/kea-saga/blob/master/CHANGELOG.md#a-note-regarding-sagas-and-actions) regarding the breaking change of automatically binding actions to dispatch in Kea. If you just `connect`ed to your actions or used local actions inside a logic, everything should work as it did before as long as `useLegacyUnboundActions` is set to `true`. However if you were using code like `yield put(otherImportedLogic.actions.doSomething())`, you need to pay attention, as those actions will now dispatch twice. Replace `actions` with `actionCreators` in the above code... or set `useLegacyUnboundActions` to `false` and get rid of `yield put()` entirely.
 :::
 
-## Installation
+# Installation
 
 First install the [`kea-saga`](https://github.com/keajs/kea-saga) and [`redux-saga`](https://github.com/redux-saga/redux-saga) packages:
 
@@ -39,7 +37,7 @@ resetContext({
 })
 ```
 
-## Usage
+# Usage
 
 First, read the docs on the [redux-saga](https://redux-saga.js.org/) homepage to learn how sagas work.
 

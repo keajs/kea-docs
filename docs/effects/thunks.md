@@ -4,11 +4,9 @@ title: Thunks
 sidebar_label: Thunks
 ---
 
-# Thunks
-
 Thunks are simple ways to define side effects with Redux.
 
-## Installation
+# Installation
 
 First install the [`kea-thunk`](https://github.com/keajs/kea-thunk) and [`redux-thunk`](https://github.com/gaearon/redux-thunk) packages:
 
@@ -32,7 +30,7 @@ resetContext({
 })
 ```
 
-## Usage
+# Usage
 
 You define thunks in a block called `thunks`. Here are some examples:
 
