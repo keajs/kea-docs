@@ -13,7 +13,6 @@ Call `resetContext` before you render your app and connect all the different plu
 Here are all the options you can pass to it:
 
 ```javascript
-
 import { resetContext } from 'kea'
 
 export default resetContext({
@@ -93,49 +92,50 @@ Call `getContext()` from anywhere to peek into the context
 ```javascript
 import { getContext } from 'kea'
 
-getContext() == {
-  plugins: {
-    activated: [],
-    buildOrder: [],
-    buildSteps: {},
-    events: {},
-    logicFields: {},
-    contexts: {}
-  },
+getContext() ==
+    {
+        plugins: {
+            activated: [],
+            buildOrder: [],
+            buildSteps: {},
+            events: {},
+            logicFields: {},
+            contexts: {},
+        },
 
-  input: {
-    inlinePathCreators: new Map(),
-    inlinePathCounter: 0,
-    defaults: undefined
-  },
+        input: {
+            inlinePathCreators: new Map(),
+            inlinePathCounter: 0,
+            defaults: undefined,
+        },
 
-  build: {
-    cache: {},
-    heap: []
-  },
+        build: {
+            cache: {},
+            heap: [],
+        },
 
-  mount: {
-    counter: {},
-    mounted: {}
-  },
+        mount: {
+            counter: {},
+            mounted: {},
+        },
 
-  reducers: {
-    tree: {},
-    roots: {},
-    combined: undefined
-  },
+        reducers: {
+            tree: {},
+            roots: {},
+            combined: undefined,
+        },
 
-  store: undefined, // you can get a copy of redux's store from here
+        store: undefined, // you can get a copy of redux's store from here
 
-  options: {
-    debug: false,
-    autoMount: false,
-    proxyFields: true,
-    flatDefaults: false,
-    attachStrategy: 'dispatch',
-    detachStrategy: 'dispatch',
+        options: {
+            debug: false,
+            autoMount: false,
+            proxyFields: true,
+            flatDefaults: false,
+            attachStrategy: 'dispatch',
+            detachStrategy: 'dispatch',
 
-    ...otherOptions
-  }
-}
+            ...otherOptions,
+        },
+    }
 ```
