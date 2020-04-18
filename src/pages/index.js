@@ -34,6 +34,16 @@ const features = [
             </>
         ),
     },
+    {
+        title: <>Linked statically</>,
+        imageUrl: 'img/undraw_docusaurus_react.svg',
+        description: (
+          <>
+              Logic is mounted and unmounted as needed.<br/>
+              Code splitting? Not a problem!
+          </>
+        ),
+    },
 ]
 
 function Feature({ imageUrl, title, description }) {
