@@ -4,18 +4,27 @@ title: Listeners
 sidebar_label: Listeners
 ---
 
-# Installation
+:::note
+Read more about listeners in the [Core Concepts](/docs/concepts#listeners) page.
 
-`kea-listeners` are built in to kea. There's nothing to install if you're running Kea 2.0+.
+Read more about using breakpoints in listeners in the [Advanced Concepts](/docs/advanced#breakpoints-in-listeners) 
+page.
+:::
 
-# Sample usage
+## Installation
+
+`kea-listeners` is built in to kea. There's nothing to install if you're using Kea 2.0+.
+
+## Usage
+
+Here is everything you can do with `listeners` and `sharedListeners`:
 
 ```javascript
-kea({
+const logic = kea({
     actions: () => ({
         openUrl: url => ({ url }),
         anotherAction: true,
-        debouncedFetchResults: true,
+        debouncedFetchResults: username => ({ username }),
         oneActionMultipleListeners: true,
         // ...
     }),
@@ -92,3 +101,14 @@ kea({
     }),
 })
 ```
+
+## Auto-Connect
+
+Listeners support `autoConnect`. This means that if inside one listener you access
+properties on another `logic`, it will be mounted automatically and unmounted together with your logic.
+
+Read more about it in the [Kea 2.0 announcement blog post](/blog/kea-2.0#auto-connect) 
+
+There is a slight caveat for when you want to manually `.mount()` and `unmount` a logic
+inside listeners, *without* that logic being automatically connected. Read more about it in 
+[Advanced Concepts](/docs/advanced#calling-mount-inside-listeners-with-autoconnect-true).

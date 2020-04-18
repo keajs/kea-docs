@@ -113,17 +113,17 @@ const dashboardLogic = kea({
     // ...
     listeners: () => ({
         refreshDashboard: async () => {
-            const { users } = usersLogic.values
-            // do something with `users` 
-        },
-        [usersLogic.actions.loadUsersSuccess]: () => {
-            actions.refreshDashboard()
-        } 
+            if (!usersLogic.values.users) {
+                usersLogic.actions.loadUsers()
+            }
+        }
     })
 })
 ```
 
-Feel free to even call `usersLogic.actions.loadUsers()` if it makes sense!
+In all of these cases, `usersLogic` will be automatically connected to the logic that called it.
+This means that it will be mounted either directly (when used inside listeners) or whenever your
+logic is mounted. It will also be unmounted when your logic is unmounted.
 
 ### The old way (v1.0 and prior)
 

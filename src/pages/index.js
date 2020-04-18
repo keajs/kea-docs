@@ -35,7 +35,7 @@ const features = [
         ),
     },
     {
-        title: <>Linked statically</>,
+        title: <>Lifecycles</>,
         imageUrl: 'img/undraw_docusaurus_react.svg',
         description: (
           <>

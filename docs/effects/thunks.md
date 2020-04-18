@@ -4,9 +4,15 @@ title: Thunks
 sidebar_label: Thunks
 ---
 
-Thunks are simple ways to define side effects with Redux.
+:::note
+While thunks definitely work, it's recommended to use the newer [listeners](/docs/effects/listeners) plugin instead. 
+Listeners support everything thunks do and more. Plus they are integrated directly into kea.
+:::
 
-# Installation
+Thunks are simple ways to define side effects in Kea. They use [`redux-thunk`](https://github.com/gaearon/redux-thunk)
+under the hood.
+
+## Installation
 
 First install the [`kea-thunk`](https://github.com/keajs/kea-thunk) and [`redux-thunk`](https://github.com/gaearon/redux-thunk) packages:
 
@@ -18,31 +24,34 @@ yarn add kea-thunk redux-thunk
 npm install --save kea-thunk redux-thunk
 ```
 
-Then you have install the plugin:
+Then install the plugin:
 
 ```javascript
 import thunkPlugin from 'kea-thunk'
 import { resetContext } from 'kea'
 
 resetContext({
-    createStore: true,
-    plugins: [thunkPlugin],
+    plugins: [thunkPlugin]
 })
 ```
 
-# Usage
+## Usage
 
-You define thunks in a block called `thunks`. Here are some examples:
+You define thunks in a block called `thunks`. Whatever you define there can be called through `logic.actions`, 
+for example in the `useActions` hook or directly inside the logic:
+
+Here is an example of thunks in action:
 
 ```javascript
 const delay = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms))
 
 const logic = kea({
-    actions: ({ constants }) => ({
+    actions: () => ({
         updateName: (name) => ({ name }),
     }),
 
     thunks: ({ actions, dispatch, getState }) => ({
+        // can be called with actions.updateNameAsync(name)
         updateNameAsync: async (name) => {
             await delay(1000) // standard promise
             await actions.anotherThunk() // another thunk action
@@ -52,20 +61,39 @@ const logic = kea({
             console.log(values.name) // 'chirpy'
             console.log(values.otherKey) // undefined
         },
+        // can be called with actions.anotherThunk()
         anotherThunk: async () => {
             // do something
         },
     }),
 
-    reducers: ({ actions, constants }) => ({
-        name: [
-            'chirpy',
-            {
-                [actions.updateName]: (state, payload) => payload.name,
-            },
-        ],
+    reducers: () => ({
+        name: ['chirpy', {
+            updateName: (state, payload) => payload.name,
+        }],
     }),
 })
 ```
 
-As you can see, you have access to the standard Redux `dispatch` and `getState` methods. However you don't need to call `dispatch` before any action in the actions object. They are wrapped automatically.
+As you can see, you have access to the standard Redux `dispatch` and `getState` methods. 
+However you don't need to call `dispatch` before any action in the actions object. 
+They are wrapped automatically.
+
+## Note about `autoConnect`
+
+The current thunk plugin (v1.0.0) does not support `autoConnect`. That means if you want to call `otherLogic.actions.something()`
+inside a thunk, you must first make sure `otherLogic` is connected to your logic:
+
+```javascript
+import { otherLogic } from './otherLogic'
+
+const logic = kea({
+    connect: [otherLogic],
+
+    thunks: ({ actions, dispatch, getState }) => ({
+        updateNameAsync: async (name) => {
+            otherLogic.actions.doSomething()
+        },
+    })
+})
+```

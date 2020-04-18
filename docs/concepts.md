@@ -106,6 +106,11 @@ something like this:
 addToCounter(1000) === { type: 'add to counter', payload: { amount: 1000 } }
 ```
 
+:::note
+Calling `logic.actions.addToCounter(1000)` dispatches the action directly. If you only want to *create*
+the object without dispatching it, use `logic.actionCreators.addToCounter(1000)` 
+:::
+
 There's one shorthand that can be useful. In case your actions take no arguments (e.g. `loadUsers`), 
 just pass `true`, or anything else that's not a function, instead of an arguments-to-payload serializer:
 
