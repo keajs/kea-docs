@@ -4,41 +4,25 @@ title: Listeners
 sidebar_label: Listeners
 ---
 
-Please help write this section or read more about[kea-listeners on github](https://github.com/keajs/kea-listeners)!
-
 # Installation
 
-First install the[`kea-listeners`](https://github.com/keajs/kea-listeners)package:
-
-```shell
-# if you're using yarn
-yarn add kea-listeners
-
-# if you're using npm
-npm install --save kea-listeners
-```
-
-Then install the plugin:
-
-```javascript
-import listenersPlugin from 'kea-listeners'
-import { resetContext } from 'kea'
-
-resetContext({
-    createStore: true,
-    plugins: [listenersPlugin],
-})
-```
+`kea-listeners` are built in to kea. There's nothing to install if you're running Kea 2.0+.
 
 # Sample usage
 
 ```javascript
 kea({
-    // ...
+    actions: () => ({
+        openUrl: url => ({ url }),
+        anotherAction: true,
+        debouncedFetchResults: true,
+        oneActionMultipleListeners: true,
+        // ...
+    }),
 
     listeners: ({ actions, values, store, sharedListeners }) => ({
         // action that conditionally calls another action
-        [actions.openUrl]: ({ url }) => {
+        openUrl: ({ url }) => {
             // get the value from the reducer 'url'
             const currentUrl = values.url
 
@@ -59,11 +43,11 @@ kea({
 
         // two listeners with one shared action
         [actions.anotherAction]: sharedListeners.sharedActionListener,
-        [actions.yetAnotherAction]: sharedListeners.sharedActionListener,
+        [otherLogic.actions.yetAnotherAction]: sharedListeners.sharedActionListener,
 
         // Debounce for 300ms before making an API call
         // Break if this action was called again while we were sleeping
-        [actions.debouncedFetchResults]: async ({ username }, breapoint) => {
+        debouncedFetchResults: async ({ username }, breakpoint) => {
             // If the same action gets called again while this waits, we will throw an exception
             // and catch it immediately, effectively cancelling the operation.
             await breakpoint(300)
@@ -79,7 +63,7 @@ kea({
         },
 
         // you can also pass an array of functions
-        [actions.oneActionMultipleListeners]: [
+        oneActionMultipleListeners: [
             (payload, breakpoint, action) => {
                 /* ... */
             },
@@ -92,13 +76,19 @@ kea({
     sharedListeners: ({ actions, values, store }) => ({
         // all listeners and sharedListeners also get a third parameter:
         // - action = the full dispatched action
-        sharedActionListener: function (payload, breakpoint, action) {
+        sharedActionListener: (payload, breakpoint, action) => {
             if (action.type === actions.anotherAction.toString()) {
                 // handle this case separately
             }
             // do something common for both
             console.log(action)
         },
+        doSomething: () => {
+            console.log('did something')
+        },
+        logAction: (_, __, action) => {
+            console.log('action dispatched', action)
+        }  
     }),
 })
 ```
