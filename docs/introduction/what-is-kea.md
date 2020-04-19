@@ -4,7 +4,14 @@ title: What is Kea?
 sidebar_label: What is Kea?
 ---
 
-Kea is a **Production Ready State Management Framework for React** (or PRSMFR for short!)
+Kea is a **Production Ready State Management Framework** for **React**, built on top of **Redux**.
+
+While Kea is built on top of Redux, it's much more than a simple wrapper.
+
+TODO: write more text
+
+TODO: add a nice diagram showing how the different parts fit together
+
 
 
 ## Why "kea"?
