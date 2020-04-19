@@ -468,6 +468,14 @@ const logic = kea({
 Please note that for aesthetics, I renamed `loading` to `usersLoading` and 
 `setUsers` to `loadUsersSuccess`.
 
+There are a few other cool things you can do with listeners:
+
+1. Listeners have built-in support for debouncing and handling out-of-order network requests through `breakpoints`
+2. You can share listeners between actions with `sharedListeners`
+3. Any other logic called inside listeners will `autoConnect` to your logic
+
+Please read the [listeners](/docs/effects/listeners) side-effect page to learn more about these features. 
+
 ## Loaders
 
 The pattern above is so common that there's a way to abstract it even further.

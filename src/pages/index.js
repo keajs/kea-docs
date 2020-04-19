@@ -76,7 +76,7 @@ function Home() {
                                 'button button--outline button--secondary button--lg',
                                 styles.getStarted
                             )}
-                            to={useBaseUrl('docs/installation')}
+                            to={useBaseUrl('docs/introduction/what-is-kea')}
                         >
                             Get Started
                         </Link>

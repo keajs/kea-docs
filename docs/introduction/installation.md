@@ -58,13 +58,3 @@ ReactDOM.render( // 👈 and update this
 ```
 
 That's it! Feel free to use `kea()` calls anywhere in your code!
-
-## A note about call order (pre-1.0)
-
-In versions of Kea before 1.0, you had to run the setup code before any call to `kea({})` was made.
-
-This is no longer the case. Each call to `kea({})` lazily loads the logic and builds it only when 
-requested, either when mounted onto a React component or instructed to do so manually 
-(via `logic.build()` and/or `logic.mount()`).
-
-Calling `resetContext()` always clears all initialised logic and reverts your app to a clean state.

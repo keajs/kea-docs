@@ -1,6 +1,7 @@
 module.exports = {
   someSidebar: {
-    Guide: ["installation", "history", "quickstart", "concepts", "advanced", "react", "debugging", "migrating-redux"],
+    Introduction: ["introduction/what-is-kea", "introduction/installation", "introduction/quickstart"],
+    Guide: ["guide/concepts", "guide/advanced", "guide/react", "guide/standalone", "guide/debugging", "guide/migrating-redux", "guide/history"],
     Examples: ['examples/github'],
     'Side Effects': ['effects/listeners', 'effects/sagas', 'effects/thunks'],
     'Plugins': ['plugins/loaders', 'plugins/localstorage', 'plugins/router', 'plugins/websockets', "plugins/writing-plugins"],

@@ -15,7 +15,7 @@ module.exports = {
             },
             links: [
                 {
-                    to: 'docs/installation',
+                    to: 'docs/introduction/what-is-kea',
                     activeBasePath: 'docs',
                     label: 'Docs',
                     position: 'left',

@@ -1,13 +1,8 @@
 ---
 id: history
-title: History
-sidebar_label: History
+title: History of Kea
+sidebar_label: History of Kea
 ---
-
-:::note
-This section is "nice to know... maybe". 
-Feel free to skip directly to the [quickstart](/docs/quickstart) if you're on a tight schedule.
-:::
 
 Hi everyone! 👋
 

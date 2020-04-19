@@ -3,7 +3,7 @@ id: migrating-redux
 title: Migrating from Redux
 ---
 
-Since kea is built on Redux, it is very easy to connect it to an existing Redux application.
+Since Kea is built on Redux, it is very easy to connect it to an existing Redux application.
 
 ## Using Redux actions
 
