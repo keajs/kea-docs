@@ -4,6 +4,11 @@ title: What is Kea?
 sidebar_label: What is Kea?
 ---
 
+Kea is a **Production Ready State Management Framework for React** (or PRSMFR for short!)
+
+
+## Why "kea"?
+
 According to Wikipedia:
 
 > The [kea](https://en.wikipedia.org/wiki/Kea) (/ˈkiːə/; Māori: [kɛ.a]) is a species of large parrot 
@@ -12,3 +17,5 @@ According to Wikipedia:
 > Kea are known for their intelligence and curiosity. Kea can solve logical puzzles, such as pushing 
 > and pulling things in a certain order to get to food, and will work together to achieve a certain 
 > objective.
+
+Kea the framework follows a similar approach
