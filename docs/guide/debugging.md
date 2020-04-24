@@ -37,3 +37,40 @@ kea({
     path: (key) => ['scenes', 'dashboard', 'index', key]
 })
 ```
+
+## Automatic Path Generation with Babel
+
+If you're using Babel to transpile your code, check out the [babel kea plugin](https://github.com/keajs/babel-plugin-kea).
+It can generate a paths for you automatically.
+
+First install the package:
+
+```bash
+# with yarn
+yarn add babel-plugin-kea --dev
+
+# with npm
+npm install babel-plugin-kea --save-dev
+```
+
+Then add it to the list of plugins in `.babelrc`:
+
+```json5
+{
+  "plugins": [
+    "babel-plugin-kea"
+  ]
+}
+```
+
+Logic paths are scoped from your app's root path. If you wish to skip a few parts of the path, 
+for example if your frontend lives under `frontend/src` and you don't want every kea path to start 
+with `frontend.src`, specify it in the config as follows:
+
+```json5
+{
+  "plugins": [
+    ["babel-plugin-kea", { path: './frontend/src' }]
+  ]
+}
+```
