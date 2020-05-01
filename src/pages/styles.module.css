@@ -9,8 +9,8 @@
   text-align: center;
   position: relative;
   overflow: hidden;
-  background-color: #388e3c;
-  background-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%,rgba(0,0,0,0) 100%), url('/static/img/homepage/pattern.png');
+  background-color: #388e3c !important;
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%,rgba(0,0,0,0) 100%), url('/static/img/homepage/pattern.png') !important;
   color: #fff;
 }
 
