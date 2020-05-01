@@ -4,13 +4,24 @@ title: What is Kea?
 sidebar_label: What is Kea?
 ---
 
-Kea is a **Production Ready State Management Framework** for **React**, built on top of **Redux**.
+import useBaseUrl from '@docusaurus/useBaseUrl'; 
 
-While Kea is built on top of Redux, it's much more than a simple wrapper.
+Kea is a production-grade framework built for managing state in ambitious React apps.
 
-TODO: write more text
+It scales really well as your app grows and keeps your state management logic neat and clean.
 
-TODO: add a nice diagram showing how the different parts fit together
+<img alt="Redux Devtools with Inline Paths" src={useBaseUrl('img/introduction/how-does-kea-work.png')} style={{ maxWidth: 611 }} />
+<br /><br /> 
+
+Kea is built on top of Redux and aims to make your state simple and predictable. 
+
+* Every operation in your app starts with an **action** (*increment counter*) 
+* These actions modify **reducers** (*counter*) that hold the actual data.
+* This data is stored in a global **state** through Redux. 
+* Reducers export **values** (*counter is 1*) through **selectors** (*find the counter in the state*).
+* Actions may also trigger **listeners**, which are async functions that can call actions and read values.
+* You group actions, reducers and listeners into a **logic** (*counterLogic*)
+* React Components fetch actions and values from the logic and display or call them as needed.    
 
 
 
