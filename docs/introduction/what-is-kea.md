@@ -22,11 +22,11 @@ Kea is built on top of Redux and leverages its underlying functional principles.
 * This data is stored in a global **state**, which is managed by Redux. 
 * You fetch **values** (*counter is 1*) through **selectors** (*find the counter in the state*) from this state.
 * Actions may also trigger **listeners**, which are async functions that talk with the externals APIs,
-  read values from the store or in turn *dispatch* other actions.
+  read values or in turn *dispatch* other actions.
 * All related actions, reducers, selectors and listeners are grouped into a **logic** (*counterLogic*).
 * React Components **connect** to this logic and pull in all needed actions and values.    
 
-Read the [installation instructions](/docs/introduction/installation) to add  Kea to your app or 
+Read the [installation instructions](/docs/introduction/installation) to add Kea to your app and 
 check out the [quickstart](/docs/introduction/quickstart) to see some code. 
 
 ## What is Kea good for?
@@ -48,6 +48,7 @@ TODO
 - Not needed for very small apps
 - Has a bit of magic, so keep away if you are afraid
 - GraphQL support is lacking
+- Very opinionated
 - ...
 
 ## Why "kea"?
