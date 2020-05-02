@@ -15,7 +15,6 @@ There's nothing on this page that's not covered in [Core Concepts](/docs/concept
 to skip this and go straight for the [juicy bits](/docs/concepts).
 :::
 
-
 ## Logic
 
 All Kea code lives inside a `logic`, which is created by calling `kea()`
