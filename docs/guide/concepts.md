@@ -25,7 +25,7 @@ Why do we call it `logic`?
 Well, we had to call it something and everything else was already taken. 😅
 
 More seriously, the name `logic` implies that calling `kea()` return complex objects, 
-which not only contain a piece of your state, but also all the logic that manipulates it.  
+which not only contain a piece of your state, but also all the *logic* that manipulates it.  
 
 It's a useful convention and we suggest sticking to it. Feel free to call your logic with
 names that make sense, such as `accountLogic`, `dashboardLogic`, etc.
@@ -72,9 +72,7 @@ const logic = kea({
 })
 ```
 
-Let's skip ahead a few steps and call `addToCounter` in a React component.
- 
-For this you use the `useActions` hook like so:
+To call `addToCounter` in a React component you use the `useActions` hook:
 
 ```jsx
 import React from 'react'
@@ -108,7 +106,7 @@ addToCounter(1000) === { type: 'add to counter', payload: { amount: 1000 } }
 
 :::note
 Calling `logic.actions.addToCounter(1000)` dispatches the action directly. If you only want to *create*
-the object without dispatching it, use `logic.actionCreators.addToCounter(1000)` 
+the action object without dispatching it, use `logic.actionCreators.addToCounter(1000)` 
 :::
 
 There's one shorthand that can be useful. In case your actions take no arguments (e.g. `loadUsers`), 
@@ -141,6 +139,24 @@ const logic = kea({
 
 While it may not feel like such a big deal, knowing that the payload is *always* an object
 will save you a lot of worry later on. This is experience talking here. 😉
+
+:::note
+In truth, you don't really *have to* convert the action arguments into objects for the payload.
+However I've found that it really helps if every payload *is* an object. Otherwise you'll 
+have about 50% of your payloads be objects like `{ id, name }` and the other 50% just scalars `id`.
+
+It'll be especially confusing, if you have one reducer (e.g. `todos`) and for some actions (`removeTodo`) 
+the payload is just `id`, but for others (`editTodo`) it's `{ id, todo }`. I've found that keeping to a 
+convention where payloads are *always* objects [removes one thing you need to think about](https://medium.com/marius-andra-blog/two-strategies-for-writing-better-code-1be0dc240698) 
+and makes for cleaner code. Repeating *"Was it an object or was it a just an id? I'd better check to make sure I don't 
+make a mistake here."* many times a day can get tiring.
+
+In addition to this, what starts out as an action with just one argument (`removeTodo: id => id`)
+will sometimes get a few optional arguments (`removeTodo: (id, undo = false) => ({ id, undo })`).
+Having to then refactor every reducer/listener to use `id = payload.id` instead of `id = payload` is 
+not going to be fun. Just stick to having all payloads as objects.   
+:::
+
 
 ## Reducers
 
