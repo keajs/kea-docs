@@ -18,22 +18,67 @@ Kea's `logic` has three different states:
 3. **Mounted**. Once a logic is built, it can be mounted. This means attaching the `reducers` to
    Redux, registering all the `listeners`, etc.  
 
-If you use Kea [without React](/docs/guide/standalone) or alongside it, you have to mount and unmount
-`logic` manually. 
+If you use Kea outside of React, you have to mount and unmount your `logic` manually. 
+[See here](/docs/guide/standalone) for instructions on how to do so. 
 
-If you use Kea [with React](/docs/guide/react), every time you access a `logic` via `useValues` or another 
-method, it is built and mounted automatically. When the component that used this `logic` is removed from
-React's tree and no other component is using it, the `logic` will be automatically unmounted.
+If you use Kea [with React](/docs/guide/react), every time you render a component that access a `logic`
+via `useValues`, `useActions` or some other method, the logic is built and mounted automatically. When all components 
+that use a `logic` are removed from React's tree, that `logic` will be unmounted automatically.
 
-This means that only `logic` which is actively in use will be mounted and attached to Redux.
-This is practical knowledge when you have a large app with multiple scenes.
- 
-In addition, thanks to this, [code-splitting](https://webpack.js.org/guides/code-splitting/) works out-of-the box
-with Kea!
+This is practical knowledge when you have a large app with multiple scenes: 
+only `logic` which is actively in use will be mounted and attached to Redux.
+
+Thanks to this, [code-splitting](https://webpack.js.org/guides/code-splitting/) works out-of-the box with Kea!
+
+## Events
+
+You can hook into the mount and unmount lifecycle with `events`:
+
+```javascript
+const logic = kea({
+    events: ({ actions, values }) => ({
+        beforeMount: () => {
+            console.log('run before the logic is mounted')
+        },
+        afterMount: () => {
+            console.log('run after the logic is mounted')
+        },
+        beforeUnmount: () => {
+            console.log('run before the logic is unmounted')
+        },
+        afterUnmount: () => {
+            console.log('run after the logic is unmounted')
+        }
+    })
+})
+```
+
+The useful events are `afterMount` and `beforeUnmount`, as when they are called
+you have access to all the `actions`, `values`, etc of the logic.
+
+All events accept either a function or an array of functions. If your actions have no arguments,
+you can put them in the array directly without making a new function:
+
+```javascript
+const usersLogic = kea({
+    events: ({ actions, values }) => ({
+        afterMount: [
+            actions.fetchUsers,
+            () => actions.fetchDetails(values.user.id)
+        ],
+        
+        // these four lines do the same:
+        beforeUnmount: actions.cleanup, 
+        beforeUnmount: [actions.cleanup],
+        beforeUnmount: () => actions.cleanup(),
+        beforeUnmount: [() => actions.cleanup()],
+    })
+})
+```
 
 ## Props
 
-When you treat `logic()` as a function, you explicitly build it. 
+When you use `logic()` as a function, you ask to explicitly build it. 
 If you pass it an object as an argument, that object will be saved as `props` on the built logic.
 
 ```javascript
@@ -44,7 +89,7 @@ logic(props).props === props
 ```
 
 Calling `logic()` is a fast operation: if the logic has already been built, it won't be rebuilt.
-Only the props will be updated if needed.
+Only the props will be updated.
 
 You can pass random data from React onto the logic this way. For example various defaults. 
 
@@ -52,6 +97,9 @@ It's as simple as this:
 
 ```jsx
 function FancyPantsCounter() {
+    // without props
+    const { counter } = useValues(counterLogic)
+    // with props
     const { counter } = useValues(counterLogic({ defaultCounter: 1000 }))
 
     // ...
@@ -83,7 +131,7 @@ const counterLogic = kea({
 })
 ```
 
-### Props in Selectors
+## Props in Selectors
 
 Since `selectors` need to be recalculated when their inputs change, there's a twist when 
 using `props` with them.
@@ -108,7 +156,7 @@ but not when `props.defaultCounter` changes.
 
 What if we would also like to update the selector when the props change? 
  
-Previously we defined a selector as a function like this:
+Previously [we defined](/docs/guide/concepts#selectors) a selector as a function like this:
 
 ```javascript
 const selector = (state) => state.path.to.something.counter
@@ -189,7 +237,7 @@ function User({ id }) {
 ```
 
 No matter how many times `<User id={1} />` is rendered by React, it'll always be connected
-to the same logic. In practical terms this means the user will be loaded only once.
+to the same logic.
 
 If you render `<User id={2} />`, it'll however get its own independent copy of this same base logic
 and do what is needed to load and display the second user. 
@@ -239,7 +287,7 @@ You can also pass selectors as defaults:
 const counterLogic = kea({ ... })
 
 const logic = kea({
-    defaults: () => ({ // must be a function to evaluate lazily
+    defaults: () => ({ // must be a function to evaluate at build time
         counterCopy: counterLogic.selectors.counter
     }),
 
@@ -269,10 +317,10 @@ const logic = kea({
 
 ## Connecting logic together
 
-Kea is said to be a *really scalable* state management library. This power comes from its ability
-to link together actions and values from different `logic`s.
+Kea is said to be a *really scalable* state management library. This power comes partially from its 
+ability to link together actions and values from different `logic`s.
 
-### The new way (v2.0+)
+### Automatic connections (Kea 2.0+)
 
 Wiring logic together is easier than you think. Suppose we have these two logics:
 
@@ -363,7 +411,7 @@ const sortedUsersLogic = kea({
 })
 ```
 
-... and probably everywhere else you might expect.
+... and everywhere else you might expect.
 
 What if we need the list of users when refreshing the dashboard? 
 
@@ -386,7 +434,7 @@ In all of these cases, `usersLogic` will be automatically connected to the logic
 This means that it will be mounted either directly (when used inside listeners) or whenever your
 logic is mounted. It will also be unmounted when your logic is unmounted.
 
-### The old way (v1.0 and prior)
+### Explicit connections (v1.0 and prior)
 
 While the "new way" of connecting logic might seem self-evident, there's actually a lot that's
 happening under the hood. 
@@ -474,53 +522,3 @@ const { counter, negativeCounter } = useValues(logic)
 Extending logic is especially powerful when [writing plugins](/docs/plugins/writing-plugins). For example to dynamically
 add actions, reducers or listeners to a logic.
 
-
-## Events
-
-When running `kea({})`, nothing happens directly. It's only when your logic is actually called
-upon (for example via `useValues(logic)`) that it gets **mounted**. When your logic is no longer
-needed (for example the React component is removed from the page), your logic is **unmounted**.
-
-You can hook into these events with the `events` object:
-
-```javascript
-const logic = kea({
-    events: ({ actions, values }) => ({
-        beforeMount: () => {
-            console.log('run before the logic is mounted')
-        },
-        afterMount: () => {
-            console.log('run after the logic is mounted')
-        },
-        beforeUnmount: () => {
-            console.log('run before the logic is unmounted')
-        },
-        afterUnmount: () => {
-            console.log('run after the logic is unmounted')
-        }
-    })
-})
-```
-
-The useful events are `afterMount` and `beforeUnmount`, as when they are called
-you have access to all the `actions`, `values`, etc of the logic.
-
-All events accept either a function or an array of functions. If your actions have no arguments,
-you can put them in the array directly without making a new function:
-
-```javascript
-const usersLogic = kea({
-    events: ({ actions, values }) => ({
-        afterMount: [
-            actions.fetchUsers,
-            () => actions.fetchDetails(values.user.id)
-        ],
-        
-        // these four lines do the same:
-        beforeUnmount: actions.cleanup, 
-        beforeUnmount: [actions.cleanup],
-        beforeUnmount: () => actions.cleanup(),
-        beforeUnmount: [() => actions.cleanup()],
-    })
-})
-```

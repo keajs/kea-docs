@@ -35,25 +35,12 @@ module.exports = {
                     title: 'Docs',
                     items: [
                         {
-                            label: 'Installation',
-                            to: 'docs/installation',
+                            label: 'What is Kea?',
+                            to: 'docs/introduction/what-is-kea',
                         },
                         {
-                            label: 'Writing plugins',
-                            to: 'docs/writing-plugins',
-                        },
-                    ],
-                },
-                {
-                    title: 'Community',
-                    items: [
-                        {
-                            label: 'Stack Overflow',
-                            href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-                        },
-                        {
-                            label: 'Discord',
-                            href: 'https://discordapp.com/invite/docusaurus',
+                            label: 'Core Concepts',
+                            to: 'docs/guide/concepts',
                         },
                     ],
                 },
@@ -66,7 +53,7 @@ module.exports = {
                         },
                         {
                             label: 'GitHub',
-                            href: 'https://github.com/keajs',
+                            href: 'https://github.com/keajs/kea',
                         },
                     ],
                 },

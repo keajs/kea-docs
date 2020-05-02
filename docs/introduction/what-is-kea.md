@@ -21,8 +21,8 @@ Kea is built on top of Redux and leverages its underlying functional principles.
 * These actions update **reducers** (*counter*) that hold the actual data.
 * This data is stored in a global **state**, which is managed by Redux. 
 * You fetch **values** (*counter is 1*) through **selectors** (*find the counter in the state*) from this state.
-* Actions may also trigger **listeners**, which are async functions that talk with the externals APIs,
-  read values or in turn *dispatch* other actions.
+* Actions may also trigger **listeners**, which are async functions that talk with externals APIs,
+  read values or dispatch other actions.
 * All related actions, reducers, selectors and listeners are grouped into a **logic** (*counterLogic*).
 * React Components **connect** to this logic and pull in all needed actions and values.    
 
