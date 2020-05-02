@@ -194,4 +194,4 @@ Read more about it in the [Kea 2.0 announcement blog post](/blog/kea-2.0#auto-co
 
 There is a slight caveat for when you want to manually `.mount()` and `unmount` a logic
 inside listeners, *without* that logic being automatically connected. Read more about it in 
-[Advanced Concepts](/docs/advanced#calling-mount-inside-listeners-with-autoconnect-true).
+[Using without React](/docs/guide/standalone#calling-mount-inside-listeners-with-autoconnect-true) section.
