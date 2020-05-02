@@ -21,16 +21,38 @@ Kea is built on top of Redux and leverages its underlying functional principles.
 * These actions update **reducers** (*counter*) that hold the actual data.
 * This data is stored in a global **state**, which is managed by Redux. 
 * You fetch **values** (*counter is 1*) through **selectors** (*find the counter in the state*) from this state.
-* Actions may also trigger **listeners**, which are async functions that call other actions,
-  read values or talk with the externals APIs that your app depends on.
-  Listeners *dispatch* actions if they need to update data or trigger other listeners.
-* Related actions, reducers, selectors and listeners are grouped into a **logic** (*counterLogic*).
-* React Components **connect** to logic and pull in all actions and values they need.    
+* Actions may also trigger **listeners**, which are async functions that talk with the externals APIs,
+  read values from the store or in turn *dispatch* other actions.
+* All related actions, reducers, selectors and listeners are grouped into a **logic** (*counterLogic*).
+* React Components **connect** to this logic and pull in all needed actions and values.    
 
 Read the [installation instructions](/docs/introduction/installation) to add  Kea to your app or 
 check out the [quickstart](/docs/introduction/quickstart) to see some code. 
 
+## What is Kea good for?
+
+TODO
+
+- Logic is managed (built only when needed, unmounted when no longer needed), so perfect when code
+  splitting
+- Scales well as your app grows
+- Logic connects to each other
+- Extendable with plugins
+- ...
+
+## What is Kea *not* good for?
+
+TODO 
+
+- We use functional paradigms (don't modify state, make new stuff)
+- Not needed for very small apps
+- Has a bit of magic, so keep away if you are afraid
+- GraphQL support is lacking
+- ...
+
 ## Why "kea"?
+
+TODO 
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/Kea):
 
@@ -42,5 +64,3 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/Kea):
 > objective.
 
 Kea the framework follows a similar approach. 
-
-TODO: expand on this
