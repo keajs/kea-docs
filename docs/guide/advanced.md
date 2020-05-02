@@ -6,6 +6,219 @@ sidebar_label: Advanced Concepts
 
 Here are some more things you can do with Kea. Learn these to fully master the framework!
 
+
+## Props
+
+When you treat `logic` as a function and pass it an object as an argument, that object will be
+saved as `props`.
+
+```javascript
+const logic = kea({ ... })
+const props = { id: 10 }
+
+logic(props).props === props
+``` 
+
+You can pass random data from React onto the logic this way. For example various defaults. 
+
+It's as simple as this: 
+
+```jsx
+function FancyPantsCounter() {
+    const { counter } = useValues(counterLogic({ defaultCounter: 1000 }))
+
+    // ...
+}
+```
+
+Then just use `props` wherever you need to. For example:
+
+```javascript
+const counterLogic = kea({
+    actions: () => ({
+        increment: (amount) => ({ amount }),
+        decrement: (amount) => ({ amount })
+    }),
+
+    reducers: ({ props }) => ({
+        counter: [props.defaultCounter || 0, {
+            increment: (state, { amount }) => state + amount,
+            decrement: (state, { amount }) => state - amount
+        }]
+    }),
+
+    listeners: ({ props }) => ({
+        increment: ({ amount }) => {
+            console.log(`incrementing by ${amount}`)
+            console.log(`default ${props.defaultCounter || 0}`)
+        }
+    })
+})
+```
+
+### Props in Selectors
+
+Since `selectors` need to be recalculated when their inputs change, 
+there's a twist when using `props` with them.
+ 
+Previously we defined a selector as a function like this:
+
+```javascript
+const selector = (state) => state.path.to.something.counter
+```
+
+That's an incomplete definition. Selectors take a second argument called `props`.
+
+```javascript
+const selector = (state, props) => state.path.to.something.counter + props.defaultCounter
+```
+
+To make your new selector update itself when a prop changes, it's easiest to define an inline
+selector that picks the right value from `props`. Here's an example:
+
+```javascript
+const counterLogic = kea({
+    // ...
+    selectors: ({ selectors }) => ({
+        diffFromDefault: [
+            () => [
+                selectors.counter, 
+                (_, props) => props.defaultCounter
+            ],
+            (counter, defaultCounter) => counter - defaultCounter
+        ]
+    })
+
+})
+```
+
+## Keyed logic
+
+If you give your logic a `key`, you can have multiple independent copies of it. The key is derived 
+from `props`:
+
+```javascript
+const userLogic = kea({
+    key: (props) => props.id, // 🔑 the key
+
+    actions: () => ({
+        loadUser: true,
+        userLoaded: (user) => ({ user })
+    }),
+  
+    reducers: () => ({
+        user: [null, {
+            userLoaded: (_, { user }) => user
+        }]
+    }),
+
+    // more on events in a section below. 
+    events: ({ actions }) => ({
+        afterMount: [actions.loadUser]
+    }),
+
+    listeners: ({ props }) => ({
+        loadUser: async () => {
+            const user = await api.getUser({ id: props.id }),
+            actions.userLoaded(user)
+        }
+    })
+})
+```
+
+Now every time you call `userLogic({ id: 1 })` with a new `id`, a completely independent
+logic will be built and mounted.
+
+This is really handy when you have data that's passed as a props in React, such as:
+
+```jsx
+function User({ id }) {
+    const { user } = useValues(userLogic({ id }))
+
+    return user 
+        ? <div>{user.name} ({user.email})</div> 
+        : <div>Loading...</div>
+}
+```
+
+No matter how many times `<User id={1} />` is rendered by React, it'll always be connected
+to the same logic. 
+
+If you render `<User id={2} />`, it'll however get its own independent copy of this same base logic. 
+
+
+## Defaults
+
+There are two ways to pass defaults to reducers. We've been using this style until now:
+
+```javascript
+const logic = kea({
+    // ... actions: () => ({ increment, decrement })
+
+    reducers: () => ({
+        counter: [0, {
+            increment: (state, { amount }) => state + amount,
+            decrement: (state, { amount }) => state - amount
+        }]
+    }),
+})
+```
+
+If you choose, you can set your defaults explicitly in a `defaults` object:
+
+```javascript
+const logic = kea({
+    // ... actions: () => ({ increment, decrement })
+  
+    defaults: {
+        counter: 0
+    },
+
+    reducers: () => ({
+        counter: {
+            increment: (state, { amount }) => state + amount,
+            decrement: (state, { amount }) => state - amount
+        }
+    })
+})
+```
+
+In case you pass both, the value in the `defaults` object will take precedence.
+
+You can also pass selectors as defaults:
+
+```javascript
+const counterLogic = kea({ ... })
+
+const logic = kea({
+    defaults: () => ({ // must be a function to evaluate lazily
+        counterCopy: counterLogic.selectors.counter
+    }),
+
+    reducers: () => ({
+        counterCopy: [counterLogic.selectors.counter, {
+            increment: (state, { amount }) => state + amount,
+            decrement: (state, { amount }) => state - amount
+        }]
+    })
+})
+```
+
+You can take it one level deeper and return a selector that computes the defaults:
+
+```javascript
+const logic = kea({
+    defaults: () => (state, props) => ({
+        // simple value
+        simpleDefault: 0,
+        // returning a selector
+        directName: someLogic.selectors.storedName
+        // returning a value through a selector
+        connectedName: someLogic.selectors.storedObject(state, props).name,
+    })
+})
+```
+
 ## Connecting logic together
 
 Kea is said to be a *really scalable* state management library. This power comes from its ability
@@ -177,219 +390,6 @@ const logic = kea({
     })
 })
 ```
-
-## Props
-
-When you treat `logic` as a function and pass it an object as an argument, that object will be
-saved as `props`.
-
-```javascript
-const logic = kea({ ... })
-const props = { id: 10 }
-
-logic(props).props === props
-``` 
-
-You can pass random data from React onto the logic this way. For example various defaults. 
-
-It's as simple as this: 
-
-```jsx
-function FancyPantsCounter() {
-    const { counter } = useValues(counterLogic({ defaultCounter: 1000 }))
-
-    // ...
-}
-```
-
-Then just use `props` wherever you need to. For example:
-
-```javascript
-const counterLogic = kea({
-    actions: () => ({
-        increment: (amount) => ({ amount }),
-        decrement: (amount) => ({ amount })
-    }),
-
-    reducers: ({ props }) => ({
-        counter: [props.defaultCounter || 0, {
-            increment: (state, { amount }) => state + amount,
-            decrement: (state, { amount }) => state - amount
-        }]
-    }),
-
-    listeners: ({ props }) => ({
-        increment: ({ amount }) => {
-            console.log(`incrementing by ${amount}`)
-            console.log(`default ${props.defaultCounter || 0}`)
-        }
-    })
-})
-```
-
-### Props in Selectors
-
-Since `selectors` need to be recalculated when their inputs change, 
-there's a twist when using `props` with them.
- 
-Previously we defined a selector as a function like this:
-
-```javascript
-const selector = (state) => state.path.to.something.counter
-```
-
-It's actually better than that. Selectors take a second argument called `props`.
-
-```javascript
-const selector = (state, props) => state.path.to.something.counter + props.defaultCounter
-```
-
-To make your new selector update itself when a prop changes, it's easiest to define an inline
-selector that picks the right value from `props`. Here's an example:
-
-```javascript
-const counterLogic = kea({
-    // ...
-    selectors: ({ selectors, props }) => ({
-        diffFromDefault: [
-            () => [
-                selectors.counter, 
-                (_, props) => props.defaultCounter
-            ],
-            (counter, defaultCounter) => counter - defaultCounter
-        ]
-    })
-
-})
-```
-
-## Keyed logic
-
-If you give your logic a `key`, you can have multiple independent copies of it. The key is derived 
-from `props`:
-
-```javascript
-const userLogic = kea({
-    key: (props) => props.id, // 🔑 the key
-
-    actions: () => ({
-        loadUser: true,
-        userLoaded: (user) => ({ user })
-    }),
-  
-    reducers: () => ({
-        user: [null, {
-            userLoaded: (_, { user }) => user
-        }]
-    }),
-
-    // more on events in a section below. 
-    events: ({ actions }) => ({
-        afterMount: [actions.loadUser]
-    }),
-
-    listeners: ({ props }) => ({
-        loadUser: async () => {
-            const user = await api.getUser({ id: props.id }),
-            actions.userLoaded(user)
-        }
-    })
-})
-```
-
-Now every time you call `userLogic({ id: 1 })` with a new `id`, a completely independent
-logic will be built and mounted.
-
-This is really handy when you have data that's passed as a props in React, such as:
-
-```jsx
-function User({ id }) {
-    const { user } = useValues(userLogic({ id }))
-
-    return user 
-        ? <div>{user.name} ({user.email})</div> 
-        : <div>Loading...</div>
-}
-```
-
-No matter how many times `<User id={1} />` is rendered by React, it'll always be connected
-to the same logic. 
-
-If you render `<User id={2} />`, it'll however get its own independent copy of this same base logic. 
-
-
-## Defaults
-
-There are two ways to pass defaults to reducers. We've been using this style until now:
-
-```javascript
-const logic = kea({
-    // ... actions: () => ({ increment, decrement })
-
-    reducers: () => ({
-        counter: [0, {
-            increment: (state, { amount }) => state + amount,
-            decrement: (state, { amount }) => state - amount
-        }]
-    }),
-})
-```
-
-If you choose, you can set your defaults explicitly in a `defaults` object:
-
-```javascript
-const logic = kea({
-    // ... actions: () => ({ increment, decrement })
-  
-    defaults: {
-        counter: 0
-    },
-
-    reducers: () => ({
-        counter: {
-            increment: (state, { amount }) => state + amount,
-            decrement: (state, { amount }) => state - amount
-        }
-    })
-})
-```
-
-In case you pass both, the value in the `defaults` object will take precedence.
-
-You can also pass selectors as defaults:
-
-```javascript
-const counterLogic = kea({ ... })
-
-const logic = kea({
-    defaults: () => ({ // must be a function to evaluate lazily
-        counterCopy: counterLogic.selectors.counter
-    }),
-
-    reducers: () => ({
-        counterCopy: [counterLogic.selectors.counter, {
-            increment: (state, { amount }) => state + amount,
-            decrement: (state, { amount }) => state - amount
-        }]
-    })
-})
-```
-
-You can take it one level deeper and return a selector that computes the defaults:
-
-```javascript
-const logic = kea({
-    defaults: () => (state, props) => ({
-        // simple value
-        simpleDefault: 0,
-        // returning a selector
-        directName: someLogic.selectors.storedName
-        // returning a value through a selector
-        connectedName: someLogic.selectors.storedObject(state, props).name,
-    })
-})
-```
-
 
 ## Extending logic
 

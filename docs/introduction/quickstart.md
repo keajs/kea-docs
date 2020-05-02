@@ -5,14 +5,15 @@ sidebar_label: Quickstart
 ---
 
 :::note
-
 This document gives a **very brief** overview of how Kea works. 
 Please read [Core Concepts](/docs/guide/concepts) to go in depth.
 That page describes not only *what* you can do in Kea, but also *why*. It's required
 reading if you are starting to use Kea in an actual app.
+:::
 
-There's nothing on this page that's not covered in [Core Concepts](/docs/guide/concepts), so feel free 
-to skip this and go straight for the [juicy bits](/docs/guide/concepts).
+:::note
+If you prefer to build a working app as you follow along, check out 
+the [Github API](/docs/tutorials/github) tutorial.
 :::
 
 ## Logic
