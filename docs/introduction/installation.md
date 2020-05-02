@@ -42,7 +42,7 @@ import App from './App'
 
 resetContext({ // 👈 add this    
     createStore: {
-        // additional options (e.g. middleware, reducers, ...)
+        // options for redux (e.g. middleware, reducers, ...)
     },
     plugins: [
         // additional kea plugins

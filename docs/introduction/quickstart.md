@@ -12,8 +12,8 @@ reading if you are starting to use Kea in an actual app.
 :::
 
 :::note
-If you prefer to build a working app as you follow along, check out 
-the [Github API](/docs/tutorials/github) tutorial.
+The examples below are contrived. If you prefer to build a working app as you follow along, check out 
+the [Github API](/docs/tutorials/github) tutorial instead.
 :::
 
 ## Logic
@@ -183,7 +183,7 @@ const { recordsForSelectedMonth } = useValues(logic)
 
 Selectors are recalculated only when their input changes. They are perfect for memoizing complex operations.
 
-Selectors are actually functions that take the redux store's current state as an argument and return
+Selectors are actually functions that take the redux store's current `state` as an argument and return
 whatever value you're looking for:
  
 ```javascript
