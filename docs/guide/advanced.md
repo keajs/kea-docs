@@ -6,18 +6,45 @@ sidebar_label: Advanced Concepts
 
 Here are some more things you can do with Kea. Learn these to fully master the framework!
 
+## Lifecycles
+
+Kea's `logic` has three different states: 
+
+1. **Initialized**. When your JavaScript interpreter encounters a `const logic = kea(input)` call, not
+   much happens. It just stores the `input` variable on the logic and goes on. No processing takes place.
+2. **Built**. When a logic is needed, it must first be built. This means converting
+   an `input` such as `{ actions: () => ({ ... }) }` into actual functions on `logic.actions`
+   that can be called. Same for all the `reducers`, `selectors`, etc.
+3. **Mounted**. Once a logic is built, it can be mounted. This means attaching the `reducers` to
+   Redux, registering all the `listeners`, etc.  
+
+If you use Kea [without React](/docs/guide/standalone) or alongside it, you have to mount and unmount
+`logic` manually. 
+
+If you use Kea [with React](/docs/guide/react), every time you access a `logic` via `useValues` or another 
+method, it is built and mounted automatically. When the component that used this `logic` is removed from
+React's tree and no other component is using it, the `logic` will be automatically unmounted.
+
+This means that only `logic` which is actively in use will be mounted and attached to Redux.
+This is practical knowledge when you have a large app with multiple scenes.
+ 
+In addition, thanks to this, [code-splitting](https://webpack.js.org/guides/code-splitting/) works out-of-the box
+with Kea!
 
 ## Props
 
-When you treat `logic` as a function and pass it an object as an argument, that object will be
-saved as `props`.
+When you treat `logic()` as a function, you explicitly build it. 
+If you pass it an object as an argument, that object will be saved as `props` on the built logic.
 
 ```javascript
 const logic = kea({ ... })
 const props = { id: 10 }
 
 logic(props).props === props
-``` 
+```
+
+Calling `logic()` is a fast operation: if the logic has already been built, it won't be rebuilt.
+Only the props will be updated if needed.
 
 You can pass random data from React onto the logic this way. For example various defaults. 
 
@@ -58,8 +85,28 @@ const counterLogic = kea({
 
 ### Props in Selectors
 
-Since `selectors` need to be recalculated when their inputs change, 
-there's a twist when using `props` with them.
+Since `selectors` need to be recalculated when their inputs change, there's a twist when 
+using `props` with them.
+
+Take the following buggy code:
+ 
+```javascript
+const counterLogic = kea({
+    // ...
+    selectors: ({ selectors, props }) => ({
+        diffFromDefault: [
+            () => [selectors.counter],
+            (counter) => counter - props.defaultCounter // DO NOT do this!
+        ]
+    })
+})
+``` 
+
+The code will work, but only partially.
+The problem is that the value of `diffFromDefault` will only be updated when `counter` changes,
+but not when `props.defaultCounter` changes.
+
+What if we would also like to update the selector when the props change? 
  
 Previously we defined a selector as a function like this:
 
@@ -142,9 +189,10 @@ function User({ id }) {
 ```
 
 No matter how many times `<User id={1} />` is rendered by React, it'll always be connected
-to the same logic. 
+to the same logic. In practical terms this means the user will be loaded only once.
 
-If you render `<User id={2} />`, it'll however get its own independent copy of this same base logic. 
+If you render `<User id={2} />`, it'll however get its own independent copy of this same base logic
+and do what is needed to load and display the second user. 
 
 
 ## Defaults
@@ -222,7 +270,7 @@ const logic = kea({
 ## Connecting logic together
 
 Kea is said to be a *really scalable* state management library. This power comes from its ability
-to link together actions and values from different logics.
+to link together actions and values from different `logic`s.
 
 ### The new way (v2.0+)
 
@@ -340,7 +388,7 @@ logic is mounted. It will also be unmounted when your logic is unmounted.
 
 ### The old way (v1.0 and prior)
 
-While the "new way" of connecting logic might now seem self-evident, there's actually a lot that's
+While the "new way" of connecting logic might seem self-evident, there's actually a lot that's
 happening under the hood. 
 
 Kea's logic is always "lazy", meaning it's not built nor mounted before it's needed. In the examples
@@ -372,7 +420,7 @@ const logic = kea({
         // pulling in actions from `counterLogic`
         actions: [counterLogic, ['increment', 'decrement']],
         // pull in values from `counterLogic`
-        values: [counterLogic, ['counter']],
+        values: [counterLogic, ['counter']]
     },
 
     // using the actions in a reducer like they're our own
@@ -423,7 +471,7 @@ logic.extend({
 const { counter, negativeCounter } = useValues(logic)
 ```
 
-Extending logic is especially powerful when writing plugins. For example to dynamically
+Extending logic is especially powerful when [writing plugins](/docs/plugins/writing-plugins). For example to dynamically
 add actions, reducers or listeners to a logic.
 
 
