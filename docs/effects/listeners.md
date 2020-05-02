@@ -5,10 +5,7 @@ sidebar_label: Listeners
 ---
 
 :::note
-Read more about listeners in the [Core Concepts](/docs/concepts#listeners) page.
-
-Read more about using breakpoints in listeners in the [Advanced Concepts](/docs/advanced#breakpoints-in-listeners) 
-page.
+Read more about listeners in the [Core Concepts](/docs/guide/concepts#listeners) page.
 :::
 
 ## Installation

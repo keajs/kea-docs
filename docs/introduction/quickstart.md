@@ -7,12 +7,12 @@ sidebar_label: Quickstart
 :::note
 
 This document gives a **very brief** overview of how Kea works. 
-Please read [Core Concepts](/docs/concepts) to go in depth.
+Please read [Core Concepts](/docs/guide/concepts) to go in depth.
 That page describes not only *what* you can do in Kea, but also *why*. It's required
 reading if you are starting to use Kea in an actual app.
 
-There's nothing on this page that's not covered in [Core Concepts](/docs/concepts), so feel free 
-to skip this and go straight for the [juicy bits](/docs/concepts).
+There's nothing on this page that's not covered in [Core Concepts](/docs/guide/concepts), so feel free 
+to skip this and go straight for the [juicy bits](/docs/guide/concepts).
 :::
 
 ## Logic
@@ -228,5 +228,5 @@ function Counter() {
 
 ## Next Steps
 
-I strongly recommend you read [Core Concepts](/docs/concepts) next to get a better
-understanding of why everything works how it does.
+I strongly recommend you read [Core Concepts](/docs/guide/concepts) next to get a better
+understanding of why everything works the way it does.
