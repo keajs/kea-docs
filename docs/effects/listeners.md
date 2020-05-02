@@ -5,7 +5,8 @@ sidebar_label: Listeners
 ---
 
 :::note
-Read more about listeners in the [Core Concepts](/docs/guide/concepts#listeners) page.
+Read the [listeners section](/docs/guide/concepts#listeners) in the 
+[Core Concepts](/docs/guide/concepts) page to get a detailed explanation of how to use listeners.
 :::
 
 ## Installation

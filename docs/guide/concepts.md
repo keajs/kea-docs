@@ -198,9 +198,9 @@ While this may *feel* limiting at first, there is method to madness here. Pushin
 through actions makes for stable and predictable apps that run better, crash less often and
 even do your laundry. We all want that, don't we?
 
-Casual readers of other [easy](https://easy-peasy.now.sh/) state management libraries might
-protest that you need to write the name of the action twice to get the job done. *Think of the extra
-keystrokes* I hear them say.
+Casual readers of other lightweight state management libraries might
+protest that you need to write the name of the action (`increment`) twice to get the job done: 
+once in `actions` and once in `reducers`. *Think of the extra keystrokes* I hear them say.
 
 There's method to this madness as well. First, you should always optimise for [read-time convenience
 over write-time convenience](https://medium.com/marius-andra-blog/two-strategies-for-writing-better-code-1be0dc240698).
@@ -234,10 +234,10 @@ const logic = kea({
 
 This example is contrived of course, but should illustrate the point about composability. 
 You can have any reducer depend on any action, even ones defined in other logic files! 
-(More on that later)
+(See [Connecting Logic Together](/docs/guide/advanced#connecting-logic-together) in Advanced Concepts)
 
-Most of the time you want your actions and reducers to mix together freely, like they're still
-living in 2019 without a care in the world.
+Most of the time you want your actions and reducers to mix together freely, like they're attending
+a music festival in a pre-pandemic world.
 
 If, however, you find yourself constantly writing code that has actions such as `setName`, `setPrice`, 
 `setLoading` and `setError` with corresponding reducers `name`, `price`, `loading` and `error`
@@ -246,8 +246,8 @@ and a 1:1 mapping between them, you're probably following an anti-pattern and do
 You'll see a more complete example to illustrate this point in the next section about listeners.
 
 One last thing, just like actions, reducers as well are [pure functions](https://en.wikipedia.org/wiki/Pure_function).
-That means no matter how many times you call a reducer with the same input, it should always
-give the same output.
+That means no matter how many times you call a reducer with the same input (same `state` and `payload`),
+it should always give the same output.
 
 More importantly, **reducers must never modify their inputs**. In practice this means that
 instead of adding an element to an array via `state.push(newThing)`, you instead create and return a new
@@ -275,7 +275,7 @@ const todosLogic = kea({
             },
             updateTodo: (state, { index, todo }) => {
                 // swap out the `todo` in the array at the given `index`
-                return state.map((t, i) => i === index ? todo : n)
+                return state.map((t, i) => i === index ? todo : t)
             }   
         }]
     })
@@ -332,7 +332,7 @@ When the `loadUsers` action is dispatched, we, *ahem,* load the users.
 The listener will get the action's `payload` as its first argument, but we will ignore it in this case. 
 
 Q: What should we do with the `users` once we have them? <br/>
-A: We store them in a `reducer` of course!
+A: We store them in a `reducer` through an `action` of course!
 
 ```javascript
 const logic = kea({
@@ -356,13 +356,13 @@ const logic = kea({
 })
 ```
 
-If you're used to React Hooks or some other [easy](https://easy-peasy.now.sh/) state management solution, 
+If you're used to React Hooks or other lightweight state management solution, 
 then the above code might seem overly verbose to you. *"Why must we write `loadUsers` and `setUsers` 
-twice?"* I might hear some of you ask.
+twice?"* is a valid question. *"Why can't listeners just implicitly create a new action"* might be another.
 
 There's a point to being this explicit. If you're following good patterns, it often makes 
 sense to use the actions that you're listening to in a reducer or vice-versa, usually to track
-second or third order states.
+second or third order state.
 
 To illustrate this point, let's track the `loading` state in our logic.
 Obviously we need a `loading` reducer to store this value, but what about the actions?
@@ -443,7 +443,8 @@ Surely that's *sub-optimal* and we can do better!
 When we add a third reducer to track the `error`, the beauty of explicitly declaring actions and
 having reducers and listeners react to them suddenly becomes clear. 😍
 
-The following code demonstrates this well:
+The following code demonstrates this well. Please note that for aesthetics, I renamed `loading` 
+from before to `usersLoading` and `setUsers` to `loadUsersSuccess`:
 
 ```javascript
 const logic = kea({
@@ -481,8 +482,6 @@ const logic = kea({
 })
 ```
 
-Please note that for aesthetics, I renamed `loading` to `usersLoading` and 
-`setUsers` to `loadUsersSuccess`.
 
 There are a few other cool things you can do with listeners:
 
@@ -496,7 +495,7 @@ Please read the [listeners](/docs/effects/listeners) side-effect page to learn m
 
 The pattern above is so common that there's a way to abstract it even further.
 
-Using the kea-loaders plugin, the above code can be simplified to this:
+Using the [kea-loaders plugin](/docs/plugins/loaders), the above code can be simplified to this:
 
 ```javascript
 const logic = kea({
@@ -512,7 +511,7 @@ The code above is identical to the block before it. It also creates three reduce
 `users`, `usersLoading` and `usersError`, along with three actions: `loadUsers`,
 `loadUsersSuccess` and `loadUsersFailure`.
 
-See the documentation for kea-loaders to find out more.
+See the [documentation for kea-loaders](/docs/plugins/loaders) to find out more.
 
 ## Selectors
 
@@ -565,6 +564,7 @@ is the answer:
 fuction RecordsForThisMonth() {
     const { month, records } = useValues(logic)
 
+    // DO NOT do this!
     const recordsForSelectedMonth = useMemo(() => {
         return records.filter(r => r.month === month)
     }, [records, month])
@@ -683,9 +683,7 @@ const logic = kea({
 
     listeners: ({ actions, values }) => ({
         fetchDetails: async () => {
-            const details = await api.fetchDetails({ 
-                username: values.username 
-            })
+            const details = await api.fetchDetails(values.username)
             actions.setDetails(details)
         }
     })
