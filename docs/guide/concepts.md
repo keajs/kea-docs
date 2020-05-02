@@ -8,7 +8,7 @@ This doc describes the different parts of Kea and how to they all fit together.
 After reading this, you'll know 80% of what there is to know about Kea.
 
 Then read the sections [advanced concepts](/docs/advanced) and [using with React](/docs/react) to
-get the remaining 20%. 
+get the remaining 80%. 😁
 
 ## Logic
 
