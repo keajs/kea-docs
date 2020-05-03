@@ -53,7 +53,7 @@ living. Kea has been used in [several large projects](/), which consist of hundr
 cover thousands of components. It has scaled really well every time!
 
 Finally, Kea's functionality is not set in stone. Whenever you find yourself writing repetitive code,
-you may [abstract it away](/docs/plugins/writing-plugins) into a plugin. In fact, Kea's core 
+you may [abstract it away](/docs/tutorials/writing-plugins) into a plugin. In fact, Kea's core 
 is actually [implemented](https://github.com/keajs/kea/blob/master/src/core/index.js) as a plugin itself.
 There are plugins for [routing](/docs/plugins/router), [offline storage](/docs/plugins/localstorage), 
 [sagas](/docs/effects/sagas), [websockets](/docs/plugins/websockets) and much more. This opens up

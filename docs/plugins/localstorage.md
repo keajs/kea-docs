@@ -4,8 +4,6 @@ title: LocalStorage
 sidebar_label: LocalStorage
 ---
 
-## LocalStorage
-
 You may store the content of your reducers in LocalStorage with the [`kea-localstorage`](https://github.com/keajs/kea-localstorage) plugin.
 
 ## Installation
@@ -27,7 +25,6 @@ import localStoragePlugin from 'kea-localstorage'
 import { resetContext } from 'kea'
 
 resetContext({
-    createStore: true,
     plugins: [localStoragePlugin],
 })
 ```
@@ -51,7 +48,12 @@ localStoragePlugin({
 
 ## Usage
 
-**NB!** To make a reducer persist in LocalStorage, your logic store **must** have a defined `path`.
+:::note
+To make a reducer persist in LocalStorage, your logic *must* have a `path`.
+
+Use the [`babel-kea-plugin`](/docs/guide/debugging#automatic-paths-with-babel) to
+automatically generate paths for every logic. 
+:::
 
 Just add `{ persist: true }` as an option to your reducers, and it will be stored:
 
@@ -84,11 +86,3 @@ const logic = kea({
     }),
 })
 ```
-
-## Example
-
-Update the counter and refresh the page. The number should remain:
-
-TODO: CodeSandbox
-
-_Note: if you refresh, it may flash the number 0 for a brief moment, as that's what's stored in the pre-rendered HTML that's served when you open the page. It should then immediately update._

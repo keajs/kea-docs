@@ -4,6 +4,10 @@ title: WebSockets
 sidebar_label: WebSockets
 ---
 
+:::note Thank You
+This is a community plugin built by [@sanchezweezer](https://github.com/sanchezweezer/).
+:::
+
 Please help write this section or read more about [`kea-socket.io`](https://github.com/sanchezweezer/kea-socket.io) on github!
 
 ## Description

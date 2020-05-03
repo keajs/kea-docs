@@ -4,34 +4,34 @@ title: Router
 sidebar_label: Router
 ---
 
-The `kea-router` plugin provides a nice wrapper around `window.History` and helps manage the URL in your application. Use it to listen to route changes or change the URL yourself. There are a few helpers (`actionToUrl` and `urlToAction`) that help track the URL changes, or access the `router` directly to manually control the browser history object.
+The `kea-router` plugin provides a nice wrapper around `window.History` and helps manage the URL 
+in your application. Use it to listen to route changes or change the URL yourself. There are a 
+few helpers (`actionToUrl` and `urlToAction`) that help track the URL changes, or access the 
+`router` directly to manually control the browser history object.
 
 ## Installation
 
-First install the [`kea-router`](https://github.com/keajs/kea-router) and [`kea-listeners`](https://github.com/keajs/kea-listeners) packages:
+First install the [`kea-router`](https://github.com/keajs/kea-router) package:
 
 ```shell
 # if you're using yarn
-yarn add kea-router kea-listeners
+yarn add kea-router
 
 # if you're using npm
-npm install --save kea-router kea-listeners
+npm install --save kea-router
 ```
 
 Then install the plugin:
 
 ```javascript
 import { routerPlugin } from 'kea-router'
-import listenersPlugin from 'kea-listeners'
 import { resetContext } from 'kea'
 
 resetContext({
-    createStore: true,
     plugins: [
         routerPlugin({
             /* options */
-        }),
-        listenersPlugin,
+        })
     ],
 })
 ```
@@ -94,6 +94,8 @@ export const articlesLogic = kea({
 })
 ```
 
+### Control the route directly
+
 Import `router` to control the router directly
 
 ```javascript
@@ -115,6 +117,8 @@ export function MyComponent() {
     )
 }
 ```
+
+### Link tag
 
 Create an `A` tag to make linking easier
 
@@ -138,6 +142,8 @@ export function A(props) {
 }
 ```
 
+### Listen to location changes
+
 Listen to the `locationChanged` action to react to URL changes manually
 
 ```javascript
@@ -152,6 +158,8 @@ const otherLogic = kea({
     }),
 })
 ```
+
+### Global scene router
 
 Here's sample code for a global scene router
 

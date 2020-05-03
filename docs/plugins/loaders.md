@@ -17,30 +17,27 @@ The `kea-loaderes` plugin abstracts this pattern into a system of loaders.
 
 # Installation
 
-First install the [`kea-loaders`](https://github.com/keajs/kea-loaders) and [`kea-listeners`](https://github.com/keajs/kea-listeners) packages:
+First install the [`kea-loaders`](https://github.com/keajs/kea-loaders) package:
 
 ```shell
 # if you're using yarn
-yarn add kea-loaders kea-listeners
+yarn add kea-loaders
 
 # if you're using npm
-npm install --save kea-loaders kea-listeners
+npm install --save kea-loaders
 ```
 
 Then install the plugin:
 
 ```javascript
 import { loadersPlugin } from 'kea-loaders'
-import listenersPlugin from 'kea-listeners'
 import { resetContext } from 'kea'
 
 resetContext({
-    createStore: true,
     plugins: [
         loadersPlugin({
             /* options */
-        }),
-        listenersPlugin,
+        })
     ],
 })
 ```
@@ -71,7 +68,7 @@ export const projectLogic = kea({
 
   loaders: ({ values, props }) => ({
     project: {
-      loadProject: async (id = props.id) => projectsService.get(id),
+      loadProject: (id = props.id) => projectsService.get(id)
     },
 
     // the above code creates these actions:
@@ -83,14 +80,13 @@ export const projectLogic = kea({
     // - project (whatever the loadProject loader returns)
     // - projectLoading (true or false)
 
-    apiKeys: {
-      __default: [], // instead of null
-      loadApiKeys: async () => apiKeysService.find({ query: { projectId: props.id } }),
+    apiKeys: [[], { // default empty array instead of null
+      loadApiKeys: () => apiKeysService.find({ query: { projectId: props.id } }),
       createApiKey: async () => {
         const apiKey = await apiKeysService.create({ projectId: props.id })
         return [...(values.apiKeys || []), apiKey]
-      },
-    },
+      }
+    }]
 
     // the above code creates these actions:
     // - loadApiKeys: true
@@ -103,15 +99,15 @@ export const projectLogic = kea({
     // ... and these reducers:
     // - apiKeys (whatever the loadProject loader returns)
     // - apiKeysLoading (true or false)
-  })
+  }),
 
   // start the loaders after mounting the logic
   events: ({ actions }) => ({
-    afterMount: () => {
-      actions.loadProject()
-      actions.loadApiKeys()
-    },
-  }),
+    afterMount: [
+      actions.loadProject,
+      actions.loadApiKeys
+    ]
+  })
 })
 
 export function Project ({ id }) {

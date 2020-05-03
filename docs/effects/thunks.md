@@ -4,7 +4,7 @@ title: Thunks
 sidebar_label: Thunks
 ---
 
-:::note
+:::note Use listeners instead
 While thunks definitely work, it's recommended to use the newer [listeners](/docs/effects/listeners) plugin instead. 
 Listeners support everything thunks do and more. Plus they are integrated directly into kea.
 :::
