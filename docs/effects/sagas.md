@@ -275,3 +275,22 @@ myRandomSceneLogic.saga ==
         // start() ...
     }
 ```
+
+## Note about `autoConnect`
+
+The current thunk plugin (v2.0.0) does not support `autoConnect`. That means if you want to call `otherLogic.actions.something()`
+inside a saga, you must first make sure `otherLogic` is connected to your logic:
+
+```javascript
+import { otherLogic } from './otherLogic'
+
+const logic = kea({
+    connect: [otherLogic],
+
+    takeLatest: () => ({
+        updateNameAsync: async (name) => {
+            otherLogic.actions.doSomething()
+        },
+    })
+})
+```
