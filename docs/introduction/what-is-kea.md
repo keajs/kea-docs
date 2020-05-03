@@ -53,8 +53,8 @@ There are plugins for [routing](/docs/plugins/router), [offline storage](/docs/p
 [sagas](/docs/effects/sagas), [websockets](/docs/plugins/websockets) and much more. 
 
 Finally, Kea is not a theoretical project. It's built by people who build complex applications for a 
-living. Kea has been used in [several huge projects](/), consisting of hundreds of logics between 
-thousands of components. It has scaled really well in all cases!
+living. Kea has been used in [several large projects](/), which consist of hundreds of logics that
+cover thousands of components. It has scaled really well every time!
 
 ## What is Kea *not* good for?
 
