@@ -104,6 +104,14 @@ buildLogic.selectors.myValue(state)
 buildLogic.values.myValue
 ```
 
+:::note
+`logic.build` accepts a second parameter: `.build(props, autoConnectInListener)`
+
+To read more on the `autoConnectInListener` parameter, check out
+["Calling `mount()` inside listeners with `autoConnect: true`"](/docs/guide/standalone#calling-mount-inside-listeners-with-autoconnect-true)
+under the "Usage without React" page.
+:::
+
 ## logic.mount()
 
 Mount the logic on Redux, return a function that unmounts

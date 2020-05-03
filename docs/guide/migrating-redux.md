@@ -41,7 +41,7 @@ const logic = kea({
 
 ## Reading non-Kea state
 
-You can use regular reselect selectors in your `selectors` blocks:
+You can use regular selectors in your `selectors` blocks:
 
 ```javascript
 const logic = kea({
@@ -129,7 +129,7 @@ const logic = kea({
 ```    
 :::note
 See the 
-[kea api docs](/docs/api/kea) for all options for connect.
+[Kea API docs](/docs/api/kea) for all options for connect.
 :::
 
 

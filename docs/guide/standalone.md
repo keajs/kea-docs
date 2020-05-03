@@ -93,7 +93,7 @@ A practical example of this is to mount a logic to preload data on a route chang
 transitioning the scene. It's enough to prevent the "flash of loading" in most cases.
 
 Instead of directly calling `logic.mount()`, you just need to build the logic fist, even if it
-doesn't need any props. Also pass `false` as the second argument to `.build`:
+doesn't need any props. You must then pass `false` as the second argument to `.build`:
 
 ```javascript
 // Works in Kea 2.0+
@@ -118,10 +118,10 @@ const logic = kea({
 })
 ```
 
-Instead of `logic(props)` to build the logic, use `logic.build(props, false)`.
+Instead of using `logic(props)` to build the logic, use `logic.build(props, false)`.
 
-Without setting this second argument (`autoConnectInListener`) to false, `counterLogic` will be
-automatically mounted already when building. This happens automatically if you type `counterLogic.values`.
+Without explicitly setting this second argument (`autoConnectInListener`) to false, 
+`counterLogic` would have been automatically built and mounted on `counterLogic.values`.
 
 Calling `.mount()` on a built and mounted logic won't mount it twice, but it will stay mounted
-until the returned `unmount` is called. Possibly forever.
+until the returned `unmount` is called, even if no other logic is connected to it.
