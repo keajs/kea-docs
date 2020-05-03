@@ -8,9 +8,10 @@ Kea has first class support for sagas via the [`kea-saga`](https://github.com/ke
 
 Read more about Sagas on the [redux-saga](https://redux-saga.js.org/) homepage.
 
-:::note
-
-**Breaking changes with 1.0!** If you're upgrading from 0.x, please [read this](https://github.com/keajs/kea-saga/blob/master/CHANGELOG.md#a-note-regarding-sagas-and-actions) regarding the breaking change of automatically binding actions to dispatch in Kea. If you just `connect`ed to your actions or used local actions inside a logic, everything should work as it did before as long as `useLegacyUnboundActions` is set to `true`. However if you were using code like `yield put(otherImportedLogic.actions.doSomething())`, you need to pay attention, as those actions will now dispatch twice. Replace `actions` with `actionCreators` in the above code... or set `useLegacyUnboundActions` to `false` and get rid of `yield put()` entirely.
+:::note Breaking changes with 1.0
+If you're upgrading from 0.x, please 
+[read this](https://github.com/keajs/kea-saga/blob/master/CHANGELOG.md#a-note-regarding-sagas-and-actions) 
+regarding the breaking change of automatically binding actions to dispatch in Kea.
 :::
 
 ## Installation
@@ -33,7 +34,7 @@ import { resetContext } from 'kea'
 
 resetContext({
     createStore: true,
-    plugins: [sagaPlugin({ useLegacyUnboundActions: false })],
+    plugins: [sagaPlugin],
 })
 ```
 
@@ -59,17 +60,32 @@ export default kea({
     },
 
     takeEvery: ({ actions, workers }) => ({
-        [actions.simpleAction]: function* () {
+        simpleAction: function* () {
             // inline worker
+
+            // one way to dispatch an action
+            actions.actionWithStaticPayload() 
+
+            // anoter way to dispatch an action
+            yield put(actionCreators.actionWithStaticPayload()) 
+         
+            // one way to read a value
+            const someValue = values.someValue
+
+            // anoether way to read a value
+            const someValueAgain = yield this.get('someValue')
         },
-        [actions.actionWithDynamicPayload]: workers.dynamicWorker,
+        [actions.simpleAction]: function* () {
+            // another way to define an inline worker
+        },
+        actionWithDynamicPayload: workers.dynamicWorker,
     }),
 
     takeLatest: ({ actions, workers }) => ({
-        [actions.actionWithStaticPayload]: function* () {
+        actionWithStaticPayload: function* () {
             // inline worker
         },
-        [actions.actionWithManyParameters]: workers.dynamicWorker,
+        actionWithManyParameters: workers.dynamicWorker,
     }),
 
     workers: {
@@ -88,9 +104,11 @@ export default kea({
 
 ### start: `function * () {}`
 
-Saga that is started whenever the component is connected or the saga exported from this component starts
+Saga that is started whenever the component is connected or the saga exported from this 
+component starts
 
-Note: sagas are started before your _wrapped component's_ `componentDidMount`. Actions dispatched before this lifecycle method will not be seen inside `start`.
+Note: sagas are started before your _wrapped component's_ `componentDidMount`. Actions 
+dispatched before this lifecycle method will not be seen inside `start`.
 
 ```javascript
  // Input
@@ -103,15 +121,26 @@ start: function * () {
 myRandomSceneLogic.saga == function * () {
   // saga started or component mounted
   console.log(this)
-  // => { actions, workers, path, key, get: function * (), fetch: function * () }
+  // => { 
+  //      actionCreators, 
+  //      actions, 
+  //      workers, 
+  //      values, 
+  //      path, 
+  //      key, 
+  //      get: function * (), 
+  //      fetch: function * () 
+  //    }
 }
 ```
 
 ### stop: `function * () {}`
 
-Saga that is started whenever the component is disconnected or the saga exported from this component is cancelled
+Saga that is started whenever the component is disconnected or the saga exported from this 
+component is cancelled
 
-This function is called right before your _wrapped component's_ `componentWillUnmount` lifecycle method.
+This function is called right before your _wrapped component's_ `componentWillUnmount` 
+lifecycle method.
 
 ```javascript
 // Input
@@ -135,7 +164,8 @@ myRandomSceneLogic.saga == function * () {
 
 Run the following workers every time the action is dispatched
 
-Note: sagas are started before your wrapped component's `componentDidMount`. Actions dispatched before this lifecycle method will not be seen by `takeEvery`.
+Note: sagas are started before your wrapped component's `componentDidMount`. Actions dispatched 
+before this lifecycle method will not be seen by `takeEvery`.
 
 ```javascript
 // Input
@@ -166,9 +196,11 @@ myRandomSceneLogic.saga ==
 
 ### takeLatest: `({ actions }) => ({})`
 
-Run the following workers every time the action is dispatched, cancel the previous worker if still running
+Run the following workers every time the action is dispatched, cancel the previous worker if still 
+running
 
-Note: sagas are started before your wrapped component's `componentDidMount`. Actions dispatched before this lifecycle method will not be seen by `takeLatest`.
+Note: sagas are started before your wrapped component's `componentDidMount`. Actions dispatched 
+before this lifecycle method will not be seen by `takeLatest`.
 
 ```javascript
 // Input
