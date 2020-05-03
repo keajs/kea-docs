@@ -74,7 +74,7 @@ const logic = kea({
         doSomething: true,
         doSomethingElse: true,
     }),
-    reduceres: () => ({
+    reducers: () => ({
         firstOne: ['default', { doSomething: () => 'did it' }],
         secondOne: ['default', { doSomething: () => 'did it' }]
     })
@@ -99,8 +99,17 @@ const MyConnectedComponent = logic(MyComponent)
 ### `connect`
 
 In case you don't want to hook up everything in a `logic` to your `Component` or if you
-want to mix and match values from multiple logics, use `connect` to create a new logic with only
-the actions and values you need. Then wrap your `Component` in that.
+want to mix and match values from multiple logics, use `kea({ connect: { ... } })` as discussed in 
+the [explicit connections](/docs/guide/advanced#explicit-connections) section under Advanced Concepts, 
+to create a new logic with only the actions and values you need. Then wrap your `Component` in that.
+
+If you go for this route, you can use a small helper function called `connect`, which is literally just:
+
+```javascript
+const connect = (args) => kea({ connect: args })
+``` 
+
+You use it like so:
 
 ```jsx
 import { connect } from 'kea'
