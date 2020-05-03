@@ -6,7 +6,7 @@ sidebar_label: Using without React
 
 ## Mounting and Unmounting
 
-When you use kea with React, there's a lot that is handled for you behind the scenes.
+When you use [Kea with React](/docs/guide/react), there's a lot that is handled for you behind the scenes.
 For example logic is mounted automatically with your `<Component />` and unmounted when it's no longer needed.
 
 Sometimes however, you wish to manually mount logic. For example to already start loading data in
@@ -14,10 +14,10 @@ your router before transitioning to a component... or in `getStaticProps` in nex
 
 Perhaps you even want to use Kea without React.
 
-In any case, just call `mount` on your logic and get as a reply a function that will `unmount` it:
+In any case, just call `mount()` on your logic and get as a reply a function that will `unmount` it:
 
 ```javascript
-// create the counter logic from the examples above
+// create the counter logic from some of the previous examples
 const logic = kea({ ... })
 
 // connect its reducers to redux
@@ -39,14 +39,14 @@ logic.values.counter
 // => throw new Error()!
 ```
 
-In case you need to pass props to your logic, do that before calling `mount()`:
+In case you need to pass props to your logic, for example if it [keyed](/docs/guide/advanced#keyed-logic), 
+build the logic explicitly before calling `mount()` on it:
 
 ```javascript
-// create the counter logic from the examples above
+// create the counter logic from the examples above, but with a key!
 const logic = kea({ key: props => props.id, ... })
 
-// built the logic with props 
-// (`logic(props)` is short for `logic.build(props)`)
+// build the logic with props (`logic(props)` is short for `logic.build(props)`)
 const logicWithProps = logic({ id: 123, otherProp: true })
 
 const unmount = logicWithProps.mount()
@@ -54,15 +54,15 @@ const unmount = logicWithProps.mount()
 // do what needs to be done
 logicWithProps.actions.increment()
 
-// call `logic()` again with the same key if you want to rehydrate the other props
+// call `logic()` again with the same key if you want to update the other props
 logic({ id: 123, otherProp: false })
 
 unmount()
 ```
 
-There are a few other options you can use. See the [logic API](/docs/api/logic) for more.
+There are a few other options you can use. See the [logic API](/docs/api/logic) for more details.
 
-### Calling `mount()` inside listeners with `autoConnect: true`.
+## Calling `mount()` inside listeners with `autoConnect: true`.
 
 In Kea 2.0 logic automatically connects when used inside another logic.
 
