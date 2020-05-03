@@ -34,29 +34,30 @@ check out the [quickstart](/docs/introduction/quickstart) to see some code.
 First, Kea is not just a place to put your app's data. It's actually a framework for managing
 the [complete lifecycle](/docs/guide/advanced#lifecycles) of this data.
 
-Unlike some other state management libraries, where you statically connect all your reducers to the 
-store (`const store = configureStore({ counter: counterSlice.reducer })`) or 
+Unlike some other state management libraries, where you statically connect all your reducers to the
+store (`const store = configureStore({ reducer: combinedReducers })`) or 
 read state through hardcoded global variables (`const todos = useStoreState(state => state.todos.items)`),
 you don't need to worry about this in Kea. The framework does it for you.
 
 Logic in Kea is always connected to your React components (and to other `logic`) via regular
-EcmaScript `import` statements and mounted only when requested by a component.
+EcmaScript `import` statements (`import { logic } from './logic'`) and mounted only when requested 
+by a component (`const { increment } = useActions(logic)`).
 Logic that is no longer in use is automatically unmounted, freeing up memory.
 
 This makes Kea perfect for large apps with complex relationships between state and components.
 This also means that [code-splitting](https://webpack.js.org/guides/code-splitting/) works out of the 
 box with Kea. No patchwork required.
 
-Second, Kea's functionality is not set in stone. Whenever you find yourself writing repetitive code,
+Second, Kea is not a theoretical project. It's built by people who build complex applications for a 
+living. Kea has been used in [several large projects](/), which consist of hundreds of logics that
+cover thousands of components. It has scaled really well every time!
+
+Finally, Kea's functionality is not set in stone. Whenever you find yourself writing repetitive code,
 you may [abstract it away](/docs/plugins/writing-plugins) into a plugin. In fact, Kea's core 
 is actually [implemented](https://github.com/keajs/kea/blob/master/src/core/index.js) as a plugin itself.
 There are plugins for [routing](/docs/plugins/router), [offline storage](/docs/plugins/localstorage), 
 [sagas](/docs/effects/sagas), [websockets](/docs/plugins/websockets) and much more. This opens up
 whole new ways to build applications.
-
-Finally, Kea is not a theoretical project. It's built by people who build complex applications for a 
-living. Kea has been used in [several large projects](/), which consist of hundreds of logics that
-cover thousands of components. It has scaled really well every time!
 
 ## What is Kea *not* good for?
 
@@ -70,7 +71,7 @@ to share logic between components, it's wise to evaluate real state management s
 
 Second, Kea is rather opinionated and wants you to follow some functional programming principles. Mainly
 this means that you should never modify existing state (`state.push(newElement)`), but must always create
-new state (`[...state, newElement]`). Instead of abstracting away these details from the end-user,
+new state (`state = [...state, newElement]`). Instead of abstracting away these details from the end-user,
 like some libraries do with [immer](https://immerjs.github.io/immer), Kea embraces 
 this style of writing code. I believe the time spent learning a bit of functional programming
 is absolutely [worth it](http://www.paulgraham.com/avg.html) and will make you into a better programmer 
