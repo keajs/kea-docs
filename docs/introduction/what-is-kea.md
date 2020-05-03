@@ -69,8 +69,8 @@ Very tiny apps might also do fine with just React's `useState`, but as soon as y
 to share logic between components, it's wise to evaluate real state management solutions.
 
 Second, Kea is rather opinionated and wants you to follow some functional programming principles. Mainly
-this means that you should never modify existing state (`array.push(element)`), but must always create
-new state (`[...array, newElement]`). Instead of abstracting away these details from the end-user,
+this means that you should never modify existing state (`state.push(newElement)`), but must always create
+new state (`[...state, newElement]`). Instead of abstracting away these details from the end-user,
 like some libraries do with [immer](https://immerjs.github.io/immer), Kea embraces 
 this style of writing code. I believe the time spent learning a bit of functional programming
 is absolutely [worth it](http://www.paulgraham.com/avg.html) and will make you into a better programmer 
