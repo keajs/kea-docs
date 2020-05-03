@@ -26,7 +26,7 @@ Kea is built on top of Redux and leverages its underlying functional principles.
 * All related actions, reducers, selectors and listeners are grouped into a **logic** (*counterLogic*).
 * React Components **connect** to this logic and pull in all needed actions and values.    
 
-Read the [installation instructions](/docs/introduction/installation) to add Kea to your app and 
+Read the [installation instructions](/docs/introduction/installation) to get started or 
 check out the [quickstart](/docs/introduction/quickstart) to see some code. 
 
 ## What is Kea good for?
@@ -34,23 +34,25 @@ check out the [quickstart](/docs/introduction/quickstart) to see some code.
 First, Kea is not just a place to put your app's data. It's actually a framework for managing
 the [complete lifecycle](/docs/guide/advanced#lifecycles) of this data.
 
-Unlike some other state management libraries, where you statically connect your
-reducers to the store or read state through global variables (`let state = getState({ namespace: 'homepage' })`),
-Kea handles all of this dynamically and behind the scenes. 
+Unlike some other state management libraries, where you statically connect all your reducers to the 
+store (`const store = configureStore({ counter: counterSlice.reducer })`) or 
+read state through hardcoded global variables (`const todos = useStoreState(state => state.todos.items)`),
+you don't need to worry about this in Kea. The framework does it for you.
 
-Kea's logic is always connected to your React components (and to other logic) via regular
-EcmaScript `import` statements and activated (*mounted*) only when requested by any component.
+Logic in Kea is always connected to your React components (and to other `logic`) via regular
+EcmaScript `import` statements and mounted only when requested by a component.
 Logic that is no longer in use is automatically unmounted, freeing up memory.
 
 This makes Kea perfect for large apps with complex relationships between state and components.
 This also means that [code-splitting](https://webpack.js.org/guides/code-splitting/) works out of the 
-box with Kea. No configuration required.
+box with Kea. No patchwork required.
 
 Second, Kea's functionality is not set in stone. Whenever you find yourself writing repetitive code,
 you may [abstract it away](/docs/plugins/writing-plugins) into a plugin. In fact, Kea's core 
 is actually [implemented](https://github.com/keajs/kea/blob/master/src/core/index.js) as a plugin itself.
 There are plugins for [routing](/docs/plugins/router), [offline storage](/docs/plugins/localstorage), 
-[sagas](/docs/effects/sagas), [websockets](/docs/plugins/websockets) and much more. 
+[sagas](/docs/effects/sagas), [websockets](/docs/plugins/websockets) and much more. This opens up
+whole new ways to build applications.
 
 Finally, Kea is not a theoretical project. It's built by people who build complex applications for a 
 living. Kea has been used in [several large projects](/), which consist of hundreds of logics that
@@ -82,8 +84,8 @@ for the next versions of Kea.
 Fourth, did I mention Kea is opinionated? Sometimes it may be too explicit for your taste (*having
 to explicitly define actions* for example), sometimes it might be too implicit or too magical. There 
 is thought put into each decision that went into Kea, taking into account developer happiness (neat and 
-clean code that just works) and developer productivity (limiting bugs). It's a tight line to walk, 
-but I believe Kea strikes a beautiful balance. You might disagree. If so, 
+clean code that just works) and developer productivity (limiting bugs). It's a tight rope to walk, 
+yet I believe Kea strikes a beautiful balance. You might disagree. If so, 
 [open an issue](https://github.com/keajs/kea/issues) and let's debate!
 
 ## Why "kea"?
@@ -106,5 +108,5 @@ from a maze.
 Kea the framework follows a similar approach. It offers a simple and straightforward solution 
 to the complicated problem of state management. 
 
-Plus, I was flying back to Belgium from New Zealand several years ago when I started to learn React.
-Thus I find the name strangely fitting.
+Plus, when I started to learn React, I was on a plane back to Belgium from a holiday in New Zealand,
+having just seen the bird a week before. Thus I find the name strangely fitting.
