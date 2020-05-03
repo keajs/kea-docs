@@ -110,4 +110,5 @@ Kea the framework follows a similar approach. It offers a simple and straightfor
 to the complicated problem of state management. 
 
 Plus, when I started to learn React, I was on a plane back to Belgium from a holiday in New Zealand,
-having just seen the bird a week before. Thus I find the name strangely fitting.
+having just [seen the bird](https://photos.app.goo.gl/5DNXZWCKtYveeu8c9) a week before. Thus I find 
+the name strangely fitting.
