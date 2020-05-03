@@ -59,7 +59,7 @@ export default kea({
         // saga cancelled or component unmounted
     },
 
-    takeEvery: ({ actions, workers }) => ({
+    takeEvery: ({ actions, actionCreators, values, workers }) => ({
         simpleAction: function* () {
             // inline worker
 
