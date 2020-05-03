@@ -58,18 +58,35 @@ thousands of components. It has scaled really well in all cases!
 
 ## What is Kea *not* good for?
 
-TODO 
+All that said, there are few cases when you should not consider using Kea.
 
-- We use functional paradigms (don't modify state, make new stuff)
-- Not needed for very small apps
-- Has a bit of magic, so keep away if you are afraid
-- GraphQL support is lacking
-- Very opinionated
-- ...
+First, if you have a large app with an existing state management solution that works reasonably well,
+switching to Kea might cost more than it's worth. This might especially be the case if your entire app
+is built around [GraphQL/Apollo](https://www.apollographql.com/) or another complete ecosystem. 
+Very tiny apps might also do fine with just React's `useState`, but as soon as you need
+to share logic between components, it's wise to evaluate real state management solutions.
+
+Second, Kea is rather opinionated and wants you to follow some functional programming principles. Mainly
+this means that you should never modify existing state (`array.push(element)`), but must always create
+new state (`[...array, newElement]`). Instead of abstracting away these details from the end-user,
+like some libraries do with [immer](https://immerjs.github.io/immer), Kea embraces 
+this style of writing code. I believe the time spent learning a bit of functional programming
+is absolutely [worth it](http://www.paulgraham.com/avg.html) and will make you into a better programmer 
+overall. That said, this style is not for everyone.
+
+Third, as of Kea 2.0, we are still missing native TypeScript support. Kea works fine with TS if you
+[manually create interfaces](https://github.com/keajs/kea/issues/35#issuecomment-561814506), yet
+we could do better. Addressing this support is [one of the main goals](/blog/kea-2.0#typescript-support) 
+for the next versions of Kea.
+
+Fourth, did I mention Kea is opinionated? Sometimes it may be too explicit for your taste (*having
+to explicitly define actions* for example), sometimes it might be too implicit or too magical. There 
+is thought put into each decision that went into Kea, taking into account developer happiness (neat and 
+clean code that just works) and developer productivity (limiting bugs). It's a tight line to walk, 
+but I believe Kea strikes a beautiful balance. You might disagree. If so, 
+[open an issue](https://github.com/keajs/kea/issues) and let's debate!
 
 ## Why "kea"?
-
-TODO 
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/Kea):
 
@@ -80,4 +97,14 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/Kea):
 > and pulling things in a certain order to get to food, and will work together to achieve a certain 
 > objective.
 
-Kea the framework follows a similar approach. 
+[Check out some videos](https://www.youtube.com/results?search_query=kea+the+smartest+parrot) to see 
+this magnificent bird in action.
+
+Kea the parrot always finds the shortest and the smartest way to achieve a goal, such as getting food
+from a maze.
+
+Kea the framework follows a similar approach. It offers a simple and straightforward solution 
+to the complicated problem of state management. 
+
+Plus, I was flying back to Belgium from New Zealand several years ago when I started to learn React.
+Thus I find the name strangely fitting.
