@@ -4,9 +4,11 @@ title: Listeners
 sidebar_label: Listeners
 ---
 
-:::note
+:::note Do this first
 Read the [listeners section](/docs/guide/concepts#listeners) in the 
 [Core Concepts](/docs/guide/concepts) page to get a detailed explanation of how to use listeners.
+Then come back here to read about `sharedListeners`, `breakpoints` and other advanced features
+of listeners.
 :::
 
 ## Installation
@@ -38,7 +40,7 @@ const logic = kea({
             }
         },
 
-        // listen to any redux action type, not just ones defined in this logic
+        // listen to any redux action, not just local kea actions
         LOCATION_CHANGE: (payload) => {
             // do something with the regular redux action
             console.log(payload)
@@ -50,19 +52,23 @@ const logic = kea({
 
         // two listeners with one shared action
         [actions.anotherAction]: sharedListeners.sharedActionListener,
-        [otherLogic.actions.yetAnotherAction]: sharedListeners.sharedActionListener,
+
+        [otherLogic.actions.yetAnotherAction]: 
+                                 sharedListeners.sharedActionListener,
 
         // Debounce for 300ms before making an API call
         // Break if this action was called again while we were sleeping
         debouncedFetchResults: async ({ username }, breakpoint) => {
-            // If the same action gets called again while this waits, we will throw an exception
-            // and catch it immediately, effectively cancelling the operation.
+            // If the same action gets called again while this waits, we 
+            // will throw an exception and catch it immediately, 
+            // effectively cancelling the operation.
             await breakpoint(300)
 
             // Make an API call
             const user = await API.fetchUser(username)
 
-            // if during the previous fetch this action was called again, then break here
+            // if during the previous fetch this listener was called 
+            // again, then break here
             breakpoint()
 
             // save the result
@@ -173,7 +179,8 @@ kea({
             const url = `${API_URL}/users/${username}/repos?per_page=250`
             const response = await window.fetch(url)
             
-            breakpoint() // break if `setUsername` was called while we were fetching
+            // break if `setUsername` was called again while we were fetching
+            breakpoint() 
             
             const json = await response.json()
             
@@ -186,12 +193,40 @@ kea({
     })
 })
 ```
+
+Under the hood breakpoints just `throw` exceptions.
+
+In case you must call a breakpoint from within a `try / catch` block, use the `isBreakpoint`
+function to check if the caught exception was from a breakpoint or not:
+
+```javascript
+import { kea, isBreakpoint } from 'kea'
+
+kea({
+    listeners: ({ actions }) => ({
+        setUsername: async ({ username }, breakpoint) => {
+            try {
+                const response = await api.getResults(username)
+                breakpoint()
+                actions.setRepositories(response)
+            } catch (error) {
+                if (isBreakpoint(error)) {
+                    throw error // pass it along
+                }
+                actions.setFetchError(json.message)
+            }
+        }
+    })
+})
+```
+
 ## Auto-Connect
 
 Listeners support `autoConnect`. This means that if inside one listener you access
 properties on another `logic`, it will be mounted automatically and unmounted together with your logic.
 
-Read more about it in the [Kea 2.0 announcement blog post](/blog/kea-2.0#auto-connect) 
+Read more about it in the [Kea 2.0 announcement blog post](/blog/kea-2.0#auto-connect) or in the
+[Advanded Concepts](/docs/guide/advanced#automatic-connections) guide. 
 
 There is a slight caveat for when you want to manually `.mount()` and `unmount` a logic
 inside listeners, *without* that logic being automatically connected. Read more about it in 
