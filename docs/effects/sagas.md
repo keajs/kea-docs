@@ -66,14 +66,20 @@ export default kea({
             // one way to dispatch an action
             actions.actionWithStaticPayload() 
 
-            // anoter way to dispatch an action
+            // another way to dispatch an action
             yield put(actionCreators.actionWithStaticPayload()) 
+            
+            // yet another way to dispatch an action
+            yield put(this.actionCreators.actionWithStaticPayload()) 
          
             // one way to read a value
             const someValue = values.someValue
 
-            // anoether way to read a value
-            const someValueAgain = yield this.get('someValue')
+            // another way to read a value
+            const someValueAgain = this.values.someValue
+
+            // yet another way to read a value
+            const someValueOnceAgain = yield this.get('someValue')
         },
         [actions.simpleAction]: function* () {
             // another way to define an inline worker
