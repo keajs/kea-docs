@@ -31,8 +31,8 @@ check out the [quickstart](/docs/introduction/quickstart) to see some code.
 
 ## What is Kea good for?
 
-Kea is not just a place to put your app's data. It's actually a framework for managing
-the complete lifecycle of this data.
+First, Kea is not just a place to put your app's data. It's actually a framework for managing
+the [complete lifecycle](/docs/guide/advanced#lifecycles) of this data.
 
 Unlike some other state management libraries, where you statically connect your
 reducers to the store or read state through global variables (`let state = getState({ namespace: 'homepage' })`),
@@ -46,12 +46,15 @@ This makes Kea perfect for large apps with complex relationships between state a
 This also means that [code-splitting](https://webpack.js.org/guides/code-splitting/) works out of the 
 box with Kea. No configuration required.
 
-TODO
+Second, Kea's functionality is not set in stone. Whenever you find yourself writing repetitive code,
+you may [abstract it away](/docs/plugins/writing-plugins) into a plugin. In fact, Kea's core 
+is actually [implemented](https://github.com/keajs/kea/blob/master/src/core/index.js) as a plugin itself.
+There are plugins for [routing](/docs/plugins/router), [offline storage](/docs/plugins/localstorage), 
+[sagas](/docs/effects/sagas), [websockets](/docs/plugins/websockets) and much more. 
 
-- Scales well as your app grows
-- Logic connects to each other
-- Extendable with plugins
-- ...
+Finally, Kea is not a theoretical project. It's built by people who build complex applications for a 
+living. Kea has been used in [several huge projects](/), consisting of hundreds of logics between 
+thousands of components. It has scaled really well in all cases!
 
 ## What is Kea *not* good for?
 
