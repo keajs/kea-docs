@@ -15,7 +15,7 @@ and then fetches all the repositories for that user on Github.
 
 The final result will look like this:
 
-:::note DEMO
+:::note Final Result
 <GithubScene />
 :::
 
@@ -23,7 +23,7 @@ The final result will look like this:
 Now that you have seen the end result, let's build it, piece by piece.
 The first thing we want to do is to have an input field to enter the username and store it in kea:
 
-```jsx live noInline
+```jsx
 import { kea, useActions, useValues } from 'kea'
 
 const logic = kea({
@@ -57,8 +57,6 @@ function Github () {
         </div>
     )
 }
-
-render(<Github />)
 ```
 
 Live demo:
@@ -71,7 +69,7 @@ Live demo:
 
 The next step is to listen for the `setUsername` action and run some code whenever it has been dispatched:
 
-```jsx live noInline
+```jsx
 const logic = kea({
     actions: () => ({
       setUsername: (username) => ({ username })
@@ -97,7 +95,7 @@ We must ask Github for data about this user.
 For this we'll use the standard `window.Fetch` API. We also add 300 milliseconds
 of debounce before actually making the call, to give the user time to add another keystroke:
 
-```jsx live noInline
+```jsx
 const API_URL = 'https://api.github.com'
 
 const logic = kea({
@@ -144,7 +142,7 @@ We can get all of this by just adding two new actions:
 
 Hooking them up gives the following result:
 
-```jsx live noInline
+```jsx
 const logic = kea({
   actions: () => ({
     setUsername: (username) => ({ username }),
@@ -179,7 +177,7 @@ const logic = kea({
 
 Now we just need to call the right actions from the worker:
 
-```jsx live noInline
+```jsx
 const API_URL = 'https://api.github.com'
 
 const logic = kea({
@@ -210,7 +208,7 @@ const logic = kea({
 ## 5. Display the result
 The last step is to display the repositories to the user. To do this we use the following code:
 
-```jsx live noInline
+```jsx
 function Github () {
   const { username, isLoading, repositories, error } = useValues(logic)
   const { setUsername } = useActions(logic)
@@ -268,7 +266,7 @@ Let's fix these points!
 
 First, to load the repositories on page load, we can use kea's mount events and run an action whenever the logic is mounted:
 
-```jsx live noInline
+```jsx
 const logic = kea({
   // listeners: ...
 
@@ -282,7 +280,7 @@ const logic = kea({
 
 To stort the results we can create a selector that takes `repositories` as input and outputs a sorted array:
 
-```jsx live noInline
+```jsx
 const logic = kea({
   // ...
   selectors: ({ selectors }) => ({
@@ -309,7 +307,7 @@ GithubFull /
 </div>
 With this code:
 
-```jsx live noInline
+```jsx
 import React from 'react'
 import { kea, useActions, useValues } from 'kea'
 
