@@ -83,6 +83,9 @@ function Home() {
                     </div>
                 </div>
             </header>
+            <div style={{ textAlign: 'center' }}>
+              TODO: add company logos, add testimonials, fix feature points
+            </div>
             <main>
                 {features && features.length && (
                     <section className={styles.features}>
