@@ -131,11 +131,12 @@ export function A(props) {
     return (
         <a
             {...props}
-            onClick={(e) => {
+            onClick={(event) => {
                 if (!props.target) {
-                    e.preventDefault()
+                    event.preventDefault()
                     router.actions.push(props.href) // router is mounted automatically, so this is safe to call
                 }
+                props.onClick && props.onClick(event)
             }}
         />
     )
