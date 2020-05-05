@@ -56,6 +56,11 @@ routerPlugin({
     // For example to have the same app on many subfolders in one the site.
     pathFromRoutesToWindow: (path) => '/subfolder' + path,
     pathFromWindowToRoutes: (path) => path.replace(/^\/subfolder/, ''),
+
+    // kea-router has support for (de)serializing the search and hash parameters
+    // It comes with sensible default functions, yet you can override them here
+    encodeParams: (obj = { key: 'value' }, symbol = '?') => '?key=value',
+    decodeParams: (input = '?key=value', symbol = '?') => ({ key: 'value' })
 })
 ```
 
@@ -67,30 +72,30 @@ Use `actionToUrl` to change the URL in response to actions and `urlToAction` to 
 import { kea } from 'kea'
 
 export const articlesLogic = kea({
-  // define the actions from below
-  actions: () => ({ ... }),
-
-  // define article = { id, ... }
-  reducers: () => ({ ... }),
-
-  actionToUrl: ({ actions, values }) => ({
-    [actions.openList]: ({ id }) => `/articles`,
-    [actions.openArticle]: ({ id }) => `/articles/${id}`,
-    [actions.openComments]: () => `/articles/${values.article.id}/comments`,
-    [actions.closeComments]: () => `/articles/${values.article.id}`
-  }),
-
-  urlToAction: ({ actions }) => ({
-    '/articles': () => actions.openList(),
-    '/articles/:id(/:extra)': ({ id, extra }) => {
-      actions.openArticle(id)
-      if (extra === 'comments') {
-        actions.openComments()
-      } else {
-        actions.closeComments()
-      }
-    },
-  })
+    // define the actions from below
+    actions: () => ({ ... }),
+    
+    // define article = { id, ... }
+    reducers: () => ({ ... }),
+    
+    actionToUrl: ({ values }) => ({
+        openList: ({ id }) => `/articles`,
+        openArticle: ({ id }) => `/articles/${id}`,
+        openComments: () => `/articles/${values.article.id}/comments`,
+        closeComments: () => `/articles/${values.article.id}`
+    }),
+    
+    urlToAction: ({ actions }) => ({
+        '/articles': () => actions.openList(),
+        '/articles/:id(/:extra)': ({ id, extra }) => {
+            actions.openArticle(id)
+            if (extra === 'comments') {
+                actions.openComments()
+            } else {
+                actions.closeComments()
+            }
+        },
+    })
 })
 ```
 
@@ -99,10 +104,52 @@ export const articlesLogic = kea({
 `kea-router` uses the [url-pattern](https://github.com/snd/url-pattern) library under the hood to match
 paths. Please see [its documentation](https://github.com/snd/url-pattern) for all supported options.
 
+### Search and Hash parameters
+
+In case you want to use search and hash parameters, it's pretty easy.
+
+For `actionToUrl`, either include them in the URL or return an array in the format:
+`[pathname, search, hash]`. The `search` and `hash` elements in that array may be either
+strings or objects, which would then be serialised. 
+
+For `urlToAction`, the second parameter will be the deserialised `search` object and the third
+parameter will be the `hash` object:
+
+```javascript
+import { kea } from 'kea'
+
+export const articlesLogic = kea({
+    actionToUrl: ({ values }) => ({
+        openList: ({ id }) => `/articles`,
+        // these three are equivalent
+        openArticle: ({ id }) => `/articles?id=${id}`,
+        openArticle: ({ id }) => [`/articles`, { id }],
+        openArticle: ({ id }) => [`/articles`, `?id=${id}`],
+        openComments: () => [`/articles`, { id: values.article.id, comments: true }],
+        closeComments: () => [`/articles`, { id: values.article.id }, '#hashKey=true'],
+    }),
+
+    urlToAction: ({ actions }) => ({
+        // pathname, search object, hash object 
+        '/articles': (_, { id, comments }, { hashKey }) => {
+            if (id) {
+                actions.openArticle(id)
+                if (comments) {
+                    actions.openComments()
+                } else {
+                    actions.closeComments()
+                }
+            } else {
+                actions.openList()
+            }
+        }
+    })
+})
+```
 
 ### Control the route directly
 
-Import `router` to control the router directly
+Import `router` to control the router directly in your components
 
 ```javascript
 import React from 'react'
@@ -123,6 +170,30 @@ export function MyComponent() {
     )
 }
 ```
+
+Or in a logic:
+
+```javascript
+import { kea } from 'kea'
+import { router } from 'kea-router'
+
+const logic = kea({
+    actions: () => ({
+        buttonPress: true,
+    }),
+
+    listeners: () => ({
+        buttonPress: () => {
+            if (router.values.location.pathname !== '/setup') {
+                router.actions.push("/setup", { search: 'param' }, '#integration')
+            }
+        }
+    })
+})
+```
+
+Both the `push` and `replace` actions accept search and hash parameters as their second and
+third arguments. You can provide both an object or a string for them.
 
 ### Link tag
 
@@ -151,7 +222,8 @@ export function A(props) {
 
 ### Listen to location changes
 
-Listen to the `locationChanged` action to react to URL changes manually
+In case `urlToAction` is not sufficient for your needs, listen to the `locationChanged` action to 
+react to URL changes manually:
 
 ```javascript
 import { kea } from 'kea'
@@ -172,66 +244,65 @@ Here's sample code for a global scene router
 
 ```javascript
 import React, { lazy, useMemo } from 'react'
-import { router } from 'kea-router'
 
 export const scenes = {
-  'dashboard': () => import(/* webpackChunkName: 'dashboard' */'./dashboard/DashboardScene'),
-  'login': () => import(/* webpackChunkName: 'login' */'./login/LoginScene'),
-  'projects': () => import(/* webpackChunkName: 'projects' */'./projects/ProjectsScene'),
+    'dashboard': () => import(/* webpackChunkName: 'dashboard' */'./dashboard/DashboardScene'),
+    'login': () => import(/* webpackChunkName: 'login' */'./login/LoginScene'),
+    'projects': () => import(/* webpackChunkName: 'projects' */'./projects/ProjectsScene'),
 }
 
 export const routes = {
-  '/': 'dashboard',
-  '/login': 'login',
-  '/projects': 'projects',
-  '/projects/:id', 'projects'
+    '/': 'dashboard',
+    '/login': 'login',
+    '/projects': 'projects',
+    '/projects/:id': 'projects'
 }
 
 export const sceneLogic = kea({
-  actions: () => ({
-    setScene: (scene, params) => ({ scene, params })
-  }),
-  reducers: ({ actions }) => ({
-    scene: [null, {
-      [actions.setScene]: (_, payload) => payload.scene
-    }],
-    params: [{}, {
-      [actions.setScene]: (_, payload) => payload.params || {}
-    }]
-  }),
-  urlToAction: ({ actions }) => {
-    const mapping = {}
-    for (const [paths, scene] of Object.entries(routes)) {
-      for (const path of paths.split('|')) {
-        mapping[path] = params => actions.setScene(scene, params)
-      }
+    actions: () => ({
+        setScene: (scene, params) => ({ scene, params })
+    }),
+    reducers: ({ actions }) => ({
+        scene: [null, {
+            [actions.setScene]: (_, payload) => payload.scene
+        }],
+        params: [{}, {
+            [actions.setScene]: (_, payload) => payload.params || {}
+        }]
+    }),
+    urlToAction: ({ actions }) => {
+        const mapping = {}
+        for (const [paths, scene] of Object.entries(routes)) {
+            for (const path of paths.split('|')) {
+                mapping[path] = params => actions.setScene(scene, params)
+            }
+        }
+        return mapping
     }
-    return mapping
-  }
 })
 
 export function Layout({ children }) {
-  return (
-    <div className='layout'>
-      <div className='menu'>...</div>
-      <div className='content'>{children}</div>
-    </div>
-  )
+    return (
+        <div className='layout'>
+            <div className='menu'>...</div>
+            <div className='content'>{children}</div>
+        </div>
+    )
 }
 
 export function Scenes() {
-  const { scene, params } = useValues(sceneLogic)
-
-  const Scene = useMemo(() => {
-    return scenes[scene] ? lazy(scenes[scene]) : () => <div>404</div>
-  }, [scene])
-
-  return (
-    <Layout>
-      <Suspense fallback={() => <div>Loading...</div>}>
-        <Scene {...params} />
-      </Suspense>
-    </Layout>
-  )
+    const { scene, params } = useValues(sceneLogic)
+    
+    const Scene = useMemo(() => {
+        return scenes[scene] ? lazy(scenes[scene]) : () => <div>404</div>
+    }, [scene])
+    
+    return (
+        <Layout>
+            <Suspense fallback={() => <div>Loading...</div>}>
+                <Scene {...params} />
+            </Suspense>
+        </Layout>
+    )
 }
 ```
