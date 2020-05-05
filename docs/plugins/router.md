@@ -130,7 +130,7 @@ export const articlesLogic = kea({
     }),
 
     urlToAction: ({ actions }) => ({
-        // pathname, search object, hash object 
+        // (pathParams, searchParams, hashParams) => { ... }  
         '/articles': (_, { id, comments }, { hashKey }) => {
             if (id) {
                 actions.openArticle(id)
