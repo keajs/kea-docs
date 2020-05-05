@@ -94,6 +94,12 @@ export const articlesLogic = kea({
 })
 ```
 
+### Url Pattern
+
+`kea-router` uses the [url-pattern](https://github.com/snd/url-pattern) library under the hood to match
+paths. Please see [its documentation](https://github.com/snd/url-pattern) for all supported options.
+
+
 ### Control the route directly
 
 Import `router` to control the router directly
