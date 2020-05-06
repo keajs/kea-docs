@@ -4,6 +4,10 @@ title: Github API
 sidebar_label: Github API
 ---
 
+:::warning
+This page is still a work in progress: this tutorial has not been completed.
+:::
+
 import { GithubScene } from './github/index.js'
 import { Provider } from 'react-redux'
 import { getContext, kea, useActions, useValues } from 'kea' 

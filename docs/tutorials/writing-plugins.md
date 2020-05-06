@@ -3,6 +3,10 @@ id: writing-plugins
 title: Writing plugins
 ---
 
+:::warning
+This page is still a work in progress: this tutorial has not been completed.
+:::
+
 :::tip
 
 NB! See the [plugins API page](/docs/api/plugins) for a list of everything that plugins can do.

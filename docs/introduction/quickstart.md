@@ -228,5 +228,7 @@ function Counter() {
 
 ## Next Steps
 
-I strongly recommend you read [Core Concepts](/docs/guide/concepts) next to get a better
+Ready to install Kea? Read the [installation instructions](/docs/installation/instructions)!
+
+I strongly recommend you read [Core Concepts](/docs/guide/concepts) after to get a better
 understanding of why everything works the way it does.

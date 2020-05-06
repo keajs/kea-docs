@@ -1,11 +1,17 @@
 ---
-id: generic
-title: Generic
-sidebar_label: Generic
+id: instructions
+title: Instructions
+sidebar_label: Instructions
 ---
 
 Installing `kea` is rather straightforward. You need to install some packages, reset kea's context and 
 wrap your app with react-redux's `<Provider />` tag.
+
+:::note
+If you're using a JS framework such as [next.js](/docs/installation/nextjs), check out the detailed
+instructions for it.
+The instructions below are generic and should work for most setups.
+:::
 
 ## Install the packages
 

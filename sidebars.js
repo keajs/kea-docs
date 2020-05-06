@@ -1,7 +1,7 @@
 module.exports = {
   someSidebar: {
     'Introduction': ["introduction/what-is-kea", "introduction/quickstart"],
-    'Installation': ["installation/generic", "installation/nextjs"],
+    'Installation': ["installation/instructions", "installation/nextjs"],
     'Guide': ["guide/concepts", "guide/advanced", "guide/react", "guide/standalone", "guide/debugging", "guide/migrating-redux", "guide/history"],
     'Tutorials': ['tutorials/github', "tutorials/writing-plugins"],
     'Side Effects': ['effects/listeners', 'effects/sagas', 'effects/thunks'],

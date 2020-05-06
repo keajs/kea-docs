@@ -27,7 +27,7 @@ Kea is built on top of Redux and leverages its underlying functional principles.
 * React Components **connect** to this logic and pull in all needed actions and values.    
 
 Check out the [quickstart](/docs/introduction/quickstart) to see this as code or read the 
-[installation instructions](/docs/installation/generic) to get started. 
+[installation instructions](/docs/installation/instructions) to get started. 
 
 ## What is Kea good for?
 
