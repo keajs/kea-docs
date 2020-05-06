@@ -106,31 +106,26 @@ paths. Please see [its documentation](https://github.com/snd/url-pattern) for al
 
 ### Search and Hash parameters
 
-In case you want to use search and hash parameters, it's pretty easy.
+`kea-router` has built in support for serializing and deserializing `search` and `hash` URL parameters, such as:
 
-For `actionToUrl`, either include them in the URL or return an array in the format:
-`[pathname, search, hash]`. The `search` and `hash` elements in that array may be either
-strings or objects, which would then be serialised. 
+```javascript
+// "pathname" + "?search" + "#hash"
+url = "http://example.com/path?searchParam=true#hashParam=nah"
+```
 
-For `urlToAction`, the second parameter will be the deserialised `search` object and the third
-parameter will be the `hash` object:
+The second and third parameters to `urlToAction` are `searchParams` and `hashParams` respectively.
+These are deserialized objects that you can use directly.
 
 ```javascript
 import { kea } from 'kea'
 
 export const articlesLogic = kea({
-    actionToUrl: ({ values }) => ({
-        openList: ({ id }) => `/articles`,
-        // these three are equivalent
-        openArticle: ({ id }) => `/articles?id=${id}`,
-        openArticle: ({ id }) => [`/articles`, { id }],
-        openArticle: ({ id }) => [`/articles`, `?id=${id}`],
-        openComments: () => [`/articles`, { id: values.article.id, comments: true }],
-        closeComments: () => [`/articles`, { id: values.article.id }, '#hashKey=true'],
-    }),
-
     urlToAction: ({ actions }) => ({
-        // (pathParams, searchParams, hashParams) => { ... }  
+        // '/path': (pathParams, searchParams, hashParams) => { ... }
+
+        // ==> "/articles?id=123&comments=true#hashKey=hurray"
+        // --> searchParams = { id: 123, comments: true }
+        // --> hashParams = { hashKey: 'hurray' }        
         '/articles': (_, { id, comments }, { hashKey }) => {
             if (id) {
                 actions.openArticle(id)
@@ -147,6 +142,33 @@ export const articlesLogic = kea({
 })
 ```
 
+For `actionToUrl`, you may include the `search` and `hash` parts directly in the URL or return
+an array in the format: `[pathname, searchParams, hashParams]`. The `searchParams` and `hashParams`
+can be both strings or objects. 
+
+```javascript
+import { kea } from 'kea'
+
+export const articlesLogic = kea({
+    actionToUrl: ({ values }) => ({
+        // Use one of:
+        // - action: () => url,
+        // - action: () => [url, searchParams, hashParams],
+
+        openList: ({ id }) => `/articles`,
+
+        // these three are equivalent
+        openArticle: ({ id }) => `/articles?id=${id}`,
+        openArticle: ({ id }) => [`/articles`, { id }],
+        openArticle: ({ id }) => [`/articles`, `?id=${id}`],
+
+        openComments: () => [`/articles`, { id: values.article.id, comments: true }],
+        closeComments: () => [`/articles`, { id: values.article.id }, '#hashKey=true'],
+    })
+})
+```
+
+
 ### Control the route directly
 
 Import `router` to control the router directly in your components
@@ -159,7 +181,9 @@ import { router } from 'kea-router'
 export function MyComponent() {
     const { push, replace } = useActions(router)
     const {
-        location: { pathname, search, hash },
+        location: { pathname, search, hash }, // strings
+        searchParams, // object
+        hashParams // object
     } = useValues(router)
 
     return (
@@ -192,8 +216,9 @@ const logic = kea({
 })
 ```
 
-Both the `push` and `replace` actions accept search and hash parameters as their second and
-third arguments. You can provide both an object or a string for them.
+Both the `push` and `replace` actions accept `searchParams` and `hashParams` as their second and
+third arguments. You can provide both an object or a string for them. You can also include the
+search and hash parts in the `url`.
 
 ### Link tag
 
