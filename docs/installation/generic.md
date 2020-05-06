@@ -1,7 +1,7 @@
 ---
-id: installation
-title: Installation
-sidebar_label: Installation
+id: generic
+title: Generic
+sidebar_label: Generic
 ---
 
 Installing `kea` is rather straightforward. You need to install some packages, reset kea's context and 
