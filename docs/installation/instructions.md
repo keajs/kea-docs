@@ -1,6 +1,6 @@
 ---
 id: instructions
-title: Instructions
+title: Installation Instructions
 sidebar_label: Instructions
 ---
 
