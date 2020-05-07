@@ -1,0 +1,65 @@
+
+section.homepage-logos {
+    background: hsla(123, 25%, 90%, 1);
+    padding: 10px 0;
+}
+
+section.homepage-logos .trusted {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 13px;
+    color: hsla(124, 50%, 12%, 1);
+    white-space: nowrap;
+}
+
+section.homepage-logos .container {
+    display: flex;
+    align-items: center;
+}
+
+section.homepage-logos img {
+    height: 30px;
+    margin-left: 40px;
+}
+
+section.homepage-logos img.navirec {
+    margin-top: 1px;
+    width: 110px;
+    height: 30px;
+}
+section.homepage-logos .posthog {
+    display: inline-block;
+    font-weight: 500;
+    font-size: 20px;
+    color: #333;
+    line-height: 30px;
+    white-space: nowrap;
+    min-width: 140px;
+}
+section.homepage-logos .posthog > img {
+    width: 24px;
+    height: 30px;
+    vertical-align: top;
+}
+section.homepage-logos .posthog > span {
+    padding-left: 10px;
+    line-height: 30px;
+}
+section.homepage-logos img.elastic {
+    width: 93px;
+    height: 32px;
+}
+section.homepage-logos img.gsmtasks {
+    width: 140px;
+    height: 24px;
+    margin-bottom: 6px;
+}
+section.homepage-logos img.smart {
+    width: 92px;
+    height: 30px;
+}
+section.homepage-logos img.apprentus {
+    margin-top: 1px;
+    width: 169px;
+    height: 30px;
+}
