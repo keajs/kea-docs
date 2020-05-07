@@ -85,19 +85,18 @@ function Home() {
                 </div>
             </header>
             <section className='homepage-logos'>
-              <div className={classnames("container", styles.logosContainer)}>
+              <div className='container'>
                 <span className='trusted'>Trusted by:</span>
-                <img className='navirec' src={useBaseUrl('img/trusted/navirec.svg')} />
-                <span className='posthog'><img src={useBaseUrl('img/trusted/posthog.png')} /><span>PostHog</span></span>
-                <img className='elastic' src={useBaseUrl('img/trusted/elastic.svg')} />
-                <img className='gsmtasks' src={useBaseUrl('img/trusted/gsmtasks.svg')} />
-                <img className='smart' src={useBaseUrl('img/trusted/smart.png')} />
-                <img className='apprentus' src={useBaseUrl('img/trusted/apprentus.png')} />
+                <div className='trusted-logos'>
+                  <img className='navirec' src={useBaseUrl('img/trusted/navirec.svg')} />
+                  <span className='posthog'><img src={useBaseUrl('img/trusted/posthog.png')} /><span>PostHog</span></span>
+                  <img className='elastic' src={useBaseUrl('img/trusted/elastic.svg')} />
+                  <img className='gsmtasks' src={useBaseUrl('img/trusted/gsmtasks.svg')} />
+                  <img className='smart' src={useBaseUrl('img/trusted/smart.png')} />
+                  <img className='apprentus' src={useBaseUrl('img/trusted/apprentus.png')} />
+                </div>
               </div>
             </section>
-            <div style={{ textAlign: 'center' }}>
-              TODO: add testimonials, fix feature points
-            </div>
             <main>
                 {features && features.length && (
                     <section className={styles.features}>
