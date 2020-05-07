@@ -143,6 +143,8 @@ If you call `await breakpoint(delay)`, the code will pause for `delay` milliseco
 resuming. In case the action you're listening to gets dispatched again during this delay,
 the listener for the old action will terminate. The new one will keep running. 
 
+In case the logic unmounts during this delay, the listener will just terminate.
+
 ```javascript
 kea({
     listeners: ({ actions }) => ({
@@ -158,9 +160,9 @@ kea({
 ```
 
 If you call `breakpoint()` without any arguments (and without `await`), there will be no pause.
-It'll just check if the listener was called again and terminate if that's the case. You should
-use this version of `breakpoint()` after long running calls and network requests in order to 
-avoid those "out of order" errors.
+It'll just check if the listener was called again or the logic was unmounted and terminate if that's 
+the case. You can use this version of `breakpoint()` after long running calls and network requests 
+to avoid those "out of order" errors.
 
 Here's an example that uses both types of breakpoints:
 
@@ -179,7 +181,8 @@ kea({
             const url = `${API_URL}/users/${username}/repos?per_page=250`
             const response = await window.fetch(url)
             
-            // break if `setUsername` was called again while we were fetching
+            // break if `setUsername` was called again while we were fetching or if
+            // the logic was unmounted, e.g. by the user moving to a different page
             breakpoint() 
             
             const json = await response.json()
