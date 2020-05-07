@@ -1,3 +1,10 @@
+.hero.hero--primary {
+    color: white !important;
+}
+
+.hero.hero--primary a.button:not(:hover) {
+    color: white !important;
+}
 
 section.homepage-logos {
     background: hsla(123, 25%, 90%, 1);
