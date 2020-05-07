@@ -118,3 +118,13 @@ section.homepage-logos img.apprentus {
     width: 169px;
     height: 30px;
 }
+
+.homepage-testimonials {
+    background: hsl(220, 9%, 93%);
+    padding: 50px 0;
+    color: #1c1e21 !important;
+}
+
+.homepage-testimonials .avatar__photo {
+    box-shadow: 1px 3px 5px rgba(0,0,0,0.1);
+}
