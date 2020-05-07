@@ -331,3 +331,42 @@ export function Scenes() {
     )
 }
 ```
+
+### Utility functions
+
+`kea-router` exposes three functions to help manage urls in your app:
+
+```javascript
+import { encodeParams, decodeParams, combineUrl } from 'kea-router'
+
+// Use `encodeParams` to convert an object to part of a path
+// --> encodeParams(object, symbol)
+encodeParams({ key: 'value' }, '?') === '?key=value' 
+
+// Use `decodeParams` to convert a part of a path to an object
+// --> decodeParams(object, symbol)
+decodeParams('?key=value', '?') === { key: 'value' }
+decodeParams('key=value', '?') === { key: 'value' }
+
+// Use `combineUrl` to both split an existing url into its components and
+// to merge new search and hash parts into an existing url.
+// --> combineUrl(url, searchInput, hashInput, encodeParams, decodeParams)
+//   - `searchInput` and `hashInput` can be either a string or an object
+//   - `encodeParams` and `decodeParams` can be overridden if needed
+combineUrl('/path?key=value#hash') === {
+    url: '/path?key=value#hash',
+    pathname: '/path',
+    search: '?key=value',
+    searchParams: { key: 'value' },
+    hash: '#hash',
+    hashParams: { hash: null } 
+}
+combineUrl('/path?key=value#hash', { key: 'otherValue' }, '#addHash=bla') === {
+    url: '/path?key=otherValue#hash&addHash=bla',
+    pathname: '/path',
+    search: '?key=otherValue',
+    searchParams: { key: 'otherValue' },
+    hash: '#hash&addHash=bla',
+    hashParams: { hash: null, addHash: 'bla' } 
+}
+```
