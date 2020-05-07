@@ -58,7 +58,7 @@ module.exports = {
                     ],
                 },
             ],
-            copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+            copyright: `Copyright © 2015-${new Date().getFullYear()} Marius Andra and other Kea contributors.`,
         },
     },
     presets: [
