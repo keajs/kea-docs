@@ -13,7 +13,7 @@ const features = [
         imageUrl: 'img/undraw_docusaurus_mountain.svg',
         description: (
             <>
-                Get up and running in minutes.
+                TODO. Get up and running in minutes.
             </>
         ),
     },
@@ -22,7 +22,7 @@ const features = [
         imageUrl: 'img/undraw_docusaurus_tree.svg',
         description: (
             <>
-                Kea has been used to build huge apps.
+              TODO. Kea has been used to build huge apps.
             </>
         ),
     },
@@ -31,7 +31,7 @@ const features = [
         imageUrl: 'img/undraw_docusaurus_react.svg',
         description: (
             <>
-                Redux. State Machines. Reactive Programming.
+              TODO. Redux. State Machines. Reactive Programming.
             </>
         ),
     },
@@ -40,7 +40,7 @@ const features = [
         imageUrl: 'img/undraw_docusaurus_react.svg',
         description: (
           <>
-              Logic is mounted and unmounted as needed.<br/>
+            TODO. Logic is mounted and unmounted as needed.<br/>
               Code splitting? Not a problem!
           </>
         ),
