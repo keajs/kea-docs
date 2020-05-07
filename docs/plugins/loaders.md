@@ -13,7 +13,7 @@ When making network requests that fetch data, you end up writing the same thing 
 5. a reducer to store the loading state
 6. a listener to make the request and return the data
 
-The `kea-loaderes` plugin abstracts this pattern into a system of loaders.
+The `kea-loaders` plugin abstracts this pattern into a system of loaders.
 
 # Installation
 
