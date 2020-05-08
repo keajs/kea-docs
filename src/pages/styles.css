@@ -160,8 +160,8 @@ html[data-theme="dark"] svg.feature-interconnected path,
 html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(1),
 html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(3),
 html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(4) {
-    fill: hsla(120, 14%, 90%, 1);
+    fill: hsla(219, 14%, 90%, 1);
 }
 html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(2) {
-    stroke: hsla(120, 14%, 90%, 1);
+    stroke: hsla(219, 14%, 90%, 1);
 }
