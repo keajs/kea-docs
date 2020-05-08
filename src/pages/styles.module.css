@@ -31,6 +31,7 @@
   align-items: center;
   padding: 2rem 0;
   width: 100%;
+  background: hsla(120, 24%, 99%, 1);
 }
 html[data-theme="dark"] .features {
   background: hsla(210, 9%, 19%, 1);
