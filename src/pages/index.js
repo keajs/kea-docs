@@ -8,43 +8,33 @@ import styles from './styles.module.css'
 import './styles.css'
 
 const features = [
-    {
-        title: <>Easy to Use</>,
-        imageUrl: 'img/undraw_docusaurus_mountain.svg',
-        description: (
-            <>
-                TODO. Get up and running in minutes.
-            </>
-        ),
-    },
-    {
-        title: <>Production Scale</>,
-        imageUrl: 'img/undraw_docusaurus_tree.svg',
-        description: (
-            <>
-              TODO. Kea has been used to build huge apps.
-            </>
-        ),
-    },
-    {
-        title: <>Built on Strong Foundations</>,
-        imageUrl: 'img/undraw_docusaurus_react.svg',
-        description: (
-            <>
-              TODO. Redux. State Machines. Reactive Programming.
-            </>
-        ),
-    },
-    {
-        title: <>Lifecycles</>,
-        imageUrl: 'img/undraw_docusaurus_react.svg',
-        description: (
-          <>
-            TODO. Logic is mounted and unmounted as needed.<br/>
-              Code splitting? Not a problem!
-          </>
-        ),
-    },
+  {
+    title: <>Strong Foundations</>,
+    description: (
+      <>
+        <p>Kea is a <strong>complete ecosystem</strong> built around Redux, taking it to another level.</p>
+        <p>It comes with <em>batteries included</em> and does more than most competing solutions.</p>
+      </>
+    ),
+  },
+  {
+    title: <>Scalable & Composable</>,
+    description: (
+      <>
+        <p>Kea is built for <strong>productive teams</strong> that work on <strong>ambitious</strong> projects. It scales really well.</p>
+        <p>It's a set of <em>interconnected building blocks</em> that just get out of your way.</p>
+      </>
+    ),
+  },
+  {
+    title: <>Sparks Joy!</>,
+    description: (
+      <>
+        <p>Kea strikes a <strong>beautiful balance</strong> between developer <strong>productivity</strong> and <strong>happiness</strong>.</p>
+        <p>Words like <em>joy</em>, <em>amazing</em>, <em>simple</em> and <em>intuitive</em> have been used to describe the experience.</p>
+      </>
+    ),
+  }
 ]
 
 
