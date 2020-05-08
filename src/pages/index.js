@@ -14,7 +14,7 @@ const features = [
     description: (
       <>
         <p>Kea is a <strong>complete ecosystem</strong> built on top of Redux that adopts its <strong>best</strong> parts.</p>
-        <p>It comes with <em>batteries included</em> and does more than most competing solutions.</p>
+        <p>It comes <em>batteries included</em> and does more than most competing solutions.</p>
       </>
     ),
   },
