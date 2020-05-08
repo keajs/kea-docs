@@ -128,3 +128,25 @@ section.homepage-logos img.apprentus {
 .homepage-testimonials .avatar__photo {
     box-shadow: 1px 3px 5px rgba(0,0,0,0.1);
 }
+
+svg.feature-foundations path,
+svg.feature-interconnected path,
+svg.feature-sparks-joy path:nth-child(1),
+svg.feature-sparks-joy path:nth-child(3),
+svg.feature-sparks-joy path:nth-child(4) {
+    fill: hsla(123, 12%, 8%, 1);
+}
+svg.feature-sparks-joy path:nth-child(2) {
+    stroke: hsla(123, 12%, 8%, 1);
+}
+
+html[data-theme="dark"] svg.feature-foundations path,
+html[data-theme="dark"] svg.feature-interconnected path,
+html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(1),
+html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(3),
+html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(4) {
+    fill: hsla(120, 14%, 90%, 1);
+}
+html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(2) {
+    stroke: hsla(120, 14%, 90%, 1);
+}
