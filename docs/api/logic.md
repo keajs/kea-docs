@@ -18,9 +18,11 @@ logic(props)     --> logic.build(props)
 logic(Component) --> logic.wrap(Component)
 ```
 
-## logic.wrap()
+## logic.wrap(Component)
 
-Wrap the logic around a React Component (functional or Class) and give it access to all actions and values
+Wrap the logic around a React Component (functional or Class) and give it access to all actions and values.
+
+You can also use the shorthand `logic(Component)`, demonstrated below:
 
 ```javascript
 const logic = kea({
@@ -59,9 +61,11 @@ class MyClassComponent extends Component {
 const ConnectedClassComponent = logic(MyClassComponent)
 ```
 
-## logic.build()
+## logic.build(props)
 
 Build the logic, but don't yet connect it to Redux
+
+You may also use the shorthand `logic(props)`.
 
 Builds are cached on the context, so calling it a on every render is very fast, assuming the key doesn't change.
 
@@ -151,7 +155,7 @@ logic.mount(async builtLogic => {
 })
 ```
 
-## logic.extend()
+## logic.extend(input)
 
 Add more features to the logic
 

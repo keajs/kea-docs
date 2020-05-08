@@ -10,9 +10,10 @@ When you use [Kea with React](/docs/guide/react), there's a lot that is handled 
 For example logic is mounted automatically with your `<Component />` and unmounted when it's no longer needed.
 
 Sometimes however, you wish to manually mount logic. For example to already start loading data in
-your router before transitioning to a component... or in `getStaticProps` in next.js.
+your router before transitioning to a component... or in `getInitialProps` in next.js... or when writing
+tests with Jest.
 
-Perhaps you even want to use Kea without React.
+Perhaps you even want to use Kea with a framework other than React.
 
 In any case, just call `mount()` on your logic and get as a reply a function that will `unmount` it:
 
@@ -40,7 +41,7 @@ logic.values.counter
 ```
 
 In case you need to pass props to your logic, for example if it [keyed](/docs/guide/advanced#keyed-logic), 
-build the logic explicitly before calling `mount()` on it:
+[build the logic](/docs/api/logic#logicbuild) explicitly before calling `mount()` on it:
 
 ```javascript
 // create the counter logic from the examples above, but with a key!
