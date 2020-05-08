@@ -32,6 +32,9 @@
   padding: 2rem 0;
   width: 100%;
 }
+html[data-theme="dark"] .features {
+  background: hsla(210, 9%, 19%, 1);
+}
 
 .featureImage {
   height: 150px;

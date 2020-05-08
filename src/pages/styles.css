@@ -125,8 +125,17 @@ section.homepage-logos img.apprentus {
     color: #1c1e21 !important;
 }
 
+html[data-theme="dark"] .homepage-testimonials {
+    background: hsla(220, 9%, 14%, 1);
+    color: hsla(216, 8%, 95%, 1) !important;
+}
+
 .homepage-testimonials .avatar__photo {
     box-shadow: 1px 3px 5px rgba(0,0,0,0.1);
+}
+
+html[data-theme="dark"] .homepage-testimonials .avatar__photo {
+    box-shadow: none;
 }
 
 svg.feature-foundations path,
