@@ -55,7 +55,7 @@ const QUOTES = [
     title: 'CTO at PostHog',
     text: (
       <>
-        I&apos;ve helped open source many projects at Facebook and every one
+        I've helped open source many projects at Facebook and every one
         needed a website. They all had very similar constraints: the
         documentation should be written in markdown and be deployed via GitHub
         pages. I’m so glad that Docusaurus now exists so that I don’t have to
@@ -63,16 +63,29 @@ const QUOTES = [
       </>
     ),
   },
+  // {
+  //   thumbnail: 'https://avatars0.githubusercontent.com/u/727994?s=460&u=25f13f09babcef77247377af7f574280606609e7&v=4',
+  //   name: 'Madis Väin',
+  //   title: 'Software Craftsman at Namespace',
+  //   text: (
+  //     <>
+  //       Open source contributions to the React Native docs have skyrocketed
+  //       after our move to Docusaurus. The docs are now hosted on a small repo in
+  //       plain markdown, with none of the clutter that a typical static site
+  //       generator would require. Thanks Slash!
+  //     </>
+  //   ),
+  // },
   {
-    thumbnail: 'https://avatars0.githubusercontent.com/u/727994?s=460&u=25f13f09babcef77247377af7f574280606609e7&v=4',
-    name: 'Madis Väin',
-    title: 'Software Craftsman at Namespace',
+    thumbnail: 'https://avatars2.githubusercontent.com/u/12876691?s=460&u=52a0866a59533f90b9e66b8768f4efd1ad547109&v=4',
+    name: 'Michael Fatoki-Bello',
+    title: 'User Experience Engineer at Smart Pension',
     text: (
       <>
-        Open source contributions to the React Native docs have skyrocketed
-        after our move to Docusaurus. The docs are now hosted on a small repo in
-        plain markdown, with none of the clutter that a typical static site
-        generator would require. Thanks Slash!
+        Setting up Kea is so simple and intuitive.
+        The best bit has to be how Kea <strong>handles form management</strong>, something that used to be a horrible experience
+        for most frontenders, has been made <strong>so straightforward and almost trivial</strong> to achieve.
+        Such a sane and sensible way to manage state.
       </>
     ),
   },
@@ -82,8 +95,8 @@ const QUOTES = [
     title: 'Senior Front End Engineer at Elastic',
     text: (
       <>
-        We have 3-5 engineers working on the Kea codebase. We use TypeScript and have about 25 logic stores all connected via a parent app logic store.
-        Absolutely LOVE the library and, as a engineer new to Redux, I found this to be incredibly easy to get up to speed on and it seems to scale very well.
+        We have 3-5 engineers working on the Kea codebase. <strong>We use TypeScript</strong> and have about 25 logic stores all connected via a parent app logic store.
+        Absolutely LOVE the library and, as a engineer new to Redux, I found this to be <strong>incredibly easy to get up to speed on</strong> and it seems to scale very well.
       </>
     ),
   },
@@ -109,7 +122,7 @@ function Home() {
     const context = useDocusaurusContext()
     const { siteConfig = {} } = context
     return (
-        <Layout title={`Hello from ${siteConfig.title}`} description="Description will go into a meta tag in <head />">
+        <Layout title='Production Ready State Management for React' description="Kea is a production-grade state management framework built for ambitious React apps.">
             <header className={classnames('hero hero--primary', styles.heroBanner)}>
                 <div className="container">
                     <h1 className="hero__title">{siteConfig.title}</h1>
