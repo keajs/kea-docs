@@ -57,6 +57,19 @@ module.exports = {
                         },
                     ],
                 },
+                {
+                    title: 'Please Support Kea',
+                    items: [
+                        {
+                            label: 'OpenCollective',
+                            href: 'http://opencollective.com/kea',
+                        },
+                        {
+                            label: 'GitHub Sponsors',
+                            href: 'https://github.com/sponsors/mariusandra',
+                        },
+                    ],
+                },
             ],
             copyright: `Copyright © 2015-${new Date().getFullYear()} Marius Andra and other Kea contributors.`,
         },
