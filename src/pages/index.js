@@ -141,12 +141,12 @@ function Home() {
               <div className='container'>
                 <span className='trusted'>Trusted by:</span>
                 <div className='trusted-logos'>
-                  <img className='navirec' src={useBaseUrl('img/trusted/navirec.svg')} />
-                  <span className='posthog'><img src={useBaseUrl('img/trusted/posthog.png')} /><span>PostHog</span></span>
-                  <img className='elastic' src={useBaseUrl('img/trusted/elastic.svg')} />
-                  <img className='gsmtasks' src={useBaseUrl('img/trusted/gsmtasks.svg')} />
-                  <img className='smart' src={useBaseUrl('img/trusted/smart.png')} />
-                  <img className='apprentus' src={useBaseUrl('img/trusted/apprentus.png')} />
+                  <a target='_blank' rel='noopener noreferrer' href='https://www.navirec.com'><img className='navirec' src={useBaseUrl('img/trusted/navirec.svg')} /></a>
+                  <a target='_blank' rel='noopener noreferrer' href='https://www.posthog.com'><span className='posthog'><img src={useBaseUrl('img/trusted/posthog.png')} /><span>PostHog</span></span></a>
+                  <a target='_blank' rel='noopener noreferrer' href='https://www.elastic.co'><img className='elastic' src={useBaseUrl('img/trusted/elastic.svg')} /></a>
+                  <a target='_blank' rel='noopener noreferrer' href='https://www.gsmtasks.com'><img className='gsmtasks' src={useBaseUrl('img/trusted/gsmtasks.svg')} /></a>
+                  <a target='_blank' rel='noopener noreferrer' href='https://www.smartpension.co.uk'><img className='smart' src={useBaseUrl('img/trusted/smart.png')} /></a>
+                  <a target='_blank' rel='noopener noreferrer' href='https://www.apprentus.com'><img className='apprentus' src={useBaseUrl('img/trusted/apprentus.png')} /></a>
                 </div>
               </div>
             </section>
