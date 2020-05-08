@@ -9,7 +9,8 @@ import './styles.css'
 
 const features = [
   {
-    title: <>Strong Foundations</>,
+    title: 'Strong Foundations',
+    imageUrl: 'img/features/foundations.svg',
     description: (
       <>
         <p>Kea is a <strong>complete ecosystem</strong> built around Redux, taking it to another level.</p>
@@ -18,7 +19,8 @@ const features = [
     ),
   },
   {
-    title: <>Scalable & Composable</>,
+    title: 'Scalable & Composable',
+    imageUrl: 'img/features/interconnected.svg',
     description: (
       <>
         <p>Kea is built for <strong>productive teams</strong> that work on <strong>ambitious</strong> projects. It scales really well.</p>
@@ -27,7 +29,8 @@ const features = [
     ),
   },
   {
-    title: <>Sparks Joy!</>,
+    title: 'Sparks Joy!',
+    imageUrl: 'img/features/sparks-joy.svg',
     description: (
       <>
         <p>Kea strikes a <strong>beautiful balance</strong> between developer <strong>productivity</strong> and <strong>happiness</strong>.</p>
