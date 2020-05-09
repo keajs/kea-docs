@@ -99,7 +99,7 @@ const QUOTES = [
 function Feature({ image, imageUrl, title, description }) {
     const imgUrl = useBaseUrl(imageUrl)
     return (
-        <div className={classnames('col col--4', styles.feature)}>
+        <div className={classnames('col col--4 text--center', styles.feature)}>
             {image ? (
               <div className="text--center">
                 {image}
@@ -109,7 +109,7 @@ function Feature({ image, imageUrl, title, description }) {
                     <img className={styles.featureImage} src={imgUrl} alt={title} />
                 </div>
             )}
-            <h3>{title}</h3>
+            <h2 className='text--center'>{title}</h2>
             {description}
         </div>
     )
