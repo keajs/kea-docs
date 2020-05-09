@@ -40,7 +40,7 @@ read state through hardcoded global variables (`const todos = useStoreState(stat
 you don't need to worry about this in Kea. The framework does it for you.
 
 Logic in Kea is always connected to your React components (and to other `logic`) via regular
-EcmaScript `import` statements (`import { logic } from './logic'`) and mounted only when requested 
+`import` statements (`import { logic } from './logic'`) and mounted only when requested 
 by a component (`const { increment } = useActions(logic)`).
 Logic that is no longer in use is automatically unmounted, freeing up memory.
 
