@@ -9,6 +9,7 @@ This page is still a work in progress: this tutorial has not been completed.
 :::
 
 import { GithubScene } from './github/index.js'
+import { Example } from './github/example.js'
 import { Provider } from 'react-redux'
 import { getContext, kea, useActions, useValues } from 'kea' 
 
@@ -19,9 +20,9 @@ and then fetches all the repositories for that user on Github.
 
 The final result will look like this:
 
-:::note Final Result
-<GithubScene />
-:::
+<Example>
+    <GithubScene />
+</Example>
 
 ## 1. Input the username
 Now that you have seen the end result, let's build it, piece by piece.
