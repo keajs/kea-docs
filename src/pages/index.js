@@ -151,18 +151,15 @@ function Home() {
               </div>
             </section>
             <main>
-                {features && features.length && (
-                    <section className={styles.features}>
-                        <div className="container">
-                            <div className="row">
-                                {features.map((props, idx) => (
-                                    <Feature key={idx} {...props} />
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                )}
-
+              <section className={styles.features}>
+                <div className="container">
+                  <div className="row">
+                    {features.map((props, idx) => (
+                      <Feature key={idx} {...props} />
+                    ))}
+                  </div>
+                </div>
+              </section>
               <div className='homepage-testimonials'>
                 <div className="container">
                   <div className="row">
@@ -188,7 +185,6 @@ function Home() {
                   </div>
                 </div>
               </div>
-
             </main>
         </Layout>
     )
