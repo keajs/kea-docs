@@ -11,8 +11,8 @@ It's required reading if you are starting to use Kea in an actual app.
 :::
 
 :::note Another note
-The examples below are contrived. If you prefer to build a working app as you follow along, check out 
-the [Github API](/docs/tutorials/github) tutorial instead.
+If you prefer to build a working app as you follow along, skim through this page to get a basic 
+overview and then follow the [Github API](/docs/tutorials/github) tutorial.
 :::
 
 ## Logic
