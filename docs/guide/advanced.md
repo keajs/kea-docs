@@ -546,6 +546,6 @@ logic.extend({
 const { counter, negativeCounter } = useValues(logic)
 ```
 
-Extending logic is especially powerful when [writing plugins](/docs/tutorials/writing-plugins). For 
+Extending logic is especially powerful when [writing plugins](/docs/guide/writing-plugins). For 
 example to dynamically add actions, reducers or listeners to a logic, based on some key.
 

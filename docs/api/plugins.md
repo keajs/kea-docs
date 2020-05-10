@@ -4,17 +4,16 @@ title: Plugins
 sidebar_label: Plugins
 ---
 
-Kea has a powerful system for authoring plugins. When you find yourself writing repetitive code,
-it might be time to extract it into a plugin.
-
-## Everything a plugin can contain
+:::note Tip
+Read the [writing plugins](/docs/guide/writing-plugins) guide to learn more about plugins.
+:::
 
 Here are all the options you can use within a plugin:
 
 ```javascript
 const myPlugin = () => ({
   // Required: name of the plugin
-  name: ''
+  name: '',
 
   // default values for output in logic stores, also used to register keys that logic will contain
   defaults: () => ({
@@ -30,55 +29,55 @@ const myPlugin = () => ({
   // either add new steps or add after effects for existing steps
   buildSteps: {
     // steps from core that you can extend
-    connect (logic, input)
-    constants (logic, input)
-    actions (logic, input)
-    defaults (logic, input)
-    reducers (logic, input)
-    reducer (logic, input)
-    reducerSelectors (logic, input)
-    selectors (logic, input)
+    connect (logic, input) {},
+    constants (logic, input) {},
+    actions (logic, input) {},
+    defaults (logic, input) {},
+    reducers (logic, input) {},
+    reducer (logic, input) {},
+    reducerSelectors (logic, input) {},
+    selectors (logic, input) {},
     // or add your own steps with custom names here and other plugins can then extend them
-  }
+  },
 
   events: {
     // Run after creating a new context, before plugins are activated and the store is created
-    afterOpenContext (context, options)
+    afterOpenContext (context, options) {},
     // Run after this plugin has been activated
-    afterPlugin ()
+    afterPlugin () {},
     // Run before the redux store creation begins. Use it to add options (middleware, etc) to the store creator.
-    beforeReduxStore (options)
+    beforeReduxStore (options) {},
     // Run after the redux store is created.
-    afterReduxStore (options, store)
+    afterReduxStore (options, store) {},
     // Run before we start doing anything
-    beforeKea (input)
+    beforeKea (input) {},
     // before the steps to build the logic (gets an array of inputs from kea(input).extend(input))
-    beforeBuild (logic, inputs)
+    beforeBuild (logic, inputs) {},
     // before the steps to convert input into logic (also run once per .extend())
-    beforeLogic (logic, input)
+    beforeLogic (logic, input) {},
     // after the steps to convert input into logic (also run once per .extend())
-    afterLogic (logic, input)
+    afterLogic (logic, input) {},
     // after the steps to build the logic
-    afterBuild (logic, inputs)
+    afterBuild (logic, inputs) {},
     // Run before/after a logic store is mounted in React
-    beforeMount (logic)
-    afterMount (logic)
+    beforeMount (logic) {},
+    afterMount (logic) {},
     // Run before/after a reducer is attached to Redux
-    beforeAttach (logic)
-    afterAttach (logic)
+    beforeAttach (logic) {},
+    afterAttach (logic) {},
     // Run before/after a logic store is unmounted in React
-    beforeUnmount (logic)
-    afterUnmount (logic)
+    beforeUnmount (logic) {},
+    afterUnmount (logic) {},
     // Run before/after a reducer is detached frm Redux
-    beforeDetach (logic)
-    afterDetach (logic)
+    beforeDetach (logic) {},
+    afterDetach (logic) {},
     // when wrapping a React component
-    beforeWrapper (input, Klass)
-    afterWrapper (input, Klass, Kea)
+    beforeWrapper (input, Klass) {},
+    afterWrapper (input, Klass, Kea) {},
     // Run after mounting and before rendering the component in React's scope (you can use hooks here)
-    beforeRender (logic, props)
+    beforeRender (logic, props) {},
     // Run when we are removing kea from the system, e.g. when cleaning up after tests
-    beforeCloseContext (context)
+    beforeCloseContext (context) {}
   }
 })
 ```
