@@ -112,3 +112,9 @@ to the complicated problem of state management.
 Plus, when I started to learn React, I was on a plane back to Belgium from a holiday in New Zealand,
 having just [seen the bird](https://photos.app.goo.gl/5DNXZWCKtYveeu8c9) a week before. Thus I find 
 the name strangely fitting.
+
+:::note Next Steps
+* Read [quickstart](/docs/introduction/quickstart) if you're in a hurry, otherwise...
+* Read [core concepts](/docs/guide/concepts) to get a good technical overview of what makes Kea tick and why.
+It includes everything in the quickstart.
+:::

@@ -130,9 +130,17 @@ section.homepage-logos img.apprentus {
     padding: 50px 0;
     color: #1c1e21 !important;
 }
+.homepage-testimonials a {
+    color: #1c1e21 !important;
+    text-decoration: underline;
+}
 
 html[data-theme="dark"] .homepage-testimonials {
     background: hsla(220, 9%, 14%, 1);
+    color: hsla(216, 8%, 95%, 1) !important;
+}
+
+html[data-theme="dark"] .homepage-testimonials a {
     color: hsla(216, 8%, 95%, 1) !important;
 }
 

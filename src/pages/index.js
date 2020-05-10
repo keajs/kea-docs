@@ -160,6 +160,7 @@ function Home() {
                   </div>
                 </div>
               </section>
+
               <div className='homepage-testimonials'>
                 <div className="container">
                   <div className="row">
@@ -182,6 +183,16 @@ function Home() {
                         </p>
                       </div>
                     ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className='homepage-testimonials'>
+                <div className="container">
+                  <div className="row">
+                    <div className="col text--center">
+                      <span style={{ fontSize: 24 }}><span style={{ opacity: 0.5 }}>&raquo;</span> Read the documentation: <Link to='/docs/introduction/what-is-kea'>What is Kea?</Link></span>
+                    </div>
                   </div>
                 </div>
               </div>
