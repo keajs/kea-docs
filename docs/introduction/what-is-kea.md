@@ -56,7 +56,7 @@ Finally, Kea's functionality is not set in stone. Whenever you find yourself wri
 you may [abstract it away](/docs/guide/writing-plugins) into a plugin. In fact, Kea's core 
 is actually [implemented](https://github.com/keajs/kea/blob/master/src/core/index.js) as a plugin itself.
 There are plugins for [routing](/docs/plugins/router), [offline storage](/docs/plugins/localstorage), 
-[sagas](/docs/effects/sagas), [websockets](/docs/plugins/websockets) and much more. This opens up
+[sagas](/docs/plugins/sagas), [websockets](/docs/plugins/websockets) and much more. This opens up
 whole new ways to build applications.
 
 ## What is Kea *not* good for?

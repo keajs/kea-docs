@@ -1,10 +1,48 @@
 ---
 id: advanced
-title: Advanced Concepts
-sidebar_label: Advanced Concepts
+title: Advanced Topics
+sidebar_label: Advanced Topics
 ---
 
-Here are some more things you can do with Kea. Learn these to fully master the framework!
+:::note
+Here are some more things you can do with Kea. You probably won't need use most of them, 
+yet the information is here in case you do.
+:::
+
+## Extending logic
+
+Up until a logic has been built and mounted, you can extend it:
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        increment: (amount = 1) => ({ amount }),
+        decrement: (amount = 1) => ({ amount })
+    }),
+    
+    reducers: () => ({
+        counter: [0, {
+            increment: (state, { amount }) => state + amount,
+            decrement: (state, { amount }) => state - amount
+        }]
+    }),
+})
+
+logic.extend({
+    reducers: () => ({
+        negativeCounter: [0, {
+            increment: (state, { amount }) => state - amount,
+            decrement: (state, { amount }) => state + amount
+        }]
+    }),
+})
+
+// later in React
+const { counter, negativeCounter } = useValues(logic)
+```
+
+Extending logic is especially powerful when [writing plugins](/docs/guide/writing-plugins). For 
+example to dynamically add actions, reducers or listeners to a logic, based on some key.
 
 ## Lifecycles
 
@@ -27,104 +65,6 @@ that use a `logic` are removed from React's tree, that `logic` will be unmounted
 
 Only `logic` which is actively in use will be mounted and attached to Redux.
 
-## Events
-
-You can hook into the mount and unmount lifecycle with `events`:
-
-```javascript
-const logic = kea({
-    events: ({ actions, values }) => ({
-        beforeMount: () => {
-            // run before the logic is mounted
-        },
-        afterMount: () => {
-            // run after the logic is mounted
-        },
-        beforeUnmount: () => {
-            // run before the logic is unmounted
-        },
-        afterUnmount: () => {
-            // run after the logic is unmounted
-        }
-    })
-})
-```
-
-The useful events are `afterMount` and `beforeUnmount`, as when they are called
-you have access to all the `actions`, `values`, etc of the logic.
-
-All events accept either a function or an array of functions:
-
-```javascript
-const usersLogic = kea({
-    events: ({ actions, values }) => ({
-        afterMount: [
-            actions.fetchUsers,
-            () => actions.fetchDetails(values.user.id)
-        ],
-        
-        // these four lines do the same:
-        beforeUnmount: actions.cleanup, 
-        beforeUnmount: [actions.cleanup],
-        beforeUnmount: () => actions.cleanup(),
-        beforeUnmount: [() => actions.cleanup()],
-    })
-})
-```
-
-## Props
-
-When you use `logic()` as a function, you ask to explicitly build it. 
-If you pass it an object as an argument, that object will be saved as `props` on the built logic.:
-
-```javascript
-const props = { id: 10 }
-const logic = kea({ ... })
-logic(props).props === props
-```
-
-Calling `logic()` is a fast operation: if the logic has already been built, it won't be rebuilt.
-Only the props will be updated.
-
-You can pass random data from React onto the logic this way. For example various defaults. 
-
-It's as simple as this: 
-
-```jsx
-function FancyPantsCounter() {
-    // without props
-    const { counter } = useValues(counterLogic)
-    // with props
-    const { counter } = useValues(counterLogic({ defaultCounter: 1000 }))
-
-    // ...
-}
-```
-
-Then just use `props` wherever you need to. For example:
-
-```javascript
-const counterLogic = kea({
-    actions: () => ({
-        increment: (amount) => ({ amount }),
-        decrement: (amount) => ({ amount })
-    }),
-
-    reducers: ({ props }) => ({
-        counter: [props.defaultCounter || 0, {
-            increment: (state, { amount }) => state + amount,
-            decrement: (state, { amount }) => state - amount
-        }]
-    }),
-
-    listeners: ({ props }) => ({
-        increment: ({ amount }) => {
-            console.log(`incrementing by ${amount}`)
-            console.log(`default ${props.defaultCounter || 0}`)
-        }
-    })
-})
-```
 
 ## Props in Selectors
 
@@ -182,370 +122,80 @@ const counterLogic = kea({
 })
 ```
 
-## Keyed logic
+## Shared listeners
 
-If you give your logic a `key`, you can have multiple independent copies of it. The key is derived 
-from `props`:
+If multiple `listeners` need to run the same code, you can:
 
-```javascript
-const userLogic = kea({
-    key: (props) => props.id, // 🔑 the key
-
-    actions: () => ({
-        loadUser: true,
-        userLoaded: (user) => ({ user })
-    }),
-  
-    reducers: () => ({
-        user: [null, {
-            userLoaded: (_, { user }) => user
-        }]
-    }),
-
-    // more on events in a section below. 
-    events: ({ actions }) => ({
-        afterMount: [actions.loadUser]
-    }),
-
-    listeners: ({ props }) => ({
-        loadUser: async () => {
-            const user = await api.getUser({ id: props.id }),
-            actions.userLoaded(user)
-        }
-    })
-})
-```
-
-Now every time you call `userLogic({ id: 1 })` with a new `id`, a completely independent
-logic will be built and mounted.
-
-This is really handy when you have data that's passed as a props in React, such as:
-
-```jsx
-function User({ id }) {
-    const { user } = useValues(userLogic({ id }))
-
-    return user 
-        ? <div>{user.name} ({user.email})</div> 
-        : <div>Loading...</div>
-}
-```
-
-No matter how many times `<User id={1} />` is rendered by React, it'll always be connected
-to the same logic.
-
-If you render `<User id={2} />`, it'll however get its own independent copy of this same base logic
-and do what is needed to load and display the second user. 
-
-
-## Defaults
-
-There are two ways to pass defaults to reducers. We've been using this style until now:
+1. Have all of them call a common action, which you then handle with another listener:
 
 ```javascript
 const logic = kea({
-    // ... actions: () => ({ increment, decrement })
-
-    reducers: () => ({
-        counter: [0, {
-            increment: (state, { amount }) => state + amount,
-            decrement: (state, { amount }) => state - amount
-        }]
-    }),
-})
-```
-
-If you choose, you can set your defaults explicitly in a `defaults` object:
-
-```javascript
-const logic = kea({
-    // ... actions: () => ({ increment, decrement })
-  
-    defaults: {
-        counter: 0
-    },
-
-    reducers: () => ({
-        counter: {
-            increment: (state, { amount }) => state + amount,
-            decrement: (state, { amount }) => state - amount
-        }
-    })
-})
-```
-
-In case you pass both, the value in the `defaults` object will take precedence.
-
-You can also pass selectors as defaults:
-
-```javascript
-const counterLogic = kea({ ... })
-
-const logic = kea({
-    defaults: () => ({ // must be a function to evaluate at build time
-        counterCopy: counterLogic.selectors.counter
-    }),
-
-    reducers: () => ({
-        counterCopy: [counterLogic.selectors.counter, {
-            increment: (state, { amount }) => state + amount,
-            decrement: (state, { amount }) => state - amount
-        }]
-    })
-})
-```
-
-You can take it one level deeper and return a selector that computes the defaults:
-
-```javascript
-const logic = kea({
-    defaults: () => (state, props) => ({
-        // simple value
-        simpleDefault: 0,
-        // returning a selector
-        directName: someLogic.selectors.storedName
-        // returning a value through a selector
-        connectedName: someLogic.selectors.storedObject(state, props).name,
-    })
-})
-```
-
-## Connecting logic together
-
-Kea is said to be a *really scalable* state management library. This power comes partially from its 
-ability to link together actions and values from different `logic`.
-
-### Automatic connections
-
-:::note
-Automatic connections are implemented in Kea versions 2.0 and later. Explicit connections (described
-below) work in all versions of Kea.
-:::
-
-Wiring logic together is easier than you think. Suppose we have these two logics:
-
-```javascript
-// stores a list of users, referenced everywhere in the app
-const usersLogic = kea({
     actions: () => ({
-        loadUsers: true,
-        loadUsersSuccess: (users) => ({ users })
-    }),
-    reducers: () => ({
-        users: [[], {
-            loadUsersSuccess: (_, { users }) => users
-        }]
-    })
-    // ... listeners, etc
-})
-
-// handles data shown on our dashboard scene
-const dashboardLogic = kea({
-    actions: () => ({
-        refreshDashboard: true    
+        firstAction: true,
+        secondAction: true,
+        commonAction: true
+        // ...
     }),
 
-    listeners: () => ({
-        refreshDashboard: async () => {
-            // pull data from the API, update values shown on the dashboard 
-        }
-    })
-})
-```
-
-Our pointy-haired-boss now tasked us with reloading the dashboard every time the users are 
-successfully loaded. How do we do that?
-
-Just use the `loadUsersSuccess` action from `usersLogic` as a key in the `listeners` object:
-
-```javascript
-const usersLogic = kea({ ... }) // same as above
- 
-const dashboardLogic = kea({
-    actions: () => ({
-        refreshDashboard: true    
-    }),
-
-    listeners: () => ({
-        refreshDashboard: async () => {
-            // pull data from the API, update values shown on the dashboard 
+    listeners: ({ actions, values }) => ({
+        // two listeners with one shared action
+        firstAction: actions.commonAction,
+        secondAction: () => {
+          actions.commonAction()
         },
-        [usersLogic.actions.loadUsersSuccess]: ({ users }) => {
-            actions.refreshDashboard()
-            // we also get `users` in the payload, 
-            // but we socially distance ourselves from them
-        } 
-    })
-})
-```
 
-:::note
-In the example above we had two options:
- 
-1. The `dashboardLogic` could listen to the `usersLogic.actions.loadUsersSuccess` action and then call 
-   its own `refreshDashboard()` action.
-2. The `usersLogic` could listen to its own `loadUsersSuccess` action and then call 
-   `dashboard.actions.refreshDashboard()`.
-
-We went for the first option. Why?
-
-It really depends on the use case. Here I'm assuming that `usersLogic` is some global logic that
-stores info on all available users and is accessed by many lower level logics throughout your app,
-including `dashboardLogic`. 
-
-In this scenario, `usersLogic` can exist independently, yet `dashboardLogic` can only exist together
-with `usersLogic`. Linking them the other way (having `usersLogic` call `dashboardLogic`'s action) 
-would mean that the `usersLogic` is *always* mounted together with `dashboardLogic`, even for instance 
-when we are not on the dashboard scene. That's probably not what we want.
-:::
-
-This `[otherLogic.actions.doSomething]` syntax also works in reducers:
-
-```javascript
-const usersLogic = kea({ ... })
-
-const shadowUsersLogic = kea({
-    actions: () => ({
-        reset: true
-    }),
-    reducers: ({ actions }) => ({
-        users: [[], {
-            reset: () => [], // action that's defined in this logic
-            [actions.reset]: () => [], // another way to call a local action
-            [usersLogic.actions.loadUsersSuccess]: (_, { users }) => users
-        }]
-    })
-})
-```
-
-and selectors:
-
-```javascript
-const usersLogic = kea({ ... })
-
-const sortedUsersLogic = kea({
-    selectors: () => ({
-        sortedUsers: [
-            () => [usersLogic.selectors.users],
-            (users) => [...users].sort((a, b) => a.name.localeCompare(b.name))
-        ]
-    })
-})
-```
-
-... and everywhere else you might expect.
-
-What if when refreshing the dashboard we need to do something with the list of users? 
-
-Just get the value directly from `usersLogic.values`:
-
-```javascript
-const dashboardLogic = kea({
-    // ...
-    listeners: () => ({
-        refreshDashboard: async () => {
-            if (!usersLogic.values.users) {
-                usersLogic.actions.loadUsers()
-            }
-            // pull data from the API, update values shown on the dashboard 
+        // you can also pass an array of functions
+        commonAction: () => {
+            // do something common
         }
-    })
+    }),
 })
 ```
 
-In all of these cases, `usersLogic` will be automatically connected to the logic that called it
-and mounted/unmounted as needed.
+This however dispatches a separate action, which is then listened to. 
 
-### Explicit connections
-
-While the automatic connections might seem self-evident, there's actually a lot that's
-happening under the hood. 
-
-Kea's logic is always *lazy*, meaning it's not built nor mounted before it's needed. In the examples
-above, if the first time `usersLogic` is referenced is when its `actions` are used as keys in 
-`dashboardLogic`'s `reducers`, it will get built and mounted then and there.
- 
-This wasn't always the case. Before version 2.0 there was no guarantee that `usersLogic` was already
-mounted and that `usersLogic.actions` would be available for use. You had to track this manually.
-
-You could either explicitly mount `usersLogic` in your component or you could use `connect` to
-pull in actions and values from other logic. You can still do this in Kea 2.0 and it has its uses.
- 
-The syntax is as follows:
-
-```javascript
-const counterLogic = kea({
-    actions: () => ({
-        increment: (amount) => ({ amount }),
-        decrement: (amount) => ({ amount })
-    }),
-
-    reducers: () => ({
-        counter: [0, {
-            increment: (state, { amount }) => state + amount,
-            decrement: (state, { amount }) => state - amount
-        }]
-    }),
-})
-
-const logic = kea({
-    connect: {
-        // pulling in actions from `counterLogic`
-        actions: [counterLogic, ['increment', 'decrement']],
-        // pull in values from `counterLogic`
-        values: [counterLogic, ['counter']]
-    },
-
-    // using the actions in a reducer like they're our own
-    reducers: () => ({
-        doubleCounter: [0, {
-            increment: (state, { amount }) => state + amount * 2,
-            decrement: (state, { amount }) => state - amount * 2
-        }]
-    }),
-    
-    // pretend that we own the selector as well 
-    selectors: ({ selectors }) => ({
-        tripleCounter: [
-            () => [selectors.counter],
-            (counter) => counter * 3
-        ]
-    })
-})
-```
-
-## Extending logic
-
-Up until a logic has been built and mounted, you can extend it:
+2. If you want to share code between listeners without dispatching another action, use `sharedListeners`:
 
 ```javascript
 const logic = kea({
     actions: () => ({
-        increment: (amount = 1) => ({ amount }),
-        decrement: (amount = 1) => ({ amount })
+        anotherAction: true,
+        debouncedFetchResults: username => ({ username }),
+        oneActionMultipleListeners: true,
+        // ...
     }),
-    
-    reducers: () => ({
-        counter: [0, {
-            increment: (state, { amount }) => state + amount,
-            decrement: (state, { amount }) => state - amount
-        }]
+
+    listeners: ({ actions, values, store, sharedListeners }) => ({
+        // two listeners with one shared action
+        anotherAction: sharedListeners.doSomething,
+
+        // you can also pass an array of functions
+        oneActionMultipleListeners: [
+            (payload, breakpoint, action) => {
+                /* ... */
+            },
+            sharedListeners.doSomething,
+            sharedListeners.logAction,
+        ],
+    }),
+
+    // if multiple actions must trigger similar code, use sharedListeners
+    sharedListeners: ({ actions }) => ({
+        // all listeners and sharedListeners also get a third parameter:
+        // - action = the full dispatched action
+        doSomething: (payload, breakpoint, action) => {
+            if (action.type === actions.anotherAction.toString()) {
+                console.log(action)
+            }
+        },
+        logAction: (_, __, action) => {
+            console.log('action dispatched', action)
+        }  
     }),
 })
-
-logic.extend({
-    reducers: () => ({
-        negativeCounter: [0, {
-            increment: (state, { amount }) => state - amount,
-            decrement: (state, { amount }) => state + amount
-        }]
-    }),
-})
-
-// later in React
-const { counter, negativeCounter } = useValues(logic)
 ```
 
-Extending logic is especially powerful when [writing plugins](/docs/guide/writing-plugins). For 
-example to dynamically add actions, reducers or listeners to a logic, based on some key.
+That function will be called directly, without an action being dispatched in the middle.
 
+You might still prefer to explicitly dispatch an action, as that level of abstraction may
+be better suited for the task at hand. You can use the shared action in a reducer for example.

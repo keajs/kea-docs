@@ -4,11 +4,12 @@ title: Core Concepts
 sidebar_label: Core Concepts
 ---
 
+:::note
 This doc describes the different parts of Kea and how to they all fit together.
-After reading this, you'll know 80% of what there is to know about Kea.
+After reading this, you'll know enough of Kea to be dangerous!  
 
-Then read the sections [advanced concepts](/docs/advanced) and [using with React](/docs/react) to
-get the remaining 80%. 😁
+Then follow up with [More Concepts](/docs/guide/more) to be unstoppable!
+:::
 
 ## Logic
 
@@ -691,3 +692,6 @@ const logic = kea({
 ```
 
 
+:::note Next steps
+Now read the section [more concepts](/docs/guide/more) to go more in depth!
+:::

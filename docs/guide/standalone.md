@@ -63,7 +63,7 @@ unmount()
 
 There are a few other options you can use. See the [logic API](/docs/api/logic) for more details.
 
-## Calling `mount()` inside listeners with `autoConnect: true`.
+## Calling `logic.mount()` inside listeners
 
 In Kea 2.0 logic automatically connects when used inside another logic.
 
@@ -91,7 +91,8 @@ What if you don't want that and instead prefer to mount and unmount `counerLogic
 the listener?
 
 A practical example of this is to mount a logic to preload data on a route change 150ms before 
-transitioning the scene. It's enough to prevent the "flash of loading" in most cases.
+transitioning the scene... and then to unmount it manually once the page loaded. It's enough to 
+prevent the "flash of loading" in most cases.
 
 Instead of directly calling `logic.mount()`, you just need to build the logic fist, even if it
 doesn't need any props. You must then pass `false` as the second argument to `.build`:
