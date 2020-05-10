@@ -187,11 +187,11 @@ function Home() {
                 </div>
               </div>
 
-              <div className='homepage-testimonials'>
+              <div className='homepage-cta'>
                 <div className="container">
                   <div className="row">
                     <div className="col text--center">
-                      <span style={{ fontSize: 24 }}><span style={{ opacity: 0.5 }}>&raquo;</span> Read the documentation: <Link to='/docs/introduction/what-is-kea'>What is Kea?</Link></span>
+                      <span style={{ fontSize: 24 }}>Read the documentation: <Link to='/docs/introduction/what-is-kea'>What is Kea?</Link></span>
                     </div>
                   </div>
                 </div>
