@@ -52,6 +52,20 @@ section.homepage-logos .container .trusted-logos {
     section.homepage-logos .container {
         display: block;
     }
+    section.homepage-logos .container .trusted-logos {
+        padding-left: 40px;
+        justify-content: space-evenly;
+    }
+}
+@media screen and (max-width: 550px) {
+    section.homepage-logos .container .trusted-logos {
+        padding-left: 20px;
+    }
+}
+@media screen and (max-width: 380px) {
+    section.homepage-logos .container .trusted-logos {
+        padding-left: 0;
+    }
 }
 section.homepage-logos .container .trusted-logos > * {
     margin-right: 40px;
