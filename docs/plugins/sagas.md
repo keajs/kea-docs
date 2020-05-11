@@ -4,7 +4,7 @@ title: Sagas
 sidebar_label: Sagas
 ---
 
-Kea has first class support for sagas via the [`kea-saga`](https://github.com/keajs/kea-saga) plugin.
+Kea has support for sagas via the [`kea-saga`](https://github.com/keajs/kea-saga) plugin.
 
 Read more about Sagas on the [redux-saga](https://redux-saga.js.org/) homepage.
 
@@ -284,7 +284,7 @@ myRandomSceneLogic.saga ==
 
 ## Note about `autoConnect`
 
-The current thunk plugin (v2.0.0) does not support `autoConnect`. That means if you want to call `otherLogic.actions.something()`
+The current saga plugin (v2.0.0) does not support `autoConnect`. That means if you want to call `otherLogic.actions.something()`
 inside a saga, you must first make sure `otherLogic` is connected to your logic:
 
 ```javascript

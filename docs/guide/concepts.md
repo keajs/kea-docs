@@ -5,10 +5,8 @@ sidebar_label: Core Concepts
 ---
 
 :::note
-This doc describes the different parts of Kea and how to they all fit together.
-After reading this, you'll know enough of Kea to be dangerous!  
-
-Then follow up with [More Concepts](/docs/guide/more) to be unstoppable!
+This doc describes the core parts of Kea. After reading this, you'll know 80% of everything you 
+need to know. Then follow up with [Additional Concepts](/docs/guide/more) to learn the rest.
 :::
 
 ## Logic
@@ -691,7 +689,10 @@ const logic = kea({
 })
 ```
 
+<br />
 
 :::note Next steps
-Now read the section [more concepts](/docs/guide/more) to go more in depth!
+* Try building something. Read the [Github API](/docs/tutorials/github) tutorial to get your
+  hands dirty.
+* Read the [additional concepts](/docs/guide/more) page to learn other useful concepts.
 :::

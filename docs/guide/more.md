@@ -1,14 +1,14 @@
 ---
 id: more
-title: More Concepts
-sidebar_label: More Concepts
+title: Additional Concepts
+sidebar_label: Additional Concepts
 ---
 
 :::note
-Building upon the [core concepts](/docs/guide/concepts), here are some more things you can do with Kea.
+This page builds upon the [core concepts](/docs/guide/concepts). Read that first if you haven't yet.
 
-Some of them might be more immediately useful than others, depending on what you're trying to
-accomplish. Still, it's worth knowing all of them!
+The concepts discussed below are all worth knowing, yet some might be more immediately useful
+than others. Have a look and then come back when you need them.
 ::: 
 
 ## Props

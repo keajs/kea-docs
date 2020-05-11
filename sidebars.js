@@ -5,10 +5,9 @@ module.exports = {
         Guide: [
             'guide/concepts',
             'guide/more',
-            'guide/advanced',
             'guide/react',
-            'guide/standalone',
             'guide/debugging',
+            'guide/advanced',
             'guide/migrating-redux',
             'guide/writing-plugins',
             'guide/history',

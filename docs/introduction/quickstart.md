@@ -226,9 +226,10 @@ function Counter() {
 }
 ```
 
-## Next Steps
+<br />
 
-Ready to install Kea? Read the [installation instructions](/docs/installation/instructions)!
-
-I strongly recommend you read [Core Concepts](/docs/guide/concepts) after to get a better
+:::note Next Steps
+* Ready to install Kea? Read the [installation instructions](/docs/installation/instructions)!
+* I strongly recommend you read [Core Concepts](/docs/guide/concepts) to get a better
 understanding of why everything works the way it does.
+:::

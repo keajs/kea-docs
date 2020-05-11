@@ -112,7 +112,7 @@ buildLogic.values.myValue
 `logic.build` accepts a second parameter: `.build(props, autoConnectInListener)`
 
 To read more on the `autoConnectInListener` parameter, check out
-["Calling `mount()` inside listeners with `autoConnect: true`"](/docs/guide/standalone#calling-mount-inside-listeners-with-autoconnect-true)
+["Calling `mount()` inside listeners with `autoConnect: true`"](/docs/guide/advanced#calling-mount-inside-listeners-with-autoconnect-true)
 under the "Usage without React" page.
 :::
 
