@@ -77,8 +77,11 @@ module.exports = {
                     title: 'Give a star!',
                     items: [
                         {
-                            html: `<iframe src="https://ghbtns.com/github-btn.html?user=keajs&amp;repo=kea&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="100px" height="20px" style="vertical-align: sub;"></iframe>`,
+                            html: `<iframe src="https://ghbtns.com/github-btn.html?user=keajs&amp;repo=kea&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="100px" height="20px" style="margin-top:5px"></iframe>`,
                         },
+                        {
+                            html: `<div style='opacity: 0.3;margin-top:3px;'>You're awesome!</div>`
+                        }
                     ],
                 },
             ],
