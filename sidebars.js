@@ -1,6 +1,6 @@
 module.exports = {
     someSidebar: {
-        Introduction: ['introduction/what-is-kea', 'introduction/quickstart'],
+        Introduction: ['introduction/what-is-kea', 'introduction/quickstart', 'introduction/history'],
         Installation: ['installation/instructions', 'installation/nextjs'],
         Guide: [
             'guide/concepts',
@@ -10,7 +10,7 @@ module.exports = {
             'guide/advanced',
             'guide/migrating-redux',
             'guide/writing-plugins',
-            'guide/history',
+
         ],
         Tutorials: ['tutorials/github'],
         Plugins: [

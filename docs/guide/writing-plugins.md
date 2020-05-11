@@ -273,9 +273,11 @@ You should, however, **never** modify the `input` in any way in your plugins! Th
 every time you build and mount your logic, it should work the same way. Modifying the input
 breaks that contract and the build step might produce different results. It's best to avoid that.
 
-## Next steps
+<br />
 
-If you want to learn more about writing plugins, it's best to just read the code
+:::note Next steps
+* If you want to learn more about writing plugins, it's best to just read the code
 of some of the existing plugins and see how they do things.
 
-Also see the [plugins API page](/docs/api/plugins) for a list of everything that a plugin can do.
+* See the [plugins API page](/docs/api/plugins) for a list of everything that a plugin can do.
+:::

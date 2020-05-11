@@ -233,7 +233,7 @@ const logic = kea({
 
 This example is contrived of course, but should illustrate the point about composability. 
 You can have any reducer depend on any action, even ones defined in other logic files! 
-(See [Connecting Logic Together](/docs/guide/advanced#connecting-logic-together) in Advanced Concepts)
+(See [Connecting Logic Together](/docs/guide/more#connecting-logic-together) in Additional Concepts)
 
 Most of the time you want your actions and reducers to mix together freely, like they're attending
 a music festival in a pre-pandemic world.
@@ -486,9 +486,9 @@ There are a few other cool things you can do with listeners:
 
 1. Listeners have built-in support for debouncing and handling out-of-order network requests through `breakpoints`
 2. You can share listeners between actions with `sharedListeners`
-3. Any other logic called inside listeners will `autoConnect` to your logic
 
-Please read the [listeners](/docs/effects/listeners) side-effect page to learn more about these features. 
+These are covered in the [Additional Concepts](/docs/guide/more#breakpoints) and 
+[Advanced Topics](/docs/guide/advanced#shared-listeners) pages.
 
 ## Loaders
 

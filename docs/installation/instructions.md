@@ -65,6 +65,7 @@ ReactDOM.render( // 👈 and update this
 
 That's it! Feel free to use `kea()` calls anywhere in your code!
 
+<br />
 
 :::note Next Steps
 * Read [Core Concepts](/docs/guide/concepts) to get a good understanding of how Kea works and why.

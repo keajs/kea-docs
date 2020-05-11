@@ -5,7 +5,7 @@ sidebar_label: Additional Concepts
 ---
 
 :::note
-This page builds upon the [core concepts](/docs/guide/concepts). Read that first if you haven't yet.
+This page builds upon the [Core Concepts](/docs/guide/concepts). Read that first if you haven't yet.
 
 The concepts discussed below are all worth knowing, yet some might be more immediately useful
 than others. Have a look and then come back when you need them.
@@ -558,3 +558,10 @@ const logic = kea({
 })
 ```
 
+
+<br />
+
+:::note Next steps
+* Read [Using with React](/docs/guide/react) to learn about all the ways you can use Kea with React. 
+* Read the [Advanced Topics](/docs/guide/advanced) page for even more things Kea can do.
+:::

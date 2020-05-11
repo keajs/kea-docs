@@ -5,7 +5,7 @@ sidebar_label: Advanced Topics
 ---
 
 :::note
-Here are some more things you can do with Kea. You probably won't need use most of them, 
+Here are some more things you can do with Kea. You probably won't need use them, 
 yet the information is here in case you do.
 :::
 
@@ -67,8 +67,8 @@ logic.values.counter
 // => throw new Error()!
 ```
 
-In case you need to pass props to your logic, for example if it [keyed](/docs/guide/advanced#keyed-logic), 
-[build the logic](/docs/api/logic#logicbuild) explicitly before calling `mount()` on it:
+In case you need to pass props to your logic, for example if it is [keyed](/docs/guide/more#keyed-logic), 
+you should [build the logic](/docs/api/logic#logicbuild) explicitly before calling `mount()` on it:
 
 ```javascript
 // create the counter logic from the examples above, but with a key!
@@ -324,3 +324,10 @@ That function will be called directly, without an action being dispatched in the
 
 You might still prefer to explicitly dispatch an action, as that level of abstraction may
 be better suited for the task at hand. You can use the shared action in a reducer for example.
+
+<br />
+
+:::note Next steps
+* For even more advanced topics, read [Migrating from Redux](/docs/guide/migrating-redux) to learn
+how Kea and Redux interact under the hood.
+:::

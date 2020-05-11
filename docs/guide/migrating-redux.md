@@ -183,3 +183,9 @@ unmount()
 ```    
 
 See the [logic API docs](/docs/api/logic) for more details.
+
+<br />
+
+:::note Next steps
+* Check out how to [Write Plugins](/docs/guide/writing-plugins) for Kea.
+:::
