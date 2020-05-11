@@ -100,7 +100,7 @@ const MyConnectedComponent = logic(MyComponent)
 
 In case you don't want to hook up everything in a `logic` to your `Component` or if you
 want to mix and match values from multiple logics, use `kea({ connect: { ... } })` as discussed in 
-the [explicit connections](/docs/guide/more#explicit-connections) section under Additional Concepts, 
+the [explicit connections](/docs/guide/additional#explicit-connections) section under Additional Concepts, 
 to create a new logic with only the actions and values you need. Then wrap your `Component` in that.
 
 If you go for this route, you can use a small helper function called `connect`, which is literally just:

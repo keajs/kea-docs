@@ -67,7 +67,7 @@ logic.values.counter
 // => throw new Error()!
 ```
 
-In case you need to pass props to your logic, for example if it is [keyed](/docs/guide/more#keyed-logic), 
+In case you need to pass props to your logic, for example if it is [keyed](/docs/guide/additional#keyed-logic), 
 you should [build the logic](/docs/api/logic#logicbuild) explicitly before calling `mount()` on it:
 
 ```javascript

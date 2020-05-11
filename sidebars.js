@@ -4,7 +4,7 @@ module.exports = {
         Installation: ['installation/instructions', 'installation/nextjs'],
         Guide: [
             'guide/concepts',
-            'guide/more',
+            'guide/additional',
             'guide/react',
             'guide/debugging',
             'guide/advanced',
