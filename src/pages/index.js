@@ -43,7 +43,7 @@ const features = [
 
 const QUOTES = [
   {
-    thumbnail: 'https://avatars3.githubusercontent.com/u/1727427?s=460&u=68d3693009c289044285447b6ed667bdb08176d2&v=4',
+    thumbnail: 'img/testimonials/tim.jpg',
     name: 'Tim Glaser',
     title: 'CTO at PostHog',
     text: (
@@ -55,7 +55,7 @@ const QUOTES = [
     ),
   },
   {
-    thumbnail: 'https://avatars2.githubusercontent.com/u/12876691?s=460&u=52a0866a59533f90b9e66b8768f4efd1ad547109&v=4',
+    thumbnail: 'img/testimonials/michael.jpg',
     name: 'Michael Fatoki-Bello',
     title: 'User Experience Engineer at Smart Pension',
     text: (
@@ -68,7 +68,7 @@ const QUOTES = [
     ),
   },
   {
-    thumbnail: 'https://avatars1.githubusercontent.com/u/1869731?s=460&u=c7168af46965484cf33d024bcb751f6319b6d41c&v=4',
+    thumbnail: 'img/testimonials/scotty.jpg',
     name: 'Scotty Bollinger',
     title: 'Senior Front End Engineer at Elastic',
     text: (
@@ -155,7 +155,7 @@ function Home() {
                           <img
                             alt={quote.name}
                             className="avatar__photo avatar__photo--xl"
-                            src={quote.thumbnail}
+                            src={useBaseUrl(quote.thumbnail)}
                             style={{overflow: 'hidden'}}
                           />
                           <div className="avatar__intro padding-top--sm">
