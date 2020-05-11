@@ -48,27 +48,12 @@ const QUOTES = [
     title: 'CTO at PostHog',
     text: (
       <>
-        I've helped open source many projects at Facebook and every one
-        needed a website. They all had very similar constraints: the
-        documentation should be written in markdown and be deployed via GitHub
-        pages. I’m so glad that Docusaurus now exists so that I don’t have to
-        spend a week each time spinning up a new one.
+        I wasn't sure whether we should have an abstraction layer on top of Redux, but after using Kea for a day I never looked back.
+        Kea feels like the <strong>good kind of magic</strong>. You can <strong>understand what’s happening</strong>, but it takes away a lot of the tedious tasks.
+        Adding more features doesn't feel like adding more complexity.
       </>
     ),
   },
-  // {
-  //   thumbnail: 'https://avatars0.githubusercontent.com/u/727994?s=460&u=25f13f09babcef77247377af7f574280606609e7&v=4',
-  //   name: 'Madis Väin',
-  //   title: 'Software Craftsman at Namespace',
-  //   text: (
-  //     <>
-  //       Open source contributions to the React Native docs have skyrocketed
-  //       after our move to Docusaurus. The docs are now hosted on a small repo in
-  //       plain markdown, with none of the clutter that a typical static site
-  //       generator would require. Thanks Slash!
-  //     </>
-  //   ),
-  // },
   {
     thumbnail: 'https://avatars2.githubusercontent.com/u/12876691?s=460&u=52a0866a59533f90b9e66b8768f4efd1ad547109&v=4',
     name: 'Michael Fatoki-Bello',
