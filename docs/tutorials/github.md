@@ -427,7 +427,7 @@ What a waste. We only need the last one!
 
 What's more, Github's API has a rate limit. If we do this long enough, we'll just get banned.
 
-Luckily listeners come with one very cool feature: [breakpoints](/docs/effects/listeners#breakpoints).
+Luckily listeners come with one very cool feature: [breakpoints](/docs/guide/additional#breakpoints).
 
 You might have noticed the second argument in the listener function is called `breakpoint`:
 
@@ -634,7 +634,7 @@ const logic = kea({
 We could have wrapped the entire listener in a `try / catch` block, but that would have
 added an extra complication: under the hood breakpoints also just throw an error and we should
 then use the `isBreakpoint` function to figure out wha type of error was just caught.
-I opted to avoid it in the example above. See the [listeners](/docs/effects/listeners#breakpoints) 
+I opted to avoid it in the example above. See the [listeners](/docs/guide/additional#breakpoints) 
 docs for more details.
 ::: 
 
