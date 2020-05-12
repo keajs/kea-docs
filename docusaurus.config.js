@@ -112,6 +112,12 @@ module.exports = {
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
                 },
+                blog: {
+                    feedOptions: {
+                        type: 'all',
+                        copyright: `Copyright © 2015-${new Date().getFullYear()} Marius Andra and other Kea contributors.`,
+                    },
+                },
             },
         ],
     ],
