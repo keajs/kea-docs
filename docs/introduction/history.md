@@ -36,7 +36,7 @@ After 5+ months of hard work over 300+ commits Kea 1.0 was born.
 It's a complete rewrite of what came before, taking Kea from being just an abstraction over Redux into 
 proper framework territory.
 
-Almost a year later, Kea reached version 2.0. This new major version ties up [a lot of loose ends](/blog/kea-2.0) 
+8 months later, Kea reached version 2.0. This new major version ties up [a lot of loose ends](/blog/kea-2.0) 
 and adds several new convenience features. 
 
 I hope you'll have as much fun using it as I had writing it! 🤩
