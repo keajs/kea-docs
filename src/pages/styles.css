@@ -128,10 +128,8 @@ section.homepage-logos img.gsmtasks {
     height: 24px;
     margin-bottom: 6px;
 }
-section.homepage-logos img.smart {
-    margin-top: 1px;
-    width: 92px;
-    height: 30px;
+section.homepage-logos svg.giveawayking {
+    fill: #248f4b;
 }
 section.homepage-logos img.apprentus {
     margin-top: 2px;
