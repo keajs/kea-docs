@@ -499,6 +499,36 @@ const dashboardLogic = kea({
 In all of these cases, `usersLogic` will be automatically connected to the logic that called it
 and mounted/unmounted as needed.
 
+### Mounting another logic together with your logic 
+
+There's one caveat here. If the first time you access a value on `usersLogic` is inside a listener,
+the logic will be mounted only then. If `usersLogic` has a `afterMount` event that loads and fetches data,
+it'll probably not have done its work by then.
+
+If you want to hook two logics together, so that they are mounted at the same time, use `connect`: 
+
+```javascript
+import { otherLogic } from './somewhere'
+
+const logic = kea({
+    // mounts `otherLogic` when `logic` is mounted, starts fetching data
+    connect: [otherLogic], 
+    
+    listeners: () => ({
+        something: () => {
+            // fetched data is already there
+            const stuff = otherLogic.values.fetchedData
+ 
+            // without `connect: [otherLogic]` above, kea would only mount 
+            // `otherLogic` and start fetching its data right now 
+        }
+    })
+})
+```
+
+This is not needed if you use `otherLogic` as a key in reducers or listeners. It's only needed if you
+access elements on `otherLogic` inside a listener.
+
 
 ## Explicit connections
 
