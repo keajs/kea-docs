@@ -37,7 +37,8 @@ Check out the [quickstart](/docs/introduction/quickstart) to see this as code or
 ## What is Kea good for?
 
 First, Kea is not just a place to put your app's data. It's actually a framework for managing
-the [complete lifecycle](/docs/guide/advanced#lifecycles) of this data.
+the *complete lifecycle* of this data. This includes only mounting logic that is actively in use by React
+and keeping the rest in standby, freeing up precious resources.
 
 Unlike some other state management libraries, where you statically connect all your reducers to the
 store (`const store = configureStore({ reducer: combinedReducers })`) or 
@@ -53,7 +54,11 @@ This makes Kea perfect for large apps with complex relationships between state a
 This also means that [code-splitting](https://webpack.js.org/guides/code-splitting/) works out of the 
 box with Kea. No patchwork required.
 
-Second, Kea is not a theoretical project. It's built by people who build complex applications for a 
+Second, Kea's `logic` exposes a [very complete interface](/docs/api/logic) that you can use from
+anywhere. Need to have one logic's listeners access another logic's values? Not a problem!
+Everything follows a consistent interface and is designed for interoperability. 
+
+Third, Kea is not a theoretical project. It's built by people who build complex applications for a 
 living. Kea has been used in [several large projects](/), which consist of hundreds of logics that
 cover thousands of components. It has scaled really well every time!
 

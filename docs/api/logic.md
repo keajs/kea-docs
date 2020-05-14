@@ -8,7 +8,7 @@ Once you have initialised a logic with `const logic = kea({})`, there are a few 
 
 ## Properties
 
-There are several properties you may call on a logic. 
+There are several properties you may access on a logic.  
 
 ```javascript
 const logic = kea({
@@ -27,15 +27,16 @@ const logic = kea({
     })
 })
 
+// logic.mount() // and then:
 // logic.actions.doSomething()
 // logic.values.myValue
 ```
 
+TODO: describe all the properties below
+
 ### logic.actionCreators
 
 Defaults to `{}`
-
-
 
 ### logic.actionKeys
 
@@ -68,6 +69,8 @@ Defaults to `{}`
 ### logic.listeners
 
 Defaults to `undefined`
+
+You should not access listeners directly, but dispatch `actions` that the listeners then listen to!
 
 ### logic.propTypes
 
