@@ -99,6 +99,10 @@ clean code that just works) and developer productivity (limiting bugs). It's a t
 yet I believe Kea strikes a beautiful balance. You might disagree. If so, 
 [open an issue](https://github.com/keajs/kea/issues) and let's debate!
 
+## How does Kea compare to other frameworks?
+
+That's a good question! [Join the discussion here!](https://github.com/keajs/kea/issues/106)
+
 ## Why "kea"?
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/Kea):
