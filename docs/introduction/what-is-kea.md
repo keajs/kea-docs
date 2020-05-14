@@ -6,6 +6,11 @@ sidebar_label: What is Kea?
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
+:::note
+If you just want to see some code, see the [quickstart](/docs/introduction/quickstart) or
+the [Github API](/docs/tutorials/github) tutorial 
+:::
+
 ## Introduction 
 
 Kea is a production-grade state management framework built for *ambitious* React apps.
@@ -27,7 +32,7 @@ Kea is built on top of Redux and leverages its underlying functional principles.
 * React Components **connect** to this logic and pull in all needed actions and values.    
 
 Check out the [quickstart](/docs/introduction/quickstart) to see this as code or read the 
-[installation instructions](/docs/installation/instructions) to get started. 
+[installation instructions](/docs/installation/instructions) to get started.
 
 ## What is Kea good for?
 
