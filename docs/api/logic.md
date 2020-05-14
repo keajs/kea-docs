@@ -36,76 +36,367 @@ TODO: describe all the properties below
 
 ### logic.actionCreators
 
+An array of functions that create a [Redux action](https://redux.js.org/basics/actions).
+
 Defaults to `{}`
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        doSomething: value => ({ value })
+    })
+})
+
+logic.mount()
+logic.actionCreators == {
+    doSomething: (value) => ({ type: 'do something (logic)', payload: { value } })
+}
+logic.actionCreators.doSomething.toString() === 'do something (logic)'
+```
 
 ### logic.actionKeys
 
+An object that returns the local short form for a Redux action's `type` if present:
+
 Defaults to `{}`
+
+```javascript
+const logic = kea({
+    actions: () => ({
+        doSomething: value => ({ value })
+    })
+})
+
+logic.mount()
+logic.actionKeys == {
+    'do something (logic)': 'doSomething'
+}
+```
 
 ### logic.actions
 
+Action creators that are wrapped with Redux's `dispatch`. 
+
 Defaults to `{}`
 
+```javascript
+const logic = kea({
+    actions: () => ({
+        doSomething: value => ({ value })
+    })
+})
+
+logic.mount()
+logic.actions == {
+    doSomething: (value) => store.dispatch(logic.actionCreators.doSomething(value))
+}
+logic.actions.doSomething.toString() === 'do something (logic)'
+```
+
 ### logic.cache
+
+An object you can use to store random data on that's accessible from all parts of the logic.
+
+This is not meant to pass data around, but to help plugins manage their work.
 
 Defaults to `{}`
 
 ### logic.connections
 
+All the other logic this `logic` depends on, which is mounted with this logic. Includes itself.
+
 Defaults to `{}`
+
+```javascript
+const otherLogic = kea({
+    path: () => ['scenes', 'other'],
+})
+
+const logic = kea({
+    connect: [otherLogic],
+    path: () => ['scenes', 'myself'],
+})
+
+logic.connections == {
+    'scenes.other': otherLogic, 
+    'scenes.myself': logic
+}
+```
 
 ### logic.constants
 
+Constants object that is created from an array.
+
 Defaults to `{}`
+
+```javascript
+const logic = kea({
+    constants: () => ['SHOW_ALL', 'SHOW_NONE']
+})
+
+logic.mount()
+logic.contants == {
+    SHOW_ALL: 'SHOW_ALL',
+    SHOW_NONE: 'SHOW_NONE',
+}
+```
 
 ### logic.defaults
 
+Default values as they were when the logic was created.
+
 Defaults to `{}`
+
+```javascript
+const logic = kea({
+    defaults: { key: 'value' },
+    reducers: () => ({
+        reducerKey: ['reducerDefault', { ... }]
+    })
+})
+
+logic.mount()
+logic.defaults == {
+    key: 'value',
+    reducerKey: 'reducerDefault',
+}
+```
 
 ### logic.events
 
+Various lifecycle events for the logic. You should not access this directly.
+
 Defaults to `{}`
+
+```javascript
+const logic = kea({
+    events: () => ({
+        afterMount: () => { console.log('kea is awesome!') }
+    })
+})
+
+logic.mount()
+logic.events == {
+    afterMount: () => { console.log('kea is awesome!') }
+}
+```
 
 ### logic.listeners
 
+Array of functions listening for certain events. You should not access `logic.listeners` directly, 
+but dispatch `actions` that the listeners then listen to!
+
 Defaults to `undefined`
 
-You should not access listeners directly, but dispatch `actions` that the listeners then listen to!
+```javascript
+const logic = kea({
+    path: () => ['scenes', 'bird'],
+    actions: () => ({
+        someAction: true
+    }),
+    listeners: () => ({
+        someAction: () => { console.log('kea is awesome!') }
+    })
+})
+
+logic.mount()
+logic.listeners == {
+    'some action (scenes.bird)': [
+        () => { console.log('kea is awesome!') }
+    ]
+}
+```
 
 ### logic.propTypes
 
+Optional PropTypes given to the logic.
+
 Defaults to `{}`
+
+```javascript
+const logic = kea({
+    propTypes: { key: PropTypes.object },
+    reducers: () => ({
+        reducerKey: ['reducerDefault', PropTypes.string, { ... }]
+    })
+})
+
+logic.mount()
+logic.propTypes == {
+    key: PropTypes.object,
+    reducerKey: PropTypes.string,
+}
+```
 
 ### logic.reducer
 
+The combined [redux-style reducer](https://redux.js.org/basics/reducers) for this logic:
+
 Defaults to `undefined`
+
+```javascript
+const logic = kea({
+    reducers: () => ({
+        reducerKey: ['reducerDefault', { ... }]
+        otherReducerKey: ['reducerDefault', { ... }]
+    })
+})
+
+logic.mount()
+logic.reducer == (localState, action, fullState) => ({
+    reducerKey: logic.reducers.reducerKey(localState.reducerKey, action, fullState),
+    otherReducerKey: logic.reducers.reducerKey(localState.otherReducerKey, action, fullState),
+})
+```
 
 ### logic.reducerOptions
 
+Options that were used when creating this logic's reducers
+
 Defaults to `{}`
+
+```javascript
+const logic = kea({
+    reducers: () => ({
+        reducerKey: ['reducerDefault', { persist: true, propType: PropTypes.string }, { ... }]
+        otherReducerKey: ['reducerDefault', { ... }]
+    })
+})
+
+logic.mount()
+logic.reducerOptions ==  {
+    reducerKey: { persist: true, propType: PropTypes.string },
+    otherReducerKey: {}
+}
+```
 
 ### logic.reducers
 
+Redux-style [reducers](https://redux.js.org/basics/reducers) for this logic:
+
 Defaults to `{}`
+
+```javascript
+const logic = kea({
+    reducers: () => ({
+        reducerKey: ['reducerDefault1', { ... }]
+        otherReducerKey: ['reducerDefault2', { ... }]
+    })
+})
+
+logic.mount()
+logic.reducers == {
+    reducerKey: (localState, action, fullState) => 'reducerDefault1',
+    otherReducerKey: (localState, action, fullState) => 'reducerDefault2',
+}
+```
 
 ### logic.selector
 
+Selector to find the logic's reducer in the store
+
 Defaults to `undefined`
+
+```javascript
+const logic = kea({
+    path: () => ['scenes', 'logic'],
+    reducers: () => ({
+        reducerKey: ['reducerDefault1', { ... }]
+        otherReducerKey: ['reducerDefault2', { ... }]
+    })
+})
+
+logic.mount()
+logic.selector == state => state.scenes.logic
+```
 
 ### logic.selectors
 
+Selectors to find each individual reducer or other selector in the store
+
 Defaults to `{}`
+
+```javascript
+const logic = kea({
+    path: () => ['scenes', 'logic'],
+    reducers: () => ({
+        reducerKey: ['reducerDefault1', { ... }]
+        otherReducerKey: ['reducerDefault2', { ... }]
+    }),
+    selectors: ({ selectors }) => ({
+        selectedValues: [
+            () => [selectors.reducerKey, selectors.otherReducerKey],
+            (reducerKey, otherReducerKey) => `${reducerKey} + ${otherReducerKey}` 
+        ]
+    })
+})
+
+logic.mount()
+logic.selectors == {
+    reducerKey: state => logic.selector(state).reducerKey,
+    otherReducerKey: state => logic.selector(state).otherReducerKey,
+    selectedValues: state => {
+        // This is simplified. There's memoization with reselect happening as well
+        const func = (reducerKey, otherReducerKey) => `${reducerKey} + ${otherReducerKey}`
+        return func(logic.selectors.reducerKey(state), logic.selectors.otherReducerKey(state))
+    }
+}
+```
 
 ### logic.sharedListeners
 
+Object to help share code between listeners
+
 Defaults to `undefined`
+
+```javascript
+const logic = kea({
+    path: () => ['scenes', 'bird'],
+    actions: () => ({
+        someAction: true
+    }),
+    listeners: ({ sharedListeners }) => ({
+        someAction: sharedListeners.processStuff
+    }),
+    sharedListeners: () => ({
+        processStuff: () => { console.log('kea is awesome!') }
+    })
+})
+
+logic.mount()
+logic.sharedListeners == {
+    processStuff: () => { console.log('kea is awesome!') }
+}
+```
 
 ### logic.values
 
+Convenient shorthand for accessing selectors. Uses 
+[getters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get) under the hood.
+
 Defaults to `{}`
 
+```javascript
+const logic = kea({
+    path: () => ['scenes', 'logic'],
+    reducers: () => ({
+        reducerKey: ['reducerDefault1', { ... }]
+        otherReducerKey: ['reducerDefault2', { ... }]
+    }),
+    selectors: ({ selectors }) => ({
+        selectedValues: [
+            () => [selectors.reducerKey, selectors.otherReducerKey],
+            (reducerKey, otherReducerKey) => `${reducerKey} + ${otherReducerKey}` 
+        ]
+    })
+})
 
-    
+logic.mount()
+logic.values.reducerKey == logic.selectors.reducerKey(store.getState())
+logic.values.otherReducerKey == logic.selectors.otherReducerKey(store.getState())
+logic.values.selectedValues == logic.selectors.selectedValues(store.getState())
+```
+
 ## Methods
 
 ### logic()
