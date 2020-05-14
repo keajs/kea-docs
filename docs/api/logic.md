@@ -19,7 +19,7 @@ const logic = kea({
         // ...
     }),
 
-    // it's common to destructurize the logic directly: 
+    // it's common to destructure the logic directly: 
     listeners: ({ actions, values }) => ({
         // actions.doSomething() 
         // values.myValue 
@@ -34,6 +34,8 @@ const logic = kea({
 ### logic.actionCreators
 
 Defaults to `{}`
+
+
 
 ### logic.actionKeys
 
