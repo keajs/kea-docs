@@ -6,7 +6,104 @@ sidebar_label: Logic
 
 Once you have initialised a logic with `const logic = kea({})`, there are a few things you can do with it:
 
-## logic()
+## Properties
+
+There are several properties you may call on a logic. 
+
+```javascript
+const logic = kea({
+    // each function gets `logic` as its argument
+    listeners: (logic) => ({
+        // logic.actions.doSomething() 
+        // logic.values.myValue 
+        // ...
+    }),
+
+    // it's common to destructurize the logic directly: 
+    listeners: ({ actions, values }) => ({
+        // actions.doSomething() 
+        // values.myValue 
+        // ...
+    })
+})
+
+// logic.actions.doSomething()
+// logic.values.myValue
+```
+
+### logic.actionCreators
+
+Defaults to `{}`
+
+### logic.actionKeys
+
+Defaults to `{}`
+
+### logic.actions
+
+Defaults to `{}`
+
+### logic.cache
+
+Defaults to `{}`
+
+### logic.connections
+
+Defaults to `{}`
+
+### logic.constants
+
+Defaults to `{}`
+
+### logic.defaults
+
+Defaults to `{}`
+
+### logic.events
+
+Defaults to `{}`
+
+### logic.listeners
+
+Defaults to `undefined`
+
+### logic.propTypes
+
+Defaults to `{}`
+
+### logic.reducer
+
+Defaults to `undefined`
+
+### logic.reducerOptions
+
+Defaults to `{}`
+
+### logic.reducers
+
+Defaults to `{}`
+
+### logic.selector
+
+Defaults to `undefined`
+
+### logic.selectors
+
+Defaults to `{}`
+
+### logic.sharedListeners
+
+Defaults to `undefined`
+
+### logic.values
+
+Defaults to `{}`
+
+
+    
+## Methods
+
+### logic()
 
 By calling just `logic(something)`, we call any of the following methods:
 
@@ -18,7 +115,7 @@ logic(props)     --> logic.build(props)
 logic(Component) --> logic.wrap(Component)
 ```
 
-## logic.wrap(Component)
+### logic.wrap(Component)
 
 Wrap the logic around a React Component (functional or Class) and give it access to all actions and values.
 
@@ -61,7 +158,7 @@ class MyClassComponent extends Component {
 const ConnectedClassComponent = logic(MyClassComponent)
 ```
 
-## logic.build(props)
+### logic.build(props)
 
 Build the logic, but don't yet connect it to Redux
 
@@ -116,7 +213,7 @@ To read more on the `autoConnectInListener` parameter, check out
 under the "Usage without React" page.
 :::
 
-## logic.mount()
+### logic.mount()
 
 Mount the logic on Redux, return a function that unmounts
 
@@ -155,7 +252,7 @@ logic.mount(async builtLogic => {
 })
 ```
 
-## logic.extend(input)
+### logic.extend(input)
 
 Add more features to the logic
 
