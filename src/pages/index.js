@@ -263,6 +263,11 @@ function Home() {
                                 It's open-source product analytics and we're building it now!
                             </div>
                         </div>
+                        <div className="row">
+                            <div className="col text--center" style={{ fontSize: 16, marginTop: 18 }}>
+                                Looking for docs for <a href="https://kea-v1.netlify.app/guide/installation">Kea 1.0</a> or <a href='https://5d7a15398fdb1e00073ed27f--kea-v1.netlify.app/'>0.28</a>?
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
