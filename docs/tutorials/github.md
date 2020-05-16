@@ -10,6 +10,7 @@ import { Github as Github3 } from './github/3-almost/index.js'
 import { Github as Github4 } from './github/4-event/index.js'
 import { Github as Github5 } from './github/5-breakpoint/index.js'
 import { Github } from './github/index.js'
+import { Toggle } from './github/toggle.js'
 import { Example } from './github/example.js'
 import { Provider } from 'react-redux'
 import { getContext, kea, useActions, useValues } from 'kea' 
@@ -400,7 +401,7 @@ const logic = kea({
 This is the result:
 
 <Example>
-    <Github4 />
+    <Toggle><Github4 /></Toggle>
 </Example>
 
 ## 8. Add breakpoints
