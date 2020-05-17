@@ -78,7 +78,7 @@ with `frontend.src`, specify it in the config as follows:
 ```json5
 {
   "plugins": [
-    ["babel-plugin-kea", { path: './frontend/src' }]
+    ["babel-plugin-kea", { "path": "./frontend/src" }]
   ]
 }
 ```
