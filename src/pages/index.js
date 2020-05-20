@@ -166,7 +166,7 @@ function Home() {
     const { siteConfig = {} } = context
     return (
         <Layout
-            title="Production Ready State Management for React"
+            title="Production Ready React State Management"
             description="Kea is a production-grade state management framework built for ambitious React apps."
         >
             <header className={classnames('hero hero--primary', styles.heroBanner)}>
