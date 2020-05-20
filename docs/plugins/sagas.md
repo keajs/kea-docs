@@ -118,25 +118,27 @@ dispatched before this lifecycle method will not be seen inside `start`.
 
 ```javascript
  // Input
-start: function * () {
-  // saga started or component mounted
-  console.log(this)
-}
+const logic = kea({
+    start: function * () {
+        // saga started or component mounted
+        console.log(this)
+    }
+}}
 
 // Output
-myRandomSceneLogic.saga == function * () {
-  // saga started or component mounted
-  console.log(this)
-  // => { 
-  //      actionCreators, 
-  //      actions, 
-  //      workers, 
-  //      values, 
-  //      path, 
-  //      key, 
-  //      get: function * (), 
-  //      fetch: function * () 
-  //    }
+logic.saga == function * () {
+    // saga started or component mounted
+    console.log(this)
+    // => { 
+    //      actionCreators, 
+    //      actions, 
+    //      workers, 
+    //      values, 
+    //      path, 
+    //      key, 
+    //      get: function * (), 
+    //      fetch: function * () 
+    //    }
 }
 ```
 
@@ -150,19 +152,21 @@ lifecycle method.
 
 ```javascript
 // Input
-stop: function * () {
-  // saga cancelled or component unmounted
-}
+const logic = kea({
+    stop: function * () {
+        // saga cancelled or component unmounted
+    }
+})
 
 // Output
-myRandomSceneLogic.saga == function * () {
-  try {
-    // start()
-  } finally {
-    if (cancelled()) {
-      // saga cancelled or component unmounted
+logic.saga == function * () {
+    try {
+        // start()
+    } finally {
+        if (cancelled()) {
+            // saga cancelled or component unmounted
+        }
     }
-  }
 }
 ```
 
@@ -175,15 +179,17 @@ before this lifecycle method will not be seen by `takeEvery`.
 
 ```javascript
 // Input
-takeEvery: ({ actions, workers }) => ({
-    [actions.simpleAction]: function* () {
-        // inline worker
-    },
-    [actions.actionWithDynamicPayload]: workers.dynamicWorker,
+const logic = kea({
+    takeEvery: ({ actions, workers }) => ({
+        [actions.simpleAction]: function* () {
+            // inline worker
+        },
+        [actions.actionWithDynamicPayload]: workers.dynamicWorker,
+    })
 })
 
 // Output
-myRandomSceneLogic.saga ==
+logic.saga ==
     function* () {
         // pseudocode
         yield fork(function* () {
@@ -210,15 +216,17 @@ before this lifecycle method will not be seen by `takeLatest`.
 
 ```javascript
 // Input
-takeLatest: ({ actions, workers }) => ({
-    [actions.simpleAction]: function* () {
-        // inline worker
-    },
-    [actions.actionWithDynamicPayload]: workers.dynamicWorker,
+const logic = kea({
+    takeLatest: ({ actions, workers }) => ({
+        [actions.simpleAction]: function* () {
+            // inline worker
+        },
+        [actions.actionWithDynamicPayload]: workers.dynamicWorker,
+    })
 })
 
 // Output
-myRandomSceneLogic.saga ==
+logic.saga ==
     function* () {
         // pseudocode
         yield fork(function* () {
@@ -241,26 +249,28 @@ An object of workers which you may reference in other sagas.
 
 ```javascript
 // Input
-workers: {
-  * dynamicWorker (action) {
-    const { id, message } = action.payload // if from takeEvery/takeLatest
-    // reference with workers.dynamicWorker
-  },
-  longerWayToDefine: function * () {
-    // another worker
-  }
-}
+const logic = kea({
+    workers: {
+        * dynamicWorker (action) {
+            const { id, message } = action.payload // if from takeEvery/takeLatest
+            // reference with workers.dynamicWorker
+        },
+        longerWayToDefine: function * () {
+            // another worker
+        }
+    }
+})
 
 // Output
-myRandomSceneLogic.workers == {
+logic.workers == {
   dynamicWorker: function (action) *
     const { id, message } = action.payload // if from takeEvery/takeLatest
     // reference with workers.dynamicWorker
-  }.bind(myRandomSceneLogic),
+  }.bind(logic),
 
   longerWayToDefine: function () * {
     // another worker
-  }.bind(myRandomSceneLogic)
+  }.bind(logic)
 }
 ```
 
@@ -270,10 +280,12 @@ Array of sagas that get exported with this component's saga
 
 ```javascript
 // Input
-sagas: [saga1, saga2]
+const logic = kea({
+    sagas: [saga1, saga2]
+})
 
 // Output
-myRandomSceneLogic.saga ==
+logic.saga ==
     function* () {
         yield fork(saga1)
         yield fork(saga2)
