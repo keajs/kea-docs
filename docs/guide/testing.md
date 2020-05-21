@@ -122,4 +122,7 @@ test('can wait for an action', async () => {
 
 ## Testing Kea and React together
 
-TODO
+I'm not yet ready to recommend a best practice. But a year ago [this approach](https://github.com/keajs/kea/blob/master/src/__tests__/hooks.js)
+got the job done. 
+
+TODO! :)

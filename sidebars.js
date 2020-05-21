@@ -21,6 +21,7 @@ module.exports = {
             'plugins/router',
             'plugins/sagas',
             'plugins/thunks',
+            'plugins/waitfor',
             'plugins/websockets',
         ],
         API: ['api/context', 'api/kea', 'api/logic', 'api/hooks', 'api/plugins', 'api/connect', 'api/createaction'],
