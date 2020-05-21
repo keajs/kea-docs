@@ -35,3 +35,8 @@ logic and react components
 
 <Gist username="mariusandra" id="0b3e63e70b68f86e5dc5ad714341bed9" />
 
+## More Gists Welcome!
+
+Built something fun, cool or noteworthy, yet not enough commitment to support a plugin? 
+[Edit this page](https://github.com/keajs/kea-docs/edit/master/docs/playground/gists.md)
+and send a PR with your gist!
