@@ -8,6 +8,7 @@ module.exports = {
             'guide/react',
             'guide/debugging',
             'guide/advanced',
+            'guide/testing',
             'guide/migrating-redux',
             'guide/writing-plugins',
 
