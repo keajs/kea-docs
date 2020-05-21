@@ -8,6 +8,13 @@ Sometimes when doing Server Side Rendering (SSR) or [testing](/docs/guide/testin
 want to `await` for an action. This is what the [kea-waitfor](https://github.com/keajs/kea-waitfor) 
 plugin does!
 
+:::note Keep In Mind
+`kea-waitfor` in not (YET!) designed to be used in listeners. Only use it outside your logic,
+like in tests or in a Server Side Rendering context.
+
+However, if you're feeling lucky and use it anyway in a listener, remember to add a [`breakpoint`](/docs/guide/additional#breakpoints) after the wait!
+::: 
+
 # Installation
 
 First install the [`kea-waitfor`](https://github.com/keajs/kea-waitfor) package:
@@ -114,10 +121,68 @@ console.log(value)
 // --> 'cheeseburger'
 ```
 
-## Keep in mind
+## Wait for many events
 
-`kea-waitfor` in not (YET!) designed to be used in listeners. Only use it outside your logic,
-like in tests or in a Server Side Rendering context.
+### All events finish
 
-However, if you're feeling lucky and use it anyway in a listener, remember to add a [`breakpoint`](/docs/guide/additional#breakpoints) after the wait!
- 
+To wait for multiple actions to finish, use `Promise.all` like you would with other
+promises: 
+
+```javascript
+Promise.all([
+    waitForAction(logic.actions.valueWasSet),
+    waitForAction(logic.actions.clickedButton),
+]).then(([
+    valueWasSetPayload,
+    clickedButtonPayload
+]) => {
+    console.log(valueWasSetPayload, clickedButtonPayload);
+});
+```
+
+### First event
+
+To wait for the first action to finish, use `Promise.race`:
+
+```javascript
+Promise.race([
+    waitForAction(logic.actions.settingValueSuccess),
+    waitForAction(logic.actions.settingValueFailure),
+]).then((firstPayload) => {
+    console.log(firstPayload) // but which one?
+});
+```
+
+### First event with metadata
+
+To add more metadata to better detect the winning action, feel free to
+add `.then(...)` to the promises:
+
+```javascript
+Promise.race([
+    waitForAction(logic.actions.settingValueSuccess)
+        .then(payload => ({ success: true, ...payload })),
+    waitForAction(logic.actions.settingValueFailure)
+        .then(payload => ({ success: false, ...payload })),
+]).then(({ success }) => {
+    console.log(success)
+});
+```
+
+### With a timeout
+
+To wait with a timeout, use a makeshift timebomb:
+
+```javascript
+const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms))
+
+Promise.race([
+    waitForAction(logic.actions.settingValueSuccess)
+        .then(payload => ({ status: 'ok', ...payload })),
+    waitForAction(logic.actions.settingValueFailure)
+        .then(payload => ({ status: 'error', ...payload })),
+    delay(5000).then(() => ({ status: 'timeout' }))
+]).then(({ status }) => {
+  console.log(status)
+});
+```
