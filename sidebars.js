@@ -13,6 +13,7 @@ module.exports = {
 
         ],
         Tutorials: ['tutorials/github'],
+        Playground: ['playground/gists'],
         Plugins: [
             'plugins/loaders',
             'plugins/localstorage',

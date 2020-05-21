@@ -11,11 +11,26 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 Currently there are no kea-specific devtools available. However the Redux devtools work really
 well. 
 
+With them you can:
+
+- See all dispatched actions
+- See the payload of each action
+- See how the store's state looked like after each action
+- See the diff the action made in the store's state
+
 Get them for [Chrome](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
 or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/reduxdevtools/)
 
-<img alt="Redux Devtools" src={useBaseUrl('img/guide/redux-devtools.png')} style={{ maxWidth: 662 }} />
+<p><img alt="Redux Devtools" src={useBaseUrl('img/guide/redux-devtools.png')} style={{ maxWidth: 662 }} /></p>
 
+:::tip Project Idea
+Any volunteers who want to work on fully-kea devtools? It would be nice to visually
+see how the logics interact with each other, see their state (including selectors) and to 
+be able to call actions on them with the push of a button.
+
+Here's a [gist](/docs/playground/gists/#kea-devtools)
+of a really raw devtool that just displays all the logics and their values in boxes.
+:::
 
 ## Logic Path
 
