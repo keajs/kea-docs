@@ -405,7 +405,7 @@ The better approach to explicitly setting the `loading` state is to have it reac
 When do we start loading? When do we stop loading? When the `loadUsers` and `setUsers` actions are
 called.
 
-Let's built off of that:
+Let's build off of that:
 
 ```javascript
 const logic = kea({
