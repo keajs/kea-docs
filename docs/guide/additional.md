@@ -11,6 +11,81 @@ The concepts discussed below are all worth knowing, yet some might be more immed
 than others. Have a look and then come back when you need them.
 ::: 
 
+## Input objects vs functions
+
+Whenever you're using any of kea's built-in primitives (`actions`, `reducers`, `listeners`, etc),
+you have two options.
+
+You can pass objects to them:
+
+```javascript
+kea({
+    actions: {
+        increment: true,
+    },
+    listeners: {
+        increment: () => {
+            console.log('incrementing!')
+        }
+    }  
+})
+```
+
+... or you can pass functions to them:
+
+```javascript
+kea({
+    actions: () => ({          // added "() => ("
+        increment: true,
+    }),                        // added ")"
+    listeners: () => ({        // added "() => ("
+        increment: () => {
+            console.log('++!')
+        }
+    })                         // added ")"
+})
+```
+
+What's the difference?
+
+First, if you pass a function, it gets evaluated lazily when the logic is built.
+
+If you're using values that are not guaranteed to be there (e.g. a reducer that uses
+`otherLogic.actions.something`), pass a function:
+
+```javascript
+kea({
+    reducers: () => ({ // evaluate later
+        counter: [0, {
+            increment: state => state + 1,
+            // controlLogic.actions is undefined when loading this code
+            // so we must wrap a function around it
+            [controlLogic.actions.setCounter]: (_, { counter }) => counter 
+        }]
+    })
+})
+```
+
+Second, the function you pass gets one argument, `logic`, which you 
+can destructure to get `actions`, `values` and other goodies on the logic that you're building:
+
+```javascript
+kea({
+    listeners: ({ actions, values }) => ({
+        increment: () => {
+            if (values.iHaveHadEnough) {
+                actions.doSomethingElse()
+            }
+        }
+    })
+})
+```
+
+The recommendation is to write the simplest code you can (start with an `reducers: {}`)
+and when you need to access `actions`, `values` or perform lazy evaluation, convert it into
+a function.
+ 
+
 ## Props
 
 When you use `logic()` as a function and pass it an object as an argument, that object will be saved 
