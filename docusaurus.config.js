@@ -1,7 +1,7 @@
 const React = require('react')
 
 module.exports = {
-    title: 'Kea 2.0',
+    title: 'Kea 2.1',
     tagline: 'Production Ready React State Management',
     url: 'https://kea.js.org',
     baseUrl: '/',
@@ -10,7 +10,7 @@ module.exports = {
     projectName: 'kea',
     themeConfig: {
         navbar: {
-            title: 'Kea 2.0',
+            title: 'Kea 2.1',
             logo: {
                 alt: 'Kea Logo',
                 src: 'img/logo.svg',
