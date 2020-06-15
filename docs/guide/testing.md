@@ -48,14 +48,14 @@ beforeEach(() => {
 
 test('runs before and after mount events', async () => {
   const logic = kea({
-    actions: () => ({
+    actions: {
       increment: (amount = 1) => ({ amount }),
-    }),
-    reducers: ({ actions }) => ({
+    },
+    reducers: {
       counter: [0, {
         increment: (_, { name }) => name,
       }],
-    }),
+    },
   })
 
   logic.mount()
@@ -88,10 +88,10 @@ const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms))
 
 test('can wait for an action', async () => {
   const logic = kea({
-    actions: () => ({
+    actions: {
       setValue: value => ({ value }),
       valueWasSet: value => ({ value })
-    }),
+    },
 
     listeners: ({ actions }) => ({
       setValue: async ({ value }) => {

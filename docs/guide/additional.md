@@ -44,10 +44,10 @@ Then just use `props` wherever you need to. For example:
 
 ```javascript
 const counterLogic = kea({
-    actions: () => ({
+    actions: {
         increment: (amount) => ({ amount }),
         decrement: (amount) => ({ amount })
-    }),
+    },
 
     reducers: ({ props }) => ({
         counter: [props.defaultCounter || 0, {
@@ -74,16 +74,16 @@ from `props`:
 const userLogic = kea({
     key: (props) => props.id, // 🔑 the key
 
-    actions: () => ({
+    actions: {
         loadUser: true,
         userLoaded: (user) => ({ user })
-    }),
+    },
   
-    reducers: () => ({
+    reducers: {
         user: [null, {
             userLoaded: (_, { user }) => user
         }]
-    }),
+    },
 
     // more on events in a section below. 
     events: ({ actions }) => ({
@@ -289,14 +289,14 @@ There are two ways to pass defaults to reducers. We've been using this style unt
 
 ```javascript
 const logic = kea({
-    // ... actions: () => ({ increment, decrement })
+    // ... actions: { increment, decrement }
 
-    reducers: () => ({
+    reducers: {
         counter: [0, {
             increment: (state, { amount }) => state + amount,
             decrement: (state, { amount }) => state - amount
         }]
-    }),
+    },
 })
 ```
 
@@ -304,18 +304,18 @@ If you choose, you can set your defaults explicitly in a `defaults` object:
 
 ```javascript
 const logic = kea({
-    // ... actions: () => ({ increment, decrement })
+    // ... actions: { increment, decrement }
   
     defaults: {
         counter: 0
     },
 
-    reducers: () => ({
+    reducers: {
         counter: {
             increment: (state, { amount }) => state + amount,
             decrement: (state, { amount }) => state - amount
         }
-    })
+    }
 })
 ```
 
@@ -331,12 +331,12 @@ const logic = kea({
         counterCopy: counterLogic.selectors.counter
     }),
 
-    reducers: () => ({
+    reducers: {
         counterCopy: [counterLogic.selectors.counter, {
             increment: (state, { amount }) => state + amount,
             decrement: (state, { amount }) => state - amount
         }]
-    })
+    }
 })
 ```
 
@@ -370,29 +370,29 @@ Wiring logic together is easier than you think. Suppose we have these two logics
 ```javascript
 // stores a list of users, referenced everywhere in the app
 const usersLogic = kea({
-    actions: () => ({
+    actions: {
         loadUsers: true,
         loadUsersSuccess: (users) => ({ users })
-    }),
-    reducers: () => ({
+    },
+    reducers: {
         users: [[], {
             loadUsersSuccess: (_, { users }) => users
         }]
-    })
+    }
     // ... listeners, etc
 })
 
 // handles data shown on our dashboard scene
 const dashboardLogic = kea({
-    actions: () => ({
+    actions: {
         refreshDashboard: true    
-    }),
+    },
 
-    listeners: () => ({
+    listeners: {
         refreshDashboard: async () => {
             // pull data from the API, update values shown on the dashboard 
         }
-    })
+    }
 })
 ```
 
@@ -405,11 +405,11 @@ Just use the `loadUsersSuccess` action from `usersLogic` as a key in the `listen
 const usersLogic = kea({ ... }) // same as above
  
 const dashboardLogic = kea({
-    actions: () => ({
+    actions: {
         refreshDashboard: true    
-    }),
+    },
 
-    listeners: () => ({
+    listeners: ({ actions }) => ({
         refreshDashboard: async () => {
             // pull data from the API, update values shown on the dashboard 
         },
@@ -448,9 +448,9 @@ This `[otherLogic.actions.doSomething]` syntax also works in reducers:
 const usersLogic = kea({ ... })
 
 const shadowUsersLogic = kea({
-    actions: () => ({
+    actions: {
         reset: true
-    }),
+    },
     reducers: ({ actions }) => ({
         users: [[], {
             reset: () => [], // action that's defined in this logic
@@ -467,12 +467,12 @@ and selectors:
 const usersLogic = kea({ ... })
 
 const sortedUsersLogic = kea({
-    selectors: () => ({
+    selectors: {
         sortedUsers: [
             () => [usersLogic.selectors.users],
             (users) => [...users].sort((a, b) => a.name.localeCompare(b.name))
         ]
-    })
+    }
 })
 ```
 
@@ -485,14 +485,14 @@ Just get the value directly from `usersLogic.values`:
 ```javascript
 const dashboardLogic = kea({
     // ...
-    listeners: () => ({
+    listeners: {
         refreshDashboard: async () => {
             if (!usersLogic.values.users) {
                 usersLogic.actions.loadUsers()
             }
             // pull data from the API, update values shown on the dashboard 
         }
-    })
+    }
 })
 ```
 
@@ -514,7 +514,7 @@ const logic = kea({
     // mounts `otherLogic` when `logic` is mounted, starts fetching data
     connect: [otherLogic], 
     
-    listeners: () => ({
+    listeners: {
         something: () => {
             // fetched data is already there
             const stuff = otherLogic.values.fetchedData
@@ -522,7 +522,7 @@ const logic = kea({
             // without `connect: [otherLogic]` above, kea would only mount 
             // `otherLogic` and start fetching its data right now 
         }
-    })
+    }
 })
 ```
 
@@ -549,17 +549,17 @@ The syntax is as follows:
 
 ```javascript
 const counterLogic = kea({
-    actions: () => ({
+    actions: {
         increment: (amount) => ({ amount }),
         decrement: (amount) => ({ amount })
-    }),
+    },
 
-    reducers: () => ({
+    reducers: {
         counter: [0, {
             increment: (state, { amount }) => state + amount,
             decrement: (state, { amount }) => state - amount
         }]
-    }),
+    },
 })
 
 const logic = kea({
@@ -571,20 +571,20 @@ const logic = kea({
     },
 
     // using the actions in a reducer like they're our own
-    reducers: () => ({
+    reducers: {
         doubleCounter: [0, {
             increment: (state, { amount }) => state + amount * 2,
             decrement: (state, { amount }) => state - amount * 2
         }]
-    }),
+    },
     
     // pretend that we own the selector as well 
-    selectors: ({ selectors }) => ({
+    selectors: {
         tripleCounter: [
-            () => [selectors.counter],
+            (selectors) => [selectors.counter],
             (counter) => counter * 3
         ]
-    })
+    }
 })
 ```
 

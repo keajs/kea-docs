@@ -32,8 +32,6 @@ const logic = kea({
 // logic.values.myValue
 ```
 
-TODO: describe all the properties below
-
 ### logic.actionCreators
 
 An array of functions that create a [Redux action](https://redux.js.org/basics/actions).
@@ -42,9 +40,9 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         doSomething: value => ({ value })
-    })
+    }
 })
 
 logic.mount()
@@ -62,9 +60,9 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         doSomething: value => ({ value })
-    })
+    }
 })
 
 logic.mount()
@@ -81,9 +79,9 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         doSomething: value => ({ value })
-    })
+    }
 })
 
 logic.mount()
@@ -131,7 +129,7 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    constants: () => ['SHOW_ALL', 'SHOW_NONE']
+    constants: ['SHOW_ALL', 'SHOW_NONE']
 })
 
 logic.mount()
@@ -150,9 +148,9 @@ Defaults to `{}`
 ```javascript
 const logic = kea({
     defaults: { key: 'value' },
-    reducers: () => ({
+    reducers: {
         reducerKey: ['reducerDefault', { ... }]
-    })
+    }
 })
 
 logic.mount()
@@ -170,9 +168,9 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    events: () => ({
+    events: {
         afterMount: () => { console.log('kea is awesome!') }
-    })
+    }
 })
 
 logic.mount()
@@ -191,12 +189,12 @@ Defaults to `undefined`
 ```javascript
 const logic = kea({
     path: () => ['scenes', 'bird'],
-    actions: () => ({
+    actions: {
         someAction: true
-    }),
-    listeners: () => ({
+    },
+    listeners: {
         someAction: () => { console.log('kea is awesome!') }
-    })
+    }
 })
 
 logic.mount()
@@ -216,9 +214,9 @@ Defaults to `{}`
 ```javascript
 const logic = kea({
     propTypes: { key: PropTypes.object },
-    reducers: () => ({
+    reducers: {
         reducerKey: ['reducerDefault', PropTypes.string, { ... }]
-    })
+    }
 })
 
 logic.mount()
@@ -236,10 +234,10 @@ Defaults to `undefined`
 
 ```javascript
 const logic = kea({
-    reducers: () => ({
+    reducers: {
         reducerKey: ['reducerDefault', { ... }]
         otherReducerKey: ['reducerDefault', { ... }]
-    })
+    }
 })
 
 logic.mount()
@@ -257,10 +255,10 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    reducers: () => ({
+    reducers: {
         reducerKey: ['reducerDefault', { persist: true, propType: PropTypes.string }, { ... }]
         otherReducerKey: ['reducerDefault', { ... }]
-    })
+    }
 })
 
 logic.mount()
@@ -278,10 +276,10 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    reducers: () => ({
+    reducers: {
         reducerKey: ['reducerDefault1', { ... }]
         otherReducerKey: ['reducerDefault2', { ... }]
-    })
+    }
 })
 
 logic.mount()
@@ -299,11 +297,11 @@ Defaults to `undefined`
 
 ```javascript
 const logic = kea({
-    path: () => ['scenes', 'logic'],
-    reducers: () => ({
+    path: ['scenes', 'logic'],
+    reducers: {
         reducerKey: ['reducerDefault1', { ... }]
         otherReducerKey: ['reducerDefault2', { ... }]
-    })
+    }
 })
 
 logic.mount()
@@ -319,16 +317,16 @@ Defaults to `{}`
 ```javascript
 const logic = kea({
     path: () => ['scenes', 'logic'],
-    reducers: () => ({
+    reducers: {
         reducerKey: ['reducerDefault1', { ... }]
         otherReducerKey: ['reducerDefault2', { ... }]
-    }),
-    selectors: ({ selectors }) => ({
+    },
+    selectors: {
         selectedValues: [
-            () => [selectors.reducerKey, selectors.otherReducerKey],
+            (selectors) => [selectors.reducerKey, selectors.otherReducerKey],
             (reducerKey, otherReducerKey) => `${reducerKey} + ${otherReducerKey}` 
         ]
-    })
+    }
 })
 
 logic.mount()
@@ -351,16 +349,16 @@ Defaults to `undefined`
 
 ```javascript
 const logic = kea({
-    path: () => ['scenes', 'bird'],
-    actions: () => ({
+    path: ['scenes', 'bird'],
+    actions: {
         someAction: true
-    }),
+    },
     listeners: ({ sharedListeners }) => ({
         someAction: sharedListeners.processStuff
     }),
-    sharedListeners: () => ({
+    sharedListeners: {
         processStuff: () => { console.log('kea is awesome!') }
-    })
+    }
 })
 
 logic.mount()
@@ -378,17 +376,17 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    path: () => ['scenes', 'logic'],
-    reducers: () => ({
+    path: ['scenes', 'logic'],
+    reducers: {
         reducerKey: ['reducerDefault1', { ... }]
         otherReducerKey: ['reducerDefault2', { ... }]
-    }),
-    selectors: ({ selectors }) => ({
+    },
+    selectors: {
         selectedValues: [
-            () => [selectors.reducerKey, selectors.otherReducerKey],
+            (selectors) => [selectors.reducerKey, selectors.otherReducerKey],
             (reducerKey, otherReducerKey) => `${reducerKey} + ${otherReducerKey}` 
         ]
-    })
+    }
 })
 
 logic.mount()
@@ -419,14 +417,14 @@ You can also use the shorthand `logic(Component)`, demonstrated below:
 
 ```javascript
 const logic = kea({
-  actions: () => ({
+  actions: {
     doSomething: true,
     doSomethingElse: true,
-  }),
-  reduceres: () => ({
+  },
+  reducers: {
     firstOne: ['defaultValue'],
     secondOne: ['defaultValue']
-  })
+  }
 })
 
 // with function components
@@ -467,15 +465,15 @@ Builds are cached on the context, so calling it a on every render is very fast, 
 const logic = kea({
   key: props => props.id,
 
-  constants: () => ['SOMETHING'],
+  constants: ['SOMETHING'],
 
-  actions: () => ({
+  actions: {
     doSomething: true,
-  }),
+  },
 
-  reducers: () => ({
+  reducers: {
     myValue: ['yes']
-  })
+  }
 })
 
 // get a built copy
@@ -555,23 +553,23 @@ Add more features to the logic
 ```javascript
 // create a logic
 const logic = kea({
-  actions: () => ({
+  actions: {
     doSomething: true,
-  }),
+  },
 
-  reducers: () => ({
+  reducers: {
     myValue: ['yes']
-  })
+  }
 })
 
 logic.extend({
-  actions: () => ({
+  actions: {
     doSomethingElse: true,
-  }),
+  },
 
-  reducers: () => ({
+  reducers: {
     anotherValue: ['no']
-  })
+  }
 })
 
 // Now you can use both:

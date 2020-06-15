@@ -16,7 +16,7 @@ Kea's `logic` has three different states:
 1. **Initialized**. When your JavaScript interpreter encounters a `const logic = kea(input)` call, not
    much happens. It just stores the `input` variable on the logic and goes on. No processing takes place.
 2. **Built**. When a logic is needed, it must first be built. This means converting
-   an `input` such as `{ actions: () => ({ ... }) }` into actual functions on `logic.actions`
+   an `input` such as `{ actions: { ... } }` into actual functions on `logic.actions`
    that can be called. Same for all the `reducers`, `selectors`, etc.
 3. **Mounted**. Once a logic is built, it can be mounted. This means attaching the `reducers` to
    Redux, registering all the `listeners`, etc.  
@@ -98,17 +98,17 @@ Assuming `counterLogic` is not used anywhere else, when called in the listener h
 it will be automatically built and mounted:
 
 ```javascript
-// Works in Kea 2.0+
+// Works in Kea 2.1+
 const logic = kea({
-    actions: () => ({
+    actions: {
         showCount: true
-    }),
-    listeners: () => ({
+    },
+    listeners: {
         showCount: () => {
             console.log('Increment called!')
             console.log(`Counter: ${counterLogic.values.counter}`)
         }
-    })
+    }
 })
 ```
 
@@ -127,10 +127,10 @@ doesn't need any props. You must then pass `false` as the second argument to `.b
 ```javascript
 // Works in Kea 2.0+
 const logic = kea({
-    actions: () => ({
+    actions: {
         showCount: true
-    }),
-    listeners: () => ({
+    },
+    listeners: {
         showCount: () => {
             // counterLogic.build(props, autoConnectInListener)
             const builtCounterLogic = counterLogic.build({}, false)
@@ -143,7 +143,7 @@ const logic = kea({
 
             unmount() // and it's gone!
         }
-    })
+    }
 })
 ```
 
@@ -161,26 +161,26 @@ Up until a logic has been built and mounted, you can extend it:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         increment: (amount = 1) => ({ amount }),
         decrement: (amount = 1) => ({ amount })
-    }),
+    },
     
-    reducers: () => ({
+    reducers: {
         counter: [0, {
             increment: (state, { amount }) => state + amount,
             decrement: (state, { amount }) => state - amount
         }]
-    }),
+    },
 })
 
 logic.extend({
-    reducers: () => ({
+    reducers: {
         negativeCounter: [0, {
             increment: (state, { amount }) => state - amount,
             decrement: (state, { amount }) => state + amount
         }]
-    }),
+    },
 })
 
 // later in React
@@ -201,9 +201,9 @@ Take the following buggy code:
 ```javascript
 const counterLogic = kea({
     // ...
-    selectors: ({ selectors, props }) => ({
+    selectors: ({ props }) => ({
         diffFromDefault: [
-            () => [selectors.counter],
+            (selectors) => [selectors.counter],
             (counter) => counter - props.defaultCounter // DO NOT do this!
         ]
     })
@@ -234,16 +234,15 @@ selector that picks the right value from `props`:
 ```javascript
 const counterLogic = kea({
     // ...
-    selectors: ({ selectors }) => ({
+    selectors: {
         diffFromDefault: [
-            () => [
+            (selectors) => [
                 selectors.counter, 
                 (_, props) => props.defaultCounter
             ],
             (counter, defaultCounter) => counter - defaultCounter
         ]
-    })
-
+    }
 })
 ```
 
@@ -255,12 +254,12 @@ If multiple `listeners` need to run the same code, you can:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         firstAction: true,
         secondAction: true,
         commonAction: true
         // ...
-    }),
+    },
 
     listeners: ({ actions, values }) => ({
         // two listeners with one shared action
@@ -283,12 +282,12 @@ This however dispatches a separate action, which is then listened to.
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         anotherAction: true,
         debouncedFetchResults: username => ({ username }),
         oneActionMultipleListeners: true,
         // ...
-    }),
+    },
 
     listeners: ({ actions, values, store, sharedListeners }) => ({
         // two listeners with one shared action

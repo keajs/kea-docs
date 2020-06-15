@@ -62,17 +62,17 @@ const logic = kea({
     // path must be defined!
     path: () => ['scenes', 'homepage', 'name'],
 
-    actions: ({ constants }) => ({
+    actions: {
         updateName: (name) => ({ name }),
-    }),
+    },
 
-    reducers: ({ actions, constants }) => ({
+    reducers: {
         // just add { persist: true }
         name: [
             'chirpy',
             { persist: true },
             {
-                [actions.updateName]: (state, payload) => payload.name,
+                updateName: (state, payload) => payload.name,
             },
         ],
         // you may override the prefix and separator keys
@@ -80,9 +80,9 @@ const logic = kea({
             'chirpy',
             { persist: true, prefix: 'example', separator: '_' },
             {
-                [actions.updateName]: (state, payload) => payload.name,
+                updateName: (state, payload) => payload.name,
             },
         ],
-    }),
+    },
 })
 ```

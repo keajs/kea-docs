@@ -31,12 +31,12 @@ Every operation in Kea start with an action:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         addToCounter: (amount) => ({ amount }),
         setName: (name) => ({ name }),
         submitForm: (values, page) => ({ values, page }),
         actionWithoutArguments: true        
-    })
+    }
 })
 ```
 
@@ -70,16 +70,16 @@ Reducers hold your state and modify it in response to actions:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         increment: (amount) => ({ amount }),
         decrement: (amount) => ({ amount })
-    }),
-    reducers: () => ({
+    },
+    reducers: {
         counter: [0, { 
             increment: (state, { amount }) => state + amount,
             decrement: (state, { amount }) => state - amount,
         }]
-    })
+    }
 })
 ```
 
@@ -119,23 +119,23 @@ All API calls and other side effects must happen inside `listeners`.
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         loadUsers: true,
         setUsers: users => ({ users })
-    }),
+    },
 
-    listeners: () => ({
+    listeners: {
         loadUsers: async () => {
             const users = await api.get('users')
             actions.setUsers(users)
         } 
-    }),
+    },
 
-    reducers: () => ({
+    reducers: {
         users: [[], {
             setUsers: (_, { users }) => users
         }]  
-    })
+    }
 })
 ```
 
@@ -151,26 +151,26 @@ Each reducer has a selector made for it automatically, which you can use as inpu
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         setMonth: (month) => ({ month }),
         setRecords: (records) => ({ records })
-    }),
-    reducers: () => ({
+    },
+    reducers: {
         month: ['2020-04', {
             setMonth: (_, { month }) => month
         }],
         records: [[], {
             setRecords: (_, { records }) => records
         }]  
-    }),
-    selectors: ({ selectors }) => ({
+    },
+    selectors: {
         recordsForSelectedMonth: [
-            () => [selectors.month, selectors.records],
+            (selectors) => [selectors.month, selectors.records],
             (month, records) => {
                 return records.filter(r => r.month === month)
             }
         ]
-    })
+    }
 })
 ```
 

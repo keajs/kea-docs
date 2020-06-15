@@ -154,9 +154,9 @@ In case you need to override `project` or `projectLoading`, just override the re
 export const projectLogic = kea({
     key: props => props.id,
 
-    actions: () => ({
+    actions: {
         setAsFinished: true
-    }),
+    },
 
     loaders: ({ values, props }) => ({
         project: {
@@ -164,7 +164,7 @@ export const projectLogic = kea({
         },
     }),
     
-    reducers: () => ({
+    reducers: {
         project: {
             setAsFinished: (state) => state ? { ...state, finished: true } : state
         },
@@ -175,7 +175,7 @@ export const projectLogic = kea({
             loadProjectSuccess: () => null,
             // loadProjectFailure is unmodified
         }
-    })
+    }
 })
 ```
 

@@ -73,10 +73,10 @@ import { kea } from 'kea'
 
 export const articlesLogic = kea({
     // define the actions from below
-    actions: () => ({ ... }),
+    actions: { ... },
     
     // define article = { id, ... }
-    reducers: () => ({ ... }),
+    reducers: { ... },
     
     actionToUrl: ({ values }) => ({
         openList: ({ id }) => `/articles`,
@@ -202,17 +202,17 @@ import { kea } from 'kea'
 import { router } from 'kea-router'
 
 const logic = kea({
-    actions: () => ({
+    actions: {
         buttonPress: true,
-    }),
+    },
 
-    listeners: () => ({
+    listeners: {
         buttonPress: () => {
             if (router.values.location.pathname !== '/setup') {
                 router.actions.push("/setup", { search: 'param' }, '#integration')
             }
         }
-    })
+    }
 })
 ```
 
@@ -255,11 +255,11 @@ import { kea } from 'kea'
 import { router } from 'kea-router'
 
 const otherLogic = kea({
-    listeners: () => ({
+    listeners: {
         [router.actions.locationChanged]: ({ pathname, search, hash, method }) => {
             console.log({ pathname, search })
         },
-    }),
+    },
 })
 ```
 
@@ -284,17 +284,17 @@ export const routes = {
 }
 
 export const sceneLogic = kea({
-    actions: () => ({
+    actions: {
         setScene: (scene, params) => ({ scene, params })
-    }),
-    reducers: ({ actions }) => ({
+    },
+    reducers: {
         scene: [null, {
-            [actions.setScene]: (_, payload) => payload.scene
+            setScene: (_, payload) => payload.scene
         }],
         params: [{}, {
-            [actions.setScene]: (_, payload) => payload.params || {}
+            setScene: (_, payload) => payload.params || {}
         }]
-    }),
+    },
     urlToAction: ({ actions }) => {
         const mapping = {}
         for (const [paths, scene] of Object.entries(routes)) {

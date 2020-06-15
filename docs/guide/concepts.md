@@ -36,12 +36,12 @@ The first thing you do in a logic is to define some actions:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         addToCounter: (amount) => ({ amount }),
         keyPressed: (keyCode) => ({ keyCode }),
         setName: (name) => ({ name }),
         submitForm: (values, page) => ({ values, page }),
-    })
+    }
 })
 ```
 
@@ -64,10 +64,10 @@ thing* they are allowed to do is to convert their arguments into a `payload` obj
 
 ```jsx
 const logic = kea({
-    actions: () => ({
+    actions: {
         // take in `amount`, give back `{ amount }`
         addToCounter: (amount) => ({ amount })
-    })
+    }
 })
 ```
 
@@ -113,12 +113,12 @@ just pass `true`, or anything else that's not a function, instead of an argument
 
 ```jsx
 const logic = kea({
-    actions: () => ({
+    actions: {
         addToCounter: (amount) => ({ amount }),
         addOneThousand: true,
         loadUsers: true,
         takeOutGarbage: false
-    })
+    }
 })
 ```
 
@@ -129,10 +129,10 @@ as a payload from your actions:
  
 ```jsx
 const logic = kea({
-    actions: () => ({
+    actions: {
         addToCounter: (amount) => ({ amount }), // ❤️ DO this!
         badBadAddToCounter: amount => amount    // 💔 DO NOT do this!
-    })
+    }
 })
 ```
 
@@ -166,18 +166,18 @@ Here's an example of a basic counter:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         increment: (amount) => ({ amount }),
         setCounter: (counter) => ({ counter }),
         reset: true
-    }),
-    reducers: () => ({
+    },
+    reducers: {
         counter: [0, { 
             increment: (state, { amount }) => state + amount,
             setCounter: (_, { counter }) => counter,
             reset: () => 0
         }]
-    })
+    }
 })
 ```
 
@@ -211,13 +211,13 @@ button that clears both pieces of data. The code would look like this:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         setName: (name) => ({ name }),
         increment: (amount) => ({ amount }),
         setCounter: (counter) => ({ counter }),
         reset: true
-    }),
-    reducers: () => ({
+    },
+    reducers: {
         counter: [0, { 
             increment: (state, { amount }) => state + amount,
             setCounter: (_, { counter }) => counter,
@@ -227,7 +227,7 @@ const logic = kea({
             setName: (_, { name }) => name,
             reset: () => ''
         }]
-    })
+    }
 })
 ```
 
@@ -256,12 +256,12 @@ For example, here's todo list that stores strings in an array:
   
 ```javascript
 const todosLogic = kea({
-    actions: () => ({
+    actions: {
         addTodo: (todo) => ({ todo }),
         removeTodo: (index) => ({ index }),
         updateTodo: (index, todo) => ({ index, todo }),
-    }),
-    reducers: () => ({
+    },
+    reducers: {
         // defaults to [], an empty array
         todos: [[], { 
             addTodo: (state, { todo }) => {
@@ -277,7 +277,7 @@ const todosLogic = kea({
                 return state.map((t, i) => i === index ? todo : t)
             }   
         }]
-    })
+    }
 })
 ```
 
@@ -313,16 +313,16 @@ As the name implies, listeners *listen* for dispatched actions and then run some
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         loadUsers: true,
-    }),
+    },
 
-    listeners: () => ({
+    listeners: {
         loadUsers: async (payload) => {
             const users = await api.get('users')
             // do something with the users?
         } 
-    })
+    }
 })
 ```
 
@@ -335,10 +335,10 @@ A: We store them in a `reducer` through an `action` of course!
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         loadUsers: true,
         setUsers: (users) => ({ users })
-    }),
+    },
 
     listeners: ({ actions }) => ({
         loadUsers: async () => {
@@ -347,11 +347,11 @@ const logic = kea({
         } 
     }),
 
-    reducers: () => ({
+    reducers: {
         users: [[], {
             setUsers: (_, { users }) => users
         }]  
-    })
+    }
 })
 ```
 
@@ -371,20 +371,20 @@ Well, here's one bad and *naïve* way you could do it:
 ```javascript
 // NB! This code follows bad patterns, don't do this.
 const logic = kea({
-    actions: () => ({
+    actions: {
         loadUsers: true,
         setUsers: (users) => ({ users }),
         setLoading: (loading) => ({ loading })
-    }),
+    },
 
-    reducers: () => ({
+    reducers: {
         users: [[], {
             setUsers: (_, { users }) => users
         }],
         loading: [false, { // DO NOT DO THIS
             setLoading: (_, { loading }) => loading
         }]      
-    }),
+    },
 
     listeners: ({ actions }) => ({
         loadUsers: async () => {
@@ -409,12 +409,12 @@ Let's build off of that:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         loadUsers: true,
         setUsers: (users) => ({ users }),
-    }),
+    },
 
-    reducers: () => ({
+    reducers: {
         users: [[], {
             setUsers: (_, { users }) => users
         }],
@@ -422,7 +422,7 @@ const logic = kea({
             loadUsers: () => true,
             setUsers: () => false,
         }]      
-    }),
+    },
 
     listeners: ({ actions }) => ({
         loadUsers: async () => {
@@ -447,13 +447,13 @@ from before to `usersLoading` and `setUsers` to `loadUsersSuccess`:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         loadUsers: true,
         loadUsersSuccess: (users) => ({ users }),
         loadUsersFailure: (error) => ({ error }),
-    }),
+    },
 
-    reducers: () => ({
+    reducers: {
         users: [[], {
             loadUsersSuccess: (_, { users }) => users
         }],
@@ -466,7 +466,7 @@ const logic = kea({
             loadUsers: () => null,
             loadUsersFailure: (_, { error }) => error
         }]      
-    }),
+    },
 
     listeners: ({ actions }) => ({
         loadUsers: async () => {
@@ -498,11 +498,11 @@ Using the [kea-loaders plugin](/docs/plugins/loaders), the above code can be sim
 
 ```javascript
 const logic = kea({
-    loaders: () => ({
+    loaders: {
         users: [[], {
             loadUsers: async () => await api.get('users')
         }]
-    })
+    }
 })
 ```
 
@@ -521,18 +521,18 @@ Let's take this example:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         setMonth: (month) => ({ month }),
         setRecords: (records) => ({ records })
-    }),
-    reducers: () => ({
+    },
+    reducers: {
         month: ['2020-04', {
             setMonth: (_, { month }) => month
         }],
         records: [[], {
             setRecords: (_, { records }) => records
         }]  
-    })
+    }
 })
 ``` 
 
@@ -583,26 +583,26 @@ That's where selectors come in:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         setMonth: (month) => ({ month }),
         setRecords: (records) => ({ records })
-    }),
-    reducers: () => ({
+    },
+    reducers: {
         month: ['2020-04', {
             setMonth: (_, { month }) => month
         }],
         records: [[], {
             setRecords: (_, { records }) => records
         }]  
-    }),
-    selectors: ({ selectors }) => ({
+    },
+    selectors: {
         recordsForSelectedMonth: [
-            () => [selectors.month, selectors.records],
+            (selectors) => [selectors.month, selectors.records],
             (month, records) => {
                 return records.filter(r => r.month === month)
             }
         ]
-    })
+    }
 })
 ``` 
 

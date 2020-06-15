@@ -46,9 +46,9 @@ Here is an example of thunks in action:
 const delay = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms))
 
 const logic = kea({
-    actions: () => ({
+    actions: {
         updateName: (name) => ({ name }),
-    }),
+    },
 
     thunks: ({ actions, dispatch, getState }) => ({
         // can be called with actions.updateNameAsync(name)
@@ -67,11 +67,11 @@ const logic = kea({
         },
     }),
 
-    reducers: () => ({
+    reducers: {
         name: ['chirpy', {
             updateName: (state, payload) => payload.name,
         }],
-    }),
+    },
 })
 ```
 

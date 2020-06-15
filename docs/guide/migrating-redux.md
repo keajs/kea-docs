@@ -15,9 +15,9 @@ import { kea } from 'kea'
 import { LOCATION_CHANGE } from 'connected-react-router'
 
 const logic = kea({
-    actions: () => ({
+    actions: {
         doit: true
-    }),
+    },
     
     reducers: ({ actions }) => ({
         myValue: [false, {
@@ -28,14 +28,14 @@ const logic = kea({
         }]
     }),
     
-    listeners: () => ({
+    listeners: {
         'REDUX_ACTION': (payload) => {
             // when the location change event is triggered
         },
         [LOCATION_CHANGE]: (payload) => {
             // when the location change event is triggered
         }
-    })
+    }
 })
 ```
 
@@ -45,12 +45,12 @@ You can use regular selectors in your `selectors` blocks:
 
 ```javascript
 const logic = kea({
-    selectors: ({ selectors }) => ({
+    selectors: {
         someValue: [
-            () => [state => state.rails.i18nLocale, selectors.name],
+            (selectors) => [state => state.rails.i18nLocale, selectors.name],
             (i18nLocale, name) => `${name} in ${i18nLocale} is "John"`
         ]
-    })
+    }
 })
 ```
 
@@ -140,20 +140,20 @@ you can import them like so:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         addOne: true
-    }),
-    reducers: ({ actions }) => ({
+    },
+    reducers: {
         myNumber: [0, {
             addOne: (state) => state + 1
         }]
-    }),
-    selectors: ({ selectors }) => ({
+    },
+    selectors: {
         myNumberDouble: [
-            () => [selectors.myNumber],
+            (selectors) => [selectors.myNumber],
             (myNumber) => myNumber * 2
         ]
-    })
+    }
 })
 
 // The logic must be mounted before you can access its fields

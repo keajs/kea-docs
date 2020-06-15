@@ -20,33 +20,33 @@ For example here's a function that just adds an `isLoading` state to your logic:
 ```javascript
 function addLoading(logic, startAction, stopAction) {
     logic.extend({
-        reducers: () => ({
+        reducers: {
             isLoading: [false, {
                 [startAction]: () => true,
                 [stopAction]: () => false
             }]
-        })
+        }
     })
 }
 
 const logic = kea({
-    actions: () => ({
+    actions: {
         fetchRepositories: username => ({ username }),
         fetchedRepositories: repositories => ({ repositories }),
-    }),
+    },
  
-    reducers: () => ({
+    reducers: {
         repositories: [null, {
             fetchedRepositories: (_, { repositories }) => repositories
         }]
-    }),
+    },
   
-    listeners: () => ({
+    listeners: {
         fetchRepositories: async ({ username }) => {
             const repositories = await api.getRepositories(username) 
             actions.fetchedRepositories(repositories)
         } 
-    })
+    }
 })
 
 addLoading(logic, 'fetchRepositories', 'fetchedRepositories')
@@ -58,28 +58,28 @@ This works, but what if we want to instead do something like this:
 
 ```javascript
 const logic = kea({
-    actions: () => ({
+    actions: {
         fetchRepositories: username => ({ username }),
         fetchedRepositories: repositories => ({ repositories }),
-    }),
+    },
  
-    reducers: () => ({
+    reducers: {
         repositories: [null, {
             fetchedRepositories: (_, { repositories }) => repositories
         }]
-    }),
+    },
   
-    listeners: () => ({
+    listeners: {
         fetchRepositories: async ({ username }) => {
             const repositories = await api.getRepositories(username) 
             actions.fetchedRepositories(repositories)
         } 
-    }),
+    },
 
-    loading: () => ({
+    loading: {
         start: 'fetchRepositories',
         stop: 'fetchedRepositories'
-    })
+    }
 })
 ```
 
@@ -106,16 +106,18 @@ const myOwnLoadingPlugin = () => ({
             // Call the `loading` function, passing the current logic to it.
             // This is how and why you can do things like 
             // `listeners: ({ actions }) => ({ ... })`
-            const { start, stop } = input.loading(logic)
+            const { start, stop } = typeof input.loading === 'function' 
+                ? input.loading(logic)
+                : input.loading
     
             // extend the logic with the { start, stop } that we get back
             logic.extend({
-                reducers: () => ({
+                reducers: {
                     isLoading: [false, {
                         [start]: () => true,
                         [stop]: () => false
                     }]
-                })
+                }
             })
         }
     }
@@ -150,7 +152,7 @@ In fact, [this is the actual code](https://github.com/keajs/kea/blob/master/src/
 export default {
     name: 'core',
     
-    defaults: () => ({
+    defaults: {
         cache: {},
         connections: {},
         constants: {},
@@ -166,7 +168,7 @@ export default {
         values: {},
         propTypes: {},
         events: {}
-    }),
+    },
     
     buildSteps: {
         connect: createConnect,
@@ -196,7 +198,9 @@ export function createActionCreators (logic, input) {
         return
     }
     
-    const actionCreators = input.actions(logic)
+    const actionCreators = typeof input.actions === 'function' 
+        ? input.actions(logic)
+        : input.actions
     
     Object.keys(actionCreators).forEach(key => {
         logic.actionCreators[key] = createAction(
@@ -244,22 +248,22 @@ const myOwnLoadingPluginVersion2 = () => ({
     
             // and extend the logic with the results
             logic.extend({
-                reducers: () => ({
+                reducers: {
                     isLoading: [false, {
                         [start]: () => true,
                         [stop]: () => false
                     }]
-                })
+                }
             })
         }
     }
 })
 
 export default resetContext({
-  plugins: [
-    // ... other plugins,
-    myOwnLoadingPluginVersion2
-  ]
+    plugins: [
+        // ... other plugins,
+        myOwnLoadingPluginVersion2
+    ]
 })
 ```
 

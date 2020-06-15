@@ -84,7 +84,7 @@ const logic = kea({
   constants: () => ['STRING', 'OTHER_STRING'],
 
   // there are a few ways to define your actions
-  actions: () => ({
+  actions: {
     actionWithStaticPayload: 'payload value',
     anotherActionWithAStaticPayload: { thisIs: 'that' },
     simpleAction: true,
@@ -92,7 +92,7 @@ const logic = kea({
     actionWithDynamicPayload: (id) => ({ id }),
     actionWithManyParameters: (id, message) => ({ id, message }),
     actionWithObjectInput: ({ id, message }) => ({ id, message })
-  }),
+  },
 
   // Defaults are specified as the first parameter to the reducers.
   // However you can have a separate "defaults" key that overrides that.
@@ -165,7 +165,7 @@ const logic = kea({
   // changes.
   selectors: ({ selectors }) => ({
     computedValue: [
-      () => [
+      (selectors) => [ // get selectors from the argument here or from above
         selectors.reducerKey,
         selectors.constantDefault,
         state => state.variable.from.redux,

@@ -79,21 +79,22 @@ resetContext({
 const someLogic = kea({
     path: () => ['scenes', 'something', 'foobar'],
 
-    actions: () => ({
+    actions: {
         socket_testEvent: ({ payload }) => payload,
         change: (value) => ({ value }),
-    }),
+    },
 
-    reducers: ({ actions }) => ({
+    reducers: {
         persistedValue: [
             0,
             PropTypes.number,
             { persist: true },
             {
-                [actions.change]: (_, payload) => payload.value,
+                change: (_, payload) => payload.value,
             },
         ],
-    }),
+    },
+
     thunks: ({ emitters, emitterActions }) => ({
         testEmit: () => {
             // emit event to socket with default nsp ('/')

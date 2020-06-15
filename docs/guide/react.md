@@ -70,14 +70,14 @@ If you wrap your `Component` inside a `logic`, it'll get all the `values` and `a
 
 ```jsx
 const logic = kea({
-    actions: () => ({
+    actions: {
         doSomething: true,
         doSomethingElse: true,
-    }),
-    reducers: () => ({
+    },
+    reducers: {
         firstOne: ['default', { doSomething: () => 'did it' }],
         secondOne: ['default', { doSomething: () => 'did it' }]
-    })
+    }
 })
 
 class MyComponent extends Component {

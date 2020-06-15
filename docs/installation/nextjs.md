@@ -155,13 +155,13 @@ import fetch from 'isomorphic-unfetch' // 👈 can't use window.fetch anymore
 const API_URL = 'https://api.github.com'
 
 const logic = kea({
-  actions: () => ({
+  actions: {
     setUsername: (username) => ({ username }),
     setRepositories: (repositories) => ({ repositories }),
     setFetchError: (message) => ({ message })
-  }),
+  },
 
-  reducers: ({ actions }) => ({
+  reducers: {
     username: ['keajs', {
       setUsername: (_, payload) => payload.username
     }],
@@ -178,15 +178,15 @@ const logic = kea({
       setUsername: () => null,
       setFetchError: (_, payload) => payload.message
     }]
-  }),
+  },
 
-  selectors: ({ selectors }) => ({
+  selectors: {
     sortedRepositories: [
-      () => [selectors.repositories],
+      (selectors) => [selectors.repositories],
       (repositories) => repositories.sort(
         (a, b) => b.stargazers_count - a.stargazers_count)
     ]
-  }),
+  },
 
   events: ({ actions, values }) => ({
     afterMount: () => {

@@ -14,9 +14,9 @@ import { createAction } from 'kea'
 const newAction = createAction('description', (id, value) => ({ id, value }))
 
 const someLogic = kea({
-  actions: () => ({
+  actions: {
     myAction: true
-  }),
+  },
 
   reducers: ({ actions }) => ({
     myValue: [false, PropTypes.bool,

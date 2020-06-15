@@ -92,9 +92,9 @@ This is how you would write a logic with such an action:
 import { kea } from 'kea'
 
 const logic = kea({
-    actions: () => ({
+    actions: {
         setUsername: (username) => ({ username })
-    })
+    }
 })
 ```
 
@@ -106,15 +106,15 @@ its payload. This is how that looks like:
 
 ```jsx
 const logic = kea({
-    actions: () => ({
+    actions: {
         setUsername: (username) => ({ username })
-    }),
+    },
 
-    reducers: () => ({
+    reducers: {
         username: ['keajs', {
             setUsername: (_, { username }) => username
         }]
-    })
+    }
 })
 ```
 
@@ -139,15 +139,15 @@ import React from 'react'
 import { kea, useActions, useValues } from 'kea'
 
 const logic = kea({
-    actions: () => ({
+    actions: {
         setUsername: (username) => ({ username })
-    }),
+    },
 
-    reducers: () => ({
+    reducers: {
         username: ['keajs', {
             setUsername: (_, payload) => payload.username
         }]
-    })
+    }
 })
 
 function Github () {
@@ -191,21 +191,21 @@ This is how that's written in Kea:
 
 ```jsx
 const logic = kea({
-    actions: () => ({
+    actions: {
         setUsername: (username) => ({ username })
-    }),
+    },
     
-    reducers: () => ({
+    reducers: {
         username: ['keajs', {
            setUsername: (_, payload) => payload.username
         }]
-    }),
+    },
     
-    listeners: () => ({
+    listeners: {
         setUsername: async ({ username }, breakpoint) => {
             // Code to run when the `setUsername` action was dispatched
         }
-    })
+    }
 })
 ```
 
@@ -220,7 +220,7 @@ For this we'll make a simple `window.fetch` call:
 const API_URL = 'https://api.github.com'
 
 const logic = kea({
-    listeners: () => ({
+    listeners: {
         setUsername: async ({ username }, breakpoint) => {
             const url = `${API_URL}/users/${username}/repos?per_page=250`
             
@@ -235,7 +235,7 @@ const logic = kea({
                 // what to do with it?
             }
         }
-    })    
+    }
 })
 ```
 
@@ -261,13 +261,13 @@ Hooking them up gives the following result:
 
 ```jsx
 const logic = kea({
-    actions: () => ({
+    actions: {
         setUsername: (username) => ({ username }),
         setRepositories: (repositories) => ({ repositories }),
         setFetchError: (error) => ({ error })
-    }),
+    },
     
-    reducers: () => ({
+    reducers: {
         username: ['keajs', {
             setUsername: (_, { username }) => username
         }],
@@ -284,11 +284,11 @@ const logic = kea({
             setUsername: () => null,
             setFetchError: (_, { error }) => error
         }]
-    }),
+    },
     
-    listeners: () => ({
+    listeners: {
         // ...
-    })
+    }
 })
 ```
 
@@ -562,15 +562,15 @@ and returns a sorted array:
 ```jsx
 const logic = kea({
     // ...
-    selectors: ({ selectors }) => ({
+    selectors: {
         sortedRepositories: [
-            () => [selectors.repositories],
+            (selectors) => [selectors.repositories],
             (repositories) => {
                 return [...repositories].
                             sort((a, b) => b.stargazers_count - a.stargazers_count)
             }
         ]
-    })
+    }
 })
 ```
 
@@ -655,13 +655,13 @@ import { kea, useActions, useValues } from 'kea'
 const API_URL = 'https://api.github.com'
 
 const logic = kea({
-    actions: () => ({
+    actions: {
         setUsername: (username) => ({ username }),
         setRepositories: (repositories) => ({ repositories }),
         setFetchError: (error) => ({ error })
-    }),
+    },
     
-    reducers: () => ({
+    reducers: {
         username: ['keajs', {
             setUsername: (_, { username }) => username
         }],
@@ -678,17 +678,17 @@ const logic = kea({
             setUsername: () => null,
             setFetchError: (_, { error }) => error
         }]
-    }),
+    },
     
-    selectors: ({ selectors }) => ({
+    selectors: {
         sortedRepositories: [
-            () => [selectors.repositories],
+            (selectors) => [selectors.repositories],
             (repositories) => {
                 return [...repositories].
                             sort((a, b) => b.stargazers_count - a.stargazers_count)
             }
         ]
-    }),
+    },
 
     listeners: ({ actions }) => ({
         setUsername: async ({ username }, breakpoint) => {

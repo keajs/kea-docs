@@ -48,7 +48,7 @@ In order to help debugging, you may manually specify a `path` for your logic.
 
 ```javascript
 kea({
-    path: () => ['scenes', 'dashboard', 'index']
+    path: ['scenes', 'dashboard', 'index']
 })
 ```
 

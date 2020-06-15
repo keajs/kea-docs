@@ -59,10 +59,10 @@ import { kea } from 'kea'
 import { waitForAction } from 'kea-waitfor'
 
 const logic = kea({
-    actions: () => ({
+    actions: {
         setValue: value => ({ value }),
         valueWasSet: value => ({ value })
-    }),
+    },
     
     listeners: ({ actions }) => ({
         setValue: async ({ value }) => {
@@ -97,10 +97,10 @@ For example:
 import { waitForCondition } from 'kea-waitfor'
 
 const logic = kea({
-    actions: () => ({
+    actions: {
         setValue: value => ({ value }),
         valueWasSet: value => ({ value })
-    }),
+    },
     
     listeners: ({ actions }) => ({
         setValue: async ({ value }) => {
