@@ -7255,6 +7255,11 @@ postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.16, postcss@^7.0.1
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
+posthog-docusaurus@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/posthog-docusaurus/-/posthog-docusaurus-1.0.0.tgz#12cc31bb29dfb8ffa16435c18df28c12399b287b"
+  integrity sha512-3y/3GIC1N8qRa7rhDmMNRder6TgmSb7vrj/xSwb3KHdVBW/RZfNa0ICn3I4Y6z+aIATAYxzCy6sHdfQtUSWvjA==
+
 prepend-http@^1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-1.0.4.tgz#d4f4562b0ce3696e41ac52d0e002e57a635dc6dc"
