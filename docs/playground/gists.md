@@ -1,7 +1,7 @@
 ---
 id: gists
-title: Funny Gists
-sidebar_label: Funny Gists
+title: Cool Code Blocks
+sidebar_label: Cool Code Blocks
 ---
 
 import Gist from './gists/gist'

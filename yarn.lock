@@ -5254,10 +5254,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-kea@2.0.0-beta.5:
-  version "2.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/kea/-/kea-2.0.0-beta.5.tgz#f3896310b56e887d18d73416861900f176881c20"
-  integrity sha512-fbCukl1bHt+TRSmO09z6II2ODRpSVXDvhSqTEQvP3CjaiXlyOLAhteJR09JbLa1/Mpt2PEs9xeZ6l24MLd/+Lw==
+kea@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/kea/-/kea-2.1.1.tgz#6e3c65c4873b67d270a2ec7bf73b0d178937234c"
+  integrity sha512-W9o4lHLOcEDIu3ASHPrWJJJzL1bMkGyxaHn9kuaDgI96ztBShVrf52R0QPGlQ2k9ca3XnkB/dnVHio1UB8kGWA==
 
 killable@^1.0.1:
   version "1.0.1"
@@ -7255,10 +7255,10 @@ postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.16, postcss@^7.0.1
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-posthog-docusaurus@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/posthog-docusaurus/-/posthog-docusaurus-1.0.0.tgz#12cc31bb29dfb8ffa16435c18df28c12399b287b"
-  integrity sha512-3y/3GIC1N8qRa7rhDmMNRder6TgmSb7vrj/xSwb3KHdVBW/RZfNa0ICn3I4Y6z+aIATAYxzCy6sHdfQtUSWvjA==
+posthog-docusaurus@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/posthog-docusaurus/-/posthog-docusaurus-1.0.3.tgz#bd49dd7f425bb6bce81ac49d3c251f8b0f9cd9d9"
+  integrity sha512-gvvHpKmOIcO7Sj68T2/vfYR/VfZmYoTaZO6kDZTJXQ309jdrhlrDncPr/Gjy+C0W9zaVlrOT6vvC7SdBBmvbdg==
 
 prepend-http@^1.0.0:
   version "1.0.4"

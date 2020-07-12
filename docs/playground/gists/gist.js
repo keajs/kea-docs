@@ -21,7 +21,7 @@ export default function Gist({ username, id }) {
                     View in GitHub
                 </a>
             </p>
-            <div style={{ height: expanded ? 'auto' : 200, overflow: 'hidden', position: 'relative' }}>
+            <div style={{ height: expanded ? 'auto' : 300, overflow: 'hidden', position: 'relative' }}>
                 {!expanded ? (
                     <div
                         style={{
