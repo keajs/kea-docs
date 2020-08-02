@@ -103,33 +103,37 @@ There's a lot happening here:
 1. We have a lot of keys (`actions`, `reducers`) inside one huge object literal `{}`
 2. We have one action `openBlog` that takes an `(id: number)` and returns `{ id }`
 3. The `reducers` are specified as a function that gets the `logic` itself as its first
-   parameter. That's some TS-killing *loopy stuff* right there!
+   parameter. That's some TS-killing _loopy stuff_ right there!
 4. The reducer `blog` uses the `openBlog` action (defined above in the same object!) to change its value
-5. This reducer also depends on an action from a different logic
+5. This reducer also depends on an action from a different logic, `appLogic`
 6. The selector `doubleBlog` depends on the return type of the `blog` reducer
 7. The selector `tripleBlog` depends on both `blog` and `doubleBlog`
    and their return types.
 
-These are just a few of the complications. This was going to be hard.
+These are just a few of the complications. 
+
+This was going to be hard.
 
 Yet I was determined to succeed, for I had on my side the strongest motivation
 on the planet: I had to [prove someone wrong](https://xkcd.com/386/) on the internet.
 
 ### Attempt 1
 
-It immediately became clear that adding types to the codebase wasn't enough.
-The JS/TS code that converts an `input` into a `logic` is just too complicated for
-the TypeScript compiler to automatically infer types from it.
+It immediately became clear that just getting rid of `any`s in the codebase wasn't 
+going to be enough.
 
-[TypeScript Generics](https://www.typescriptlang.org/docs/handbook/generics.html)
-to the rescue!
+The [JavaScript that converts](https://github.com/keajs/kea/tree/master/src/core/steps) `kea(input)` into a `logic` is just 
+a bit too complicated for the TypeScript compiler to automatically infer types from it.
 
-It felt possible to write code that takes `InputType` from `kea(input: InputType)`, 
-looks at its properties and morphs them into a `LogicType`.
+[TypeScript Generics](https://www.typescriptlang.org/docs/handbook/generics.html) enter he game.
+
+Just write a long TypeScript type that gets the `kea(input)` parameter's type,
+looks at its properties and morphs them into a `LogicType`. Write some functional *loopy* stuff in
+a funny markup language. No big deal.
 
 So I thought.
 
-The first attempt looked something like this:
+The first attempt looked like this when stripped to its core:
 
 ```typescript
 type Input = {
@@ -160,8 +164,6 @@ type MakeLogicReducers<InputReducers> = {
 }
 ```
 
-On paper this is legit, yet the lines marked `// !` are where this breaks down.
-
 This implementation gives us type completion when _using_ the logic:
 
 <img alt="Kea TypeScript Values" src="/static/img/blog/typescript/values.gif" loading="lazy" />
@@ -170,10 +172,14 @@ This implementation gives us type completion when _using_ the logic:
 
 <img alt="Kea TypeScript No Input Listeners" src="/static/img/blog/typescript/no-input-listeners.gif" loading="lazy" />
 
-There's just no way to make the `(logic: Logic<Input>) => any` inside `Input` depend on the
-`I extends Input` that was passed to `Logic<Input>`. Try it, it'll get complicated really fast.
+The lines marked `// !` are where this breaks down.
 
-This kind of *loopy stuff* is just not possible with TypeScript:
+There's just no way to make the `(logic: Logic<Input>) => any` inside `Input` depend on the
+`I extends Input` that was passed to `Logic<Input>`. 
+
+Got all that? Me neither. 
+
+This kind of _loopy stuff_ is just not possible with TypeScript:
 
 ```typescript
 // don't try this at home
@@ -192,8 +198,8 @@ function kea<I extends Input<Logic<I>>>(input: I): Logic<I> {
 }
 ```
 
-I got _something_ to work, buy ultimately this attempt wouldn't prove someone on
-the internet _wrong enough_.
+I got _something_ to work, but ultimately without typing support while writing the `kea({...})` call itself, this attempt 
+wouldn't prove someone on the internet _wrong enough_.
 
 Back to the drawing board!
 
@@ -207,7 +213,7 @@ What if I changed the syntax of Kea itself to something friendlier to TypeScript
 Hopefully in a completely opt-in and 100% backwards-compatible way?
 
 Surely there won't be any problems maintaining two parallel implementations and
-everyone using Kea will understand that this is Kea's [_hooks moment_](https://reactjs.org/docs/hooks-intro.html#no-breaking-changes), right? Right?
+everyone using Kea will understand that this is Kea's [_hooks moment_](https://reactjs.org/docs/hooks-intro.html#no-breaking-changes) [1], right? Right?
 
 _Right?_
 
@@ -315,7 +321,7 @@ that I tried.
 
 They all had their issues.
 
-In the end, it appears that this kind of *loopy* syntax that
+In the end, it appears that this kind of _loopy_ syntax that
 Kea uses together with selectors that depend on each other just wouldn't work with TypeScript.
 
 That's even before you take into account [plugins](/docs/api/plugins) and `logic.extend(moreInput)`.
@@ -338,89 +344,123 @@ The stakes are high: If I fail or quit, the person on the internet will be prove
 
 Thus it's with great excitement that I can announce [`kea-typegen`](https://github.com/keajs/kea-typegen) to the world!
 
-Install the `typescript` and `kea-typegen` packages, run `kea-typegen watch` and code away!
-
-<img alt="Kea-TypeGen" src="/static/img/blog/typescript/kea-typegen.gif" loading="lazy" /> 
-
-It's still rough with [a lot of things to improve](https://github.com/keajs/kea-typegen/projects/1), 
-yet it's already *really useful*! 
+It's still rough with [a lot of things to improve](https://github.com/keajs/kea-typegen/projects/1),
+yet it's already _really useful_!
 
 We've been [using it in PostHog](https://github.com/PostHog/posthog/pull/1286) for
 about a week now, and it's working great!
-If something breaks for you though, please [open an issue](https://github.com/keajs/kea-typegen/issues)!
-
-Life is so much better with autocomplete:
-
-<img alt="PostHog TypeScript Actions" src="/static/img/blog/typescript/posthog-actions.gif" loading="lazy" /> 
-
-<img alt="PostHog TypeScript Values" src="/static/img/blog/typescript/posthog-values.gif" loading="lazy" /> 
 
 Take that, random person on the internet!
 
-### How to use?
+Install the `typescript` and `kea-typegen` packages, run `kea-typegen watch` and code away!
+Keep the generated `logicType.ts` files in version control.
 
-Here's a 10min video where I convert the Github API example to TypeScript.
+<img alt="Kea-TypeGen" src="/static/img/blog/typescript/kea-typegen.gif" loading="lazy" />
 
-[TODO: add video!]
-
-Otherwise, like stated above, install `kea-typegen` and `typescript`. 
-Then run `kea-typegen watch`.
-
-This will geneate a bunch of `logicType.ts` files. Store those in your 
-version control alongside the `logic.ts` files. 
-
-Next, go through each `logic` and follow the steps below.
-
-
-### Caveats
+### Rough Edges
 
 This is the very first version of `kea-typegen`, so there are still some rough edges.
 
-1. You must manually import the `logicType` and insert it into your logic. 
-  This will be done automatically in the future.
+1. You must manually import the `logicType` and insert it into your logic.
+   This will be done automatically in the future.
 
-<img alt="Import Logic Type Manually" src="/static/img/blog/typescript/import-logic-type.gif" loading="lazy" /> 
+<img alt="Import Logic Type Manually" src="/static/img/blog/typescript/import-logic-type.gif" loading="lazy" />
 
 2. You must manually hook up all type dependencies by adding them on the `logicType`
-  in `logic.ts`. Kea-TypeGen will then put the same list inside `logicType`. 
-  This will also be done automatically in the future.
-  
-<img alt="Send Type to Logic Type" src="/static/img/blog/typescript/send-type-to-type.gif" loading="lazy" /> 
+   in `logic.ts`. Kea-TypeGen will then put the same list inside `logicType`.
+   This will also be done automatically in the future.
+
+<img alt="Send Type to Logic Type" src="/static/img/blog/typescript/send-type-to-type.gif" loading="lazy" />
 
 3. When [connecting logic together](https://kea.js.org/docs/guide/additional#connecting-logic-together),
-   you must use `[otherLogic.actionTypes.doSomething]` instead of `[otherLogic.actions.doSomething]` 
+   you must use `[otherLogic.actionTypes.doSomething]` instead of `[otherLogic.actions.doSomething]`
 
-<img alt="Use ActionTypes" src="/static/img/blog/typescript/action-types.gif" loading="lazy" /> 
+<img alt="Use ActionTypes" src="/static/img/blog/typescript/action-types.gif" loading="lazy" />
 
-4. Sometimes you might need to "Reload All Files" in your editor at times... or 
-   explicitly open `logicType.ts` to see the changes. 
+4. Sometimes you might need to "Reload All Files" in your editor at times... or
+   explicitly open `logicType.ts` to see the changes.
 
 5. Plugins aren't supported yet. I've hardcoded a few of them (loaders, router, window-values)
-   into the library, yet that's not a long term solution.
-   
-6. Extending logic doesn't work yet.
+   into the typegen library, yet that's not a long term solution.
 
-Most of these issues will be solved in the next versions of `kea-typegen`,
-once I get enough feedback to know what to prioritise.  
+6. `logic.extend()` doesn't work yet.
 
-## Manual Type Generation
+These are all solvable issues. [Let me know](https://github.com/keajs/kea-typegen/issues) which ones to prioritise!
 
-What if 
+## Alternative: MakeLogicType<V, A, P>
 
-## Closing remarks
+At the end of the day, Kea's _loopy_ syntax doesn't bode well with TypeScript
+and we are forced to make our own `logicTypes` and feed them to Kea.
 
-What's next? I don't know. Perhaps this type generation will be amazing as is.
-Perhaps it's smarter to store everything in one huge "logicTypes.ts" file?
-Perhaps integrating it inside a whicheverpack plugin will remove the need for
-a separate command to run? Perhaps [ttypescript](https://github.com/cevek/ttypescript) can make this more magical?
-Perhaps there will be official [support for plugins in TypeScript](https://github.com/microsoft/TypeScript/issues/14419)? Perhaps I
-should send all the gathered metadata on the logics to GPT-3, so it would write
-the rest of your app?
+However nothing says these types need to be explicitly made by `kea-typegen`.
+You could easily make them by hand. [Follow the example](https://github.com/keajs/kea-typegen/blob/master/samples/logicType.ts)
+and adapt as needed!
 
-Who knows.
+To help migrating the most common cases, Kea 2.2.0 will come with a special type:
 
-## WIP:
+```typescript
+import { MakeLogicType } from 'kea'
 
-I even recorded a 10min video on how it works!
+type MyLogicType = MakeLogicType<Values, Actions, Props>
+```
+
+Pass it a bunch of interfaces denoting your logic's `values`, `actions` and `props`...
+and you'll get a _close-enough_ approximation of the generated logic.
+
+```typescript
+interface Values {
+    id: number
+    created_at: string
+    name: string
+    pinned: boolean
+}
+
+interface Actions {
+    setName: (name: string) => { name: string }
+}
+
+interface Props {
+    id: number
+}
+
+type RandomLogicType = MakeLogicType<Values, Actions, Props>
+
+const randomLogic = kea<RandomLogicType>({
+    /* skipping for brevity */
+})
+```
+
+The result is a fully typed experience:
+
+<img alt="MakeLogicType" src="/static/img/blog/typescript/make-logic-type.gif" loading="lazy" />
+
+You'll even get completion when coding the logic:
+
+<img alt="MakeLogicType Reducers" src="/static/img/blog/typescript/make-logic-reducers.gif" loading="lazy" />
+
+Thank you to the team at Elastic for [inspiring](https://github.com/elastic/kibana/pull/72160) this approach!
+
+## Closing words
+
+TypeScript support for Kea is finally here.
+
+Well, almost. You can already use Kea `v2.2.0-rc.1` with TypeScript support. The final `2.2.0` is
+not far away.
+
+So far I've been building `kea-typegen` in isolation. 
+I'd love to hear what the wider community thinks of it. Is it useful?
+What's missing? How can I improve the developer ergonomics?
+Should I send the created `logicTypes` to GPT-3, so it would code the rest of your app?
+And who ate all the bagels?
+
+Just [open an issue](https://github.com/keajs/kea-typegen/issues) and let's chat!
+
+Also check out [the samples folder](https://github.com/keajs/kea-typegen/tree/master/samples)
+in the `kea-typegen` repository for a few random examples of generated logic.
+
+Finally here's a 12min video where I add TypeScript support to [PostHog](https://posthog.com/) (we're hiring!):
 
 <iframe src="//www.youtube.com/embed/jGy-p9UxcBA" frameborder="0" allowfullscreen width="100%" style={{ minHeight: 350 }}></iframe>
+
+#### Footnotes 
+[1] Hooks Moment: A massive improvement in developer ergonomics at the cost of all old code becoming legacy overnight.
