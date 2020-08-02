@@ -6,7 +6,6 @@ module.exports = {
             'guide/concepts',
             'guide/additional',
             'guide/react',
-            'guide/typescript',
             'guide/debugging',
             'guide/advanced',
             'guide/testing',
