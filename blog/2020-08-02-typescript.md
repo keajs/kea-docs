@@ -1,6 +1,6 @@
 ---
 id: typescript
-title: 'TypeScript Support in Kea (aka The Long Road)'
+title: 'TypeScript Support in Kea (The Long Road to)'
 author: Marius Andra
 author_title: Kea Core Team
 author_url: https://github.com/mariusandra
@@ -11,7 +11,7 @@ tags: [kea, typescript]
 Even [before](https://github.com/keajs/kea/issues/65) Kea [reached 1.0](https://www.reddit.com/r/reactjs/comments/d386wp/kea_10_released_data_layer_for_react_powered_by/)
 last year, one topic kept popping up over and over again:
 
-> "Great, but what about typescript?"
+> "Yeah it's great, but what about typescript?"
 
 ... or [more eloquently](https://www.reddit.com/r/reactjs/comments/d386wp/kea_10_released_data_layer_for_react_powered_by/f00ddmv/):
 
@@ -21,15 +21,15 @@ last year, one topic kept popping up over and over again:
 While that comment above is still _technically_ true, as of version 2.2 (`2.2.0-rc.1`),
 Kea has full support for TypeScript!
 
-The road there was long and winding... with plenty of dragons guarding the way.
+The road there was long and winding... with plenty of dragons along the way.
 
 Yet we prevailed!
 
 But how?
 
 :::note What is Kea?
-Kea is a state management library for React. Powered by Redux.
-It's like Redux Toolkit, but different and older.
+Kea is a state management library for [React](https://reactjs.org/). Powered by [Redux](https://redux.js.org/).
+It's like [Redux Toolkit](https://redux-toolkit.js.org/), but different and older. It's designed to spark joy!
 
 -   Read "[What is Kea?](http://localhost:3000/docs/introduction/what-is-kea)" to learn more.
 -   Open the "[Quickstart](/docs/introduction/quickstart)" to see code.
@@ -63,7 +63,7 @@ How on earth do we do that?
 As predicted by [the Redditor quoted above](https://www.reddit.com/r/reactjs/comments/d386wp/kea_10_released_data_layer_for_react_powered_by/f00ddmv/):
 
 > "Unless the API has changed dramatically in the last few months it’s written in a way that ensure
-> that it’s basically impossible to create effective typescript types to use it safely."
+> that it’s **basically impossible** to create effective typescript types to use it safely."
 
 It turns out code like this is nearly impossible to type safely:
 
@@ -96,13 +96,15 @@ const logic = kea({
 })
 ```
 
+Who could have guessed?
+
 There's a lot happening here:
 
-1. We have everything inside one object literal `{}`
-2. We have one action `openBlog` that takes an `id` and returns `{ id }`
+1. We have a lot of keys (`actions`, `reducers`) inside one huge object literal `{}`
+2. We have one action `openBlog` that takes an `(id: number)` and returns `{ id }`
 3. The `reducers` are specified as a function that gets the `logic` itself as its first
-   parameter. That's some TS-killing loopy stuff right there!
-4. The reducer `blog` uses this action to change its value
+   parameter. That's some TS-killing *loopy stuff* right there!
+4. The reducer `blog` uses the `openBlog` action (defined above in the same object!) to change its value
 5. This reducer also depends on an action from a different logic
 6. The selector `doubleBlog` depends on the return type of the `blog` reducer
 7. The selector `tripleBlog` depends on both `blog` and `doubleBlog`
@@ -110,69 +112,26 @@ There's a lot happening here:
 
 These are just a few of the complications. This was going to be hard.
 
-Yet I was determined to succeed, for I had on my side the strongest motivation that
-exists: I had to [prove someone wrong](https://xkcd.com/386/) on the internet.
+Yet I was determined to succeed, for I had on my side the strongest motivation
+on the planet: I had to [prove someone wrong](https://xkcd.com/386/) on the internet.
 
 ### Attempt 1
 
-It immediately became clear that adding types to the codebase wasn't going
-to automatically solve my problems. I needed to dive into [TypeScript Generics](https://www.typescriptlang.org/docs/handbook/generics.html).
+It immediately became clear that adding types to the codebase wasn't enough.
+The JS/TS code that converts an `input` into a `logic` is just too complicated for
+the TypeScript compiler to automatically infer types from it.
 
-The first attempt that I tried looked something like this:
+[TypeScript Generics](https://www.typescriptlang.org/docs/handbook/generics.html)
+to the rescue!
 
-```typescript
-// Note: broken code, for demonstration purposes only!
-import { kea as realKea } from 'kea'
+It felt possible to write code that takes `InputType` from `kea(input: InputType)`, 
+looks at its properties and morphs them into a `LogicType`.
 
-type ActionDefinitions = Record<string, (...args: any) => any>
+So I thought.
 
-type ReducerDefinitions = Record<string,
-    | Record<string, any>
-    | [any, Record<string, any>]
->
-
-type Input = {
-    actions?:
-        | ActionDefinitions
-        | ((logic: Logic<Input>) => ActionDefinitions),  // !
-    reducers?:
-        | ReducerDefinitions
-        | ((logic: Logic<Input>) => ReducerDefinitions)  // !
-    // ...
-}
-
-type ConvertInputActions<A extends Record<string, () => any>> = {
-    [K in keyof A]: (...args: Parameters<A[K]>) => {
-        type: string,
-        payload: ReturnType<A[K]>
-    }
-}
-
-type Logic<I extends Input> = {
-    actions: ConvertInputActions<I['actions']>,
-    reducers: ConvertInputReducers<I['reducers']>,
-    // ...
-}
-
-function kea<I extends Input>(input: I): Logic<I> {
-    return realKea(input)
-}
-
-const logic = kea({ actions: () => { ... } })
-```
-
-Seems legit?
-
-The big problem is with the lines marked with "!". Simplified:
+The first attempt looked something like this:
 
 ```typescript
-type MakeLogicActions<InputActions> = {
-    /* skip */
-}
-type MakeLogicReducers<InputReducers> = {
-    /* skip */
-}
-
 type Input = {
     actions?: (logic: Logic<Input>) => any // !
     reducers?: (logic: Logic<Input>) => any // !
@@ -186,9 +145,24 @@ type Logic<I extends Input> = {
 function kea<I extends Input>(input: I): Logic<I> {
     return realKea(input)
 }
+
+// helpers
+type MakeLogicActions<InputActions> = {
+    [K in keyof InputActions]: (
+        ...args: Parameters<InputActions[K]>
+    ) => {
+        type: string
+        payload: ReturnType<InputActions[K]>
+    }
+}
+type MakeLogicReducers<InputReducers> = {
+    // skip
+}
 ```
 
-When set to `(logic: any) => any`, we get type completion when _using_ the logic:
+On paper this is legit, yet the lines marked `// !` are where this breaks down.
+
+This implementation gives us type completion when _using_ the logic:
 
 ![Kea TypeScript Values](/static/img/blog/typescript/values.gif)
 
@@ -196,13 +170,32 @@ When set to `(logic: any) => any`, we get type completion when _using_ the logic
 
 ![Kea TypeScript No Input Listeners](/static/img/blog/typescript/no-input-listeners.gif)
 
-I dare you, try to make the `(logic: Logic<Input>) => any` inside `Input<Logic>` depend on the `I extends Input` that was passed
-to `Logic<Input>`.
+There's just no way to make the `(logic: Logic<Input>) => any` inside `Input` depend on the
+`I extends Input` that was passed to `Logic<Input>`. Try it, it'll get complicated really fast.
 
-AFAIK this kind of loopy stuff is just not possible with TypeScript.
+This kind of *loopy stuff* is just not possible with TypeScript:
 
-This attempt just wouldn't prove someone on the internet _wrong enough_,
-so back to the drawing board!
+```typescript
+// don't try this at home
+type Input<L extends Logic<Input> = Logic<Input>> = {
+    actions?: (logic: L) => MakeInputActions[Input['actions']] // ???
+    reducers?: (logic: L) => MakeInputReducers[Input['actions']] // ???
+    // ...
+}
+type Logic<I extends Input<Logic> = Input<Logic>> = {
+    actions: MakeLogicActions<I['actions']>
+    reducers: MakeLogicReducers<I['reducers']>
+    // ...
+}
+function kea<I extends Input<Logic<I>>>(input: I): Logic<I> {
+    return realKea(input)
+}
+```
+
+I got _something_ to work, buy ultimately this attempt wouldn't prove someone on
+the internet _wrong enough_.
+
+Back to the drawing board!
 
 ### Attempt 2
 
@@ -211,10 +204,10 @@ automatic type generation 10 months ago, yet it always seemed like a huge undert
 There had to be an easier way.
 
 What if I changed the syntax of Kea itself to something friendlier to TypeScript?
-Hopefully in a backwards-compatible and opt-in way?
+Hopefully in a completely opt-in and 100% backwards-compatible way?
 
 Surely there won't be any problems maintaining two parallel implementations and
-everyone using Kea will understand that this is Kea's _hooks moment_, right? Right?
+everyone using Kea will understand that this is Kea's [_hooks moment_](https://reactjs.org/docs/hooks-intro.html#no-breaking-changes), right? Right?
 
 _Right?_
 
@@ -222,7 +215,7 @@ Would something like this be easier to type?
 
 ```typescript
 // pseudocode!
-const logic = tsKea()
+const logic = typedKea()
     .actions({
         submit: (id) => ({ id }),
         change: (id) => ({ id }),
@@ -238,9 +231,10 @@ const logic = tsKea()
     }))
 ```
 
-I mean, it's just a slight alteration to code that already works:
+I mean, it's just a slight alteration to this code that already works:
 
 ```typescript
+// real code!
 const logic = kea({})
     .extend({
         actions: {
@@ -262,9 +256,9 @@ const logic = kea({})
     })
 ```
 
-Unfortunately not.
+Surely not a big effort to refactor?
 
-(Or fortunately if you don't like breaking changes!)
+Unfortunately (or _fortunately_?), this approach didn't work either.
 
 While this huge chain of type extensions sounds good in theory,
 you'll hit TypeScript's max instantiation depth limit eventually, as
@@ -313,30 +307,49 @@ export declare function kea<T extends Input<T['actions'], T['reducers'], T['list
 
 ... only to fail even harder.
 
-## Automatic Type Generation
+### Attempt N+1
 
-There's only one thing left to do.
+There were many other [experiments](https://github.com/keajs/kea/compare/typescript-experiments) and
+[types](https://github.com/keajs/kea/blob/0cd60e02dd315b55546e0f8f01501c5d0bbf957d/src/types.d.ts)
+that I tried.
+
+They all had their issues.
+
+In the end, it appears that this kind of *loopy* syntax that
+Kea uses together with selectors that depend on each other just wouldn't work with TypeScript.
+
+That's even before you take into account [plugins](/docs/api/plugins) and `logic.extend(moreInput)`.
+
+### What now?
+
+I guess there's only one thing left to do.
 
 My job now is to spend countless nights and weekends building [kea-typegen](https://github.com/keajs/kea-typegen),
 which will use the TypeScript Compiler API to load your project, analyse the generated AST,
-infer the correct types and write them back to disk in the form of `logicType.ts` files. 
+infer the correct types and write them back to disk in the form of `logicType.ts` files.
 
 These `logicTypes` will then be fed back to the `const logic = kea<logicType>()` calls... and presto! Fully typed logic!
 
-It's not ideal (*ugh, another command to run*), but it *should* work.
+It's not ideal (_ugh, another command to run_), but it _should_ work.
 
-The stakes are high: If I fail or quit, the person on the internet will be proven right... and that's just not an option.
+The stakes are high: If I fail or quit, the person on the internet will be proven right... and that is just not an option.
 
-### kea-typegen
+## Automatic Type Generation
 
 Thus it's with great excitement that I can announce `kea-typegen` to the world!
 
+It's still rough, but all the effort has paid off and it is already really useful!
 
+Just run `npx kea-typegen watch` and code away!
+
+Here's a 10min video where I convert the Github API example to TypeScript.
 
 ...
 
-
 Take that, person on the internet!
+
+### Caveats
+
 
 
 ## Manual Type Generation
@@ -352,3 +365,9 @@ should send all the gathered metadata on the logics to GPT-3, so it would write
 the rest of your app?
 
 Who knows.
+
+## WIP:
+
+I even recorded a 10min video on how it works!
+
+<iframe src="//www.youtube.com/embed/jGy-p9UxcBA" frameborder="0" allowfullscreen width="100%" style={{ minHeight: 350 }}></iframe>
