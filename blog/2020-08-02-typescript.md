@@ -29,7 +29,7 @@ But how?
 
 :::note What is Kea?
 Kea is a state management library for [React](https://reactjs.org/). Powered by [Redux](https://redux.js.org/).
-It's like [Redux Toolkit](https://redux-toolkit.js.org/), but different and older. It's designed to spark joy!
+It's like [Redux Toolkit](https://redux-toolkit.js.org/), but different, and older. It's designed to spark joy!
 
 -   Read "[What is Kea?](http://localhost:3000/docs/introduction/what-is-kea)" to learn more.
 -   Open the "[Quickstart](/docs/introduction/quickstart)" to see code.
@@ -46,15 +46,15 @@ This already gives a lot!
 
 For example an autocomplete for `resetContext`:
 
-<img alt="Kea TypeScript ResetContext" src="/static/img/blog/typescript/context.gif" loading="lazy" />
+<img alt="Kea TypeScript ResetContext" src="/img/blog/typescript/context.gif" loading="lazy" />
 
 But we want more. This should work as well:
 
-<img alt="Kea TypeScript No Values" src="/static/img/blog/typescript/no-values.gif" loading="lazy" />
+<img alt="Kea TypeScript No Values" src="/img/blog/typescript/no-values.gif" loading="lazy" />
 
 and this:
 
-<img alt="Kea TypeScript No Input Listeners" src="/static/img/blog/typescript/no-input-listeners.gif" loading="lazy" />
+<img alt="Kea TypeScript No Input Listeners" src="/img/blog/typescript/no-input-listeners.gif" loading="lazy" />
 
 How on earth do we do that?
 
@@ -166,11 +166,11 @@ type MakeLogicReducers<InputReducers> = {
 
 This implementation gives us type completion when _using_ the logic:
 
-<img alt="Kea TypeScript Values" src="/static/img/blog/typescript/values.gif" loading="lazy" />
+<img alt="Kea TypeScript Values" src="/img/blog/typescript/values.gif" loading="lazy" />
 
 ... but not when _writing_ it:
 
-<img alt="Kea TypeScript No Input Listeners" src="/static/img/blog/typescript/no-input-listeners.gif" loading="lazy" />
+<img alt="Kea TypeScript No Input Listeners" src="/img/blog/typescript/no-input-listeners.gif" loading="lazy" />
 
 The lines marked `// !` are where this breaks down.
 
@@ -355,7 +355,7 @@ Take that, random person on the internet!
 Install the `typescript` and `kea-typegen` packages, run `kea-typegen watch` and code away!
 Keep the generated `logicType.ts` files in version control.
 
-<img alt="Kea-TypeGen" src="/static/img/blog/typescript/kea-typegen.gif" loading="lazy" />
+<img alt="Kea-TypeGen" src="/img/blog/typescript/kea-typegen.gif" loading="lazy" />
 
 ### Rough Edges
 
@@ -364,18 +364,18 @@ This is the very first version of `kea-typegen`, so there are still some rough e
 1. You must manually import the `logicType` and insert it into your logic.
    This will be done automatically in the future.
 
-<img alt="Import Logic Type Manually" src="/static/img/blog/typescript/import-logic-type.gif" loading="lazy" />
+<img alt="Import Logic Type Manually" src="/img/blog/typescript/import-logic-type.gif" loading="lazy" />
 
 2. You must manually hook up all type dependencies by adding them on the `logicType`
    in `logic.ts`. Kea-TypeGen will then put the same list inside `logicType`.
    This will also be done automatically in the future.
 
-<img alt="Send Type to Logic Type" src="/static/img/blog/typescript/send-type-to-type.gif" loading="lazy" />
+<img alt="Send Type to Logic Type" src="/img/blog/typescript/send-type-to-type.gif" loading="lazy" />
 
 3. When [connecting logic together](https://kea.js.org/docs/guide/additional#connecting-logic-together),
    you must use `[otherLogic.actionTypes.doSomething]` instead of `[otherLogic.actions.doSomething]`
 
-<img alt="Use ActionTypes" src="/static/img/blog/typescript/action-types.gif" loading="lazy" />
+<img alt="Use ActionTypes" src="/img/blog/typescript/action-types.gif" loading="lazy" />
 
 4. Sometimes you might need to "Reload All Files" in your editor at times... or
    explicitly open `logicType.ts` to see the changes.
@@ -432,11 +432,11 @@ const randomLogic = kea<RandomLogicType>({
 
 The result is a fully typed experience:
 
-<img alt="MakeLogicType" src="/static/img/blog/typescript/make-logic-type.gif" loading="lazy" />
+<img alt="MakeLogicType" src="/img/blog/typescript/make-logic-type.gif" loading="lazy" />
 
 You'll even get completion when coding the logic:
 
-<img alt="MakeLogicType Reducers" src="/static/img/blog/typescript/make-logic-reducers.gif" loading="lazy" />
+<img alt="MakeLogicType Reducers" src="/img/blog/typescript/make-logic-reducers.gif" loading="lazy" />
 
 Thank you to the team at Elastic for [inspiring](https://github.com/elastic/kibana/pull/72160) this approach!
 
