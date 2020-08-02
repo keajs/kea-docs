@@ -46,15 +46,15 @@ This already gives a lot!
 
 For example an autocomplete for `resetContext`:
 
-![Kea TypeScript ResetContext](/static/img/blog/typescript/context.gif)
+<img alt="Kea TypeScript ResetContext" src="/static/img/blog/typescript/context.gif" loading="lazy" />
 
 But we want more. This should work as well:
 
-![Kea TypeScript No Values](/static/img/blog/typescript/no-values.gif)
+<img alt="Kea TypeScript No Values" src="/static/img/blog/typescript/no-values.gif" loading="lazy" />
 
 and this:
 
-![Kea TypeScript No Input Listeners](/static/img/blog/typescript/no-input-listeners.gif)
+<img alt="Kea TypeScript No Input Listeners" src="/static/img/blog/typescript/no-input-listeners.gif" loading="lazy" />
 
 How on earth do we do that?
 
@@ -164,11 +164,11 @@ On paper this is legit, yet the lines marked `// !` are where this breaks down.
 
 This implementation gives us type completion when _using_ the logic:
 
-![Kea TypeScript Values](/static/img/blog/typescript/values.gif)
+<img alt="Kea TypeScript Values" src="/static/img/blog/typescript/values.gif" loading="lazy" />
 
 ... but not when _writing_ it:
 
-![Kea TypeScript No Input Listeners](/static/img/blog/typescript/no-input-listeners.gif)
+<img alt="Kea TypeScript No Input Listeners" src="/static/img/blog/typescript/no-input-listeners.gif" loading="lazy" />
 
 There's just no way to make the `(logic: Logic<Input>) => any` inside `Input` depend on the
 `I extends Input` that was passed to `Logic<Input>`. Try it, it'll get complicated really fast.
@@ -340,7 +340,7 @@ Thus it's with great excitement that I can announce [`kea-typegen`](https://gith
 
 Install the `typescript` and `kea-typegen` packages, run `kea-typegen watch` and code away!
 
-![Kea-TypeGen](/static/img/blog/typescript/kea-typegen.gif) 
+<img alt="Kea-TypeGen" src="/static/img/blog/typescript/kea-typegen.gif" loading="lazy" /> 
 
 It's still rough with [a lot of things to improve](https://github.com/keajs/kea-typegen/projects/1), 
 yet it's already *really useful*! 
@@ -351,9 +351,9 @@ If something breaks for you though, please [open an issue](https://github.com/ke
 
 Life is so much better with autocomplete:
 
-![PostHog TypeScript Actions](/static/img/blog/typescript/posthog-actions.gif) 
+<img alt="PostHog TypeScript Actions" src="/static/img/blog/typescript/posthog-actions.gif" loading="lazy" /> 
 
-![PostHog TypeScript Values](/static/img/blog/typescript/posthog-values.gif) 
+<img alt="PostHog TypeScript Values" src="/static/img/blog/typescript/posthog-values.gif" loading="lazy" /> 
 
 Take that, random person on the internet!
 
@@ -379,18 +379,18 @@ This is the very first version of `kea-typegen`, so there are still some rough e
 1. You must manually import the `logicType` and insert it into your logic. 
   This will be done automatically in the future.
 
-![Import Logic Type Manually](/static/img/blog/typescript/import-logic-type.gif) 
+<img alt="Import Logic Type Manually" src="/static/img/blog/typescript/import-logic-type.gif" loading="lazy" /> 
 
 2. You must manually hook up all type dependencies by adding them on the `logicType`
   in `logic.ts`. Kea-TypeGen will then put the same list inside `logicType`. 
   This will also be done automatically in the future.
   
-![Send Type to Logic Type](/static/img/blog/typescript/send-type-to-type.gif) 
+<img alt="Send Type to Logic Type" src="/static/img/blog/typescript/send-type-to-type.gif" loading="lazy" /> 
 
 3. When [connecting logic together](https://kea.js.org/docs/guide/additional#connecting-logic-together),
    you must use `[otherLogic.actionTypes.doSomething]` instead of `[otherLogic.actions.doSomething]` 
 
-![Use ActionTypes](/static/img/blog/typescript/action-types.gif) 
+<img alt="Use ActionTypes" src="/static/img/blog/typescript/action-types.gif" loading="lazy" /> 
 
 4. Sometimes you might need to "Reload All Files" in your editor at times... or 
    explicitly open `logicType.ts` to see the changes. 
