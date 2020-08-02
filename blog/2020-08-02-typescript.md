@@ -338,13 +338,16 @@ The stakes are high: If I fail or quit, the person on the internet will be prove
 
 Thus it's with great excitement that I can announce [`kea-typegen`](https://github.com/keajs/kea-typegen) to the world!
 
-Just run `npx kea-typegen watch` and code away!
+Install the `typescript` and `kea-typegen` packages, run `kea-typegen watch` and code away!
+
+![Kea-TypeGen](/static/img/blog/typescript/kea-typegen.gif) 
 
 It's still rough with [a lot of things to improve](https://github.com/keajs/kea-typegen/projects/1), 
-yet it's already *really useful*!
+yet it's already *really useful*! 
 
 We've been [using it in PostHog](https://github.com/PostHog/posthog/pull/1286) for
 about a week now, and it's working great!
+If something breaks for you though, please [open an issue](https://github.com/keajs/kea-typegen/issues)!
 
 Life is so much better with autocomplete:
 
@@ -352,26 +355,65 @@ Life is so much better with autocomplete:
 
 ![PostHog TypeScript Values](/static/img/blog/typescript/posthog-values.gif) 
 
-Take that, person on the internet!
+Take that, random person on the internet!
 
 ### How to use?
 
 Here's a 10min video where I convert the Github API example to TypeScript.
 
+[TODO: add video!]
+
+Otherwise, like stated above, install `kea-typegen` and `typescript`. 
+Then run `kea-typegen watch`.
+
+This will geneate a bunch of `logicType.ts` files. Store those in your 
+version control alongside the `logic.ts` files. 
+
+Next, go through each `logic` and follow the steps below.
+
 
 ### Caveats
 
+This is the very first version of `kea-typegen`, so there are still some rough edges.
 
+1. You must manually import the `logicType` and insert it into your logic. 
+  This will be done automatically in the future.
+
+![Import Logic Type Manually](/static/img/blog/typescript/import-logic-type.gif) 
+
+2. You must manually hook up all type dependencies by adding them on the `logicType`
+  in `logic.ts`. Kea-TypeGen will then put the same list inside `logicType`. 
+  This will also be done automatically in the future.
+  
+![Send Type to Logic Type](/static/img/blog/typescript/send-type-to-type.gif) 
+
+3. When [connecting logic together](https://kea.js.org/docs/guide/additional#connecting-logic-together),
+   you must use `[otherLogic.actionTypes.doSomething]` instead of `[otherLogic.actions.doSomething]` 
+
+![Use ActionTypes](/static/img/blog/typescript/action-types.gif) 
+
+4. Sometimes you might need to "Reload All Files" in your editor at times... or 
+   explicitly open `logicType.ts` to see the changes. 
+
+5. Plugins aren't supported yet. I've hardcoded a few of them (loaders, router, window-values)
+   into the library, yet that's not a long term solution.
+   
+6. Extending logic doesn't work yet.
+
+Most of these issues will be solved in the next versions of `kea-typegen`,
+once I get enough feedback to know what to prioritise.  
 
 ## Manual Type Generation
+
+What if 
 
 ## Closing remarks
 
 What's next? I don't know. Perhaps this type generation will be amazing as is.
 Perhaps it's smarter to store everything in one huge "logicTypes.ts" file?
 Perhaps integrating it inside a whicheverpack plugin will remove the need for
-a separate command to run? Perhaps ttypescript can make this more magical?
-Perhaps there will be official support for plugins in TypeScript? Perhaps I
+a separate command to run? Perhaps [ttypescript](https://github.com/cevek/ttypescript) can make this more magical?
+Perhaps there will be official [support for plugins in TypeScript](https://github.com/microsoft/TypeScript/issues/14419)? Perhaps I
 should send all the gathered metadata on the logics to GPT-3, so it would write
 the rest of your app?
 
