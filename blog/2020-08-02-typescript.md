@@ -336,17 +336,28 @@ The stakes are high: If I fail or quit, the person on the internet will be prove
 
 ## Automatic Type Generation
 
-Thus it's with great excitement that I can announce `kea-typegen` to the world!
-
-It's still rough, but all the effort has paid off and it is already really useful!
+Thus it's with great excitement that I can announce [`kea-typegen`](https://github.com/keajs/kea-typegen) to the world!
 
 Just run `npx kea-typegen watch` and code away!
 
-Here's a 10min video where I convert the Github API example to TypeScript.
+It's still rough with [a lot of things to improve](https://github.com/keajs/kea-typegen/projects/1), 
+yet it's already *really useful*!
 
-...
+We've been [using it in PostHog](https://github.com/PostHog/posthog/pull/1286) for
+about a week now, and it's working great!
+
+Life is so much better with autocomplete:
+
+![PostHog TypeScript Actions](/static/img/blog/typescript/posthog-actions.gif) 
+
+![PostHog TypeScript Values](/static/img/blog/typescript/posthog-values.gif) 
 
 Take that, person on the internet!
+
+### How to use?
+
+Here's a 10min video where I convert the Github API example to TypeScript.
+
 
 ### Caveats
 
