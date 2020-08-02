@@ -1,6 +1,6 @@
 ---
 id: typescript
-title: 'TypeScript Support in Kea (The Long Road to)'
+title: 'TypeScript Support in Kea (The Long Road)'
 author: Marius Andra
 author_title: Kea Core Team
 author_url: https://github.com/mariusandra
