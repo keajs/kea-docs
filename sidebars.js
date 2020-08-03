@@ -11,7 +11,6 @@ module.exports = {
             'guide/testing',
             'guide/migrating-redux',
             'guide/writing-plugins',
-
         ],
         Tutorials: ['tutorials/github'],
         Playground: ['playground/gists', 'playground/sandboxes'],

@@ -6,34 +6,6 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import styles from './styles.module.css'
 import './styles.css'
-import { kea, useMountedLogic } from 'kea'
-
-const logic = kea({
-    actions: () => ({
-        updateName: (name) => ({ name }),
-        updateOtherName: (otherName) => ({ otherName }),
-    }),
-    reducers: () => {
-        return {
-            name: [
-                'my name',
-                {
-                    updateName: (_, { name }) => name,
-                    updateOtherName: (state, payload) => payload.name,
-                },
-            ],
-            otherNameNoDefault: {
-                updateName: (_, { name }) => name,
-            },
-            yetAnotherNameWithNullDefault: [
-                null,
-                {
-                    updateName: (_, { name }) => name,
-                },
-            ],
-        }
-    }
-})
 
 const features = [
     {
@@ -188,11 +160,9 @@ function Feature({ image, imageUrl, title, description }) {
         </div>
     )
 }
-window.logic=logic
 
 function Home() {
     const context = useDocusaurusContext()
-    useMountedLogic(logic)
 
     const { siteConfig = {} } = context
     return (
