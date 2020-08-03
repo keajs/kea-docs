@@ -198,7 +198,7 @@ function kea<I extends Input<Logic<I>>>(input: I): Logic<I> {
 }
 ```
 
-I got _something_ to work, but ultimately without typing support while writing the `kea({...})` call itself, this attempt 
+With this attempt I got _something_ to work, but ultimately without typing assistance *inside* the logic, it 
 wouldn't prove someone on the internet _wrong enough_.
 
 Back to the drawing board!
@@ -396,7 +396,7 @@ However nothing says these types need to be explicitly made by `kea-typegen`.
 You could easily make them by hand. [Follow the example](https://github.com/keajs/kea-typegen/blob/master/samples/logicType.ts)
 and adapt as needed!
 
-To help migrating the most common cases, Kea 2.2.0 will come with a special type:
+To help with the most common cases, Kea 2.2.0 comes with a special type:
 
 ```typescript
 import { MakeLogicType } from 'kea'
@@ -442,14 +442,14 @@ Thank you to the team at Elastic for [inspiring](https://github.com/elastic/kiba
 
 ## Closing words
 
-TypeScript support for Kea is finally here.
+TypeScript support for Kea is finally here!
 
-Well, almost. You can already use Kea `v2.2.0-rc.1` with TypeScript support. The final `2.2.0` is
+Well, almost. You can already use it in Kea `v2.2.0-rc.1`. The final `v2.2.0` is
 not far away.
 
-So far I've been building `kea-typegen` in isolation. 
+I've been building `kea-typegen` in isolation until now.
 I'd love to hear what the wider community thinks of it. Is it useful?
-What's missing? How can I improve the developer ergonomics?
+What's missing? How can I improve the developer ergonomics? Can it work in your toolchain?
 Should I send the created `logicTypes` to GPT-3, so it would code the rest of your app?
 And who ate all the bagels?
 
