@@ -125,7 +125,7 @@ going to be enough.
 The [JavaScript that converts](https://github.com/keajs/kea/tree/master/src/core/steps) `kea(input)` into a `logic` is just 
 a bit too complicated for the TypeScript compiler to automatically infer types from it.
 
-[TypeScript Generics](https://www.typescriptlang.org/docs/handbook/generics.html) enter he game.
+[TypeScript Generics](https://www.typescriptlang.org/docs/handbook/generics.html) enter the game.
 
 Just write a long TypeScript type that gets the `kea(input)` parameter's type,
 looks at its properties and morphs them into a `LogicType`. Write some functional *loopy* stuff in
