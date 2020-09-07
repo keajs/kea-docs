@@ -12,11 +12,11 @@ In addition to increased type safety, this massively improves developer ergonomi
 as you can now autocomplete all your actions and values, both while using logic
 in a component:
 
-<p><img alt="Redux Devtools" src={useBaseUrl('img/guide/typescript-using.gif')} loading="lazy" style={{ width: '100%', maxWidth: 753 }} /></p>
+<p><img alt="Kea TypeScript React Component" src={useBaseUrl('img/guide/typescript-using.gif')} loading="lazy" style={{ width: '100%', maxWidth: 753 }} /></p>
 
 ... and while writing it:
 
-<p><img alt="Redux Devtools" src={useBaseUrl('img/guide/typescript-writing.gif')} loading="lazy" style={{ width: '100%', maxWidth: 836 }} /></p>
+<p><img alt="Kea TypeScript in Logic" src={useBaseUrl('img/guide/typescript-writing.gif')} loading="lazy" style={{ width: '100%', maxWidth: 836 }} /></p>
 
 There's just one gotcha.
 
