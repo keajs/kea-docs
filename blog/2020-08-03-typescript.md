@@ -353,7 +353,8 @@ about a week now, and it's working great!
 Take that, random person on the internet!
 
 Install the `typescript` and `kea-typegen` packages, run `kea-typegen watch` and code away!
-Keep the generated `logicType.ts` files in version control.
+
+[Read the TypeScript guide for more details](/docs/guide/typescript).
 
 <img alt="Kea-TypeGen" src="/img/blog/typescript/kea-typegen.gif" loading="lazy" />
 
