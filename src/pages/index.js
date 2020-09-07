@@ -66,7 +66,8 @@ const features = [
     {
         title: 'Sparks Joy!',
         image: (
-            <svg style={{ cursor: 'pointer' }}
+            <svg
+                style={{ cursor: 'pointer' }}
                 className={classnames(styles.featureImage, 'feature-sparks-joy')}
                 enableBackground="new 0 0 100 100"
                 viewBox="0 0 100 100"
@@ -173,7 +174,18 @@ function Home() {
             <header className={classnames('hero hero--primary', styles.heroBanner)}>
                 <div className="container">
                     <h1 className="hero__title">{siteConfig.title}</h1>
-                    <p className="hero__subtitle">{siteConfig.tagline}</p>
+                    <p className="hero__subtitle">
+                        {siteConfig.tagline}
+                        <br />
+                        Now with{' '}
+                        <Link
+                            to={useBaseUrl('docs/guide/typescript')}
+                            style={{ color: 'white', textDecoration: 'underline' }}
+                        >
+                            TypeScript
+                        </Link>
+                        {' '}support!
+                    </p>
                     <div className={styles.buttons}>
                         <Link
                             className={classnames(
