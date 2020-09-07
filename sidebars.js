@@ -23,6 +23,7 @@ module.exports = {
             'plugins/thunks',
             'plugins/waitfor',
             'plugins/websockets',
+            'plugins/window-values',
         ],
         API: ['api/context', 'api/kea', 'api/logic', 'api/hooks', 'api/plugins', 'api/connect', 'api/createaction'],
     },
