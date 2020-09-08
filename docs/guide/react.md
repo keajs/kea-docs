@@ -171,5 +171,6 @@ class MyComponent extends Component {
 <br />
 
 :::note Next steps
-* Read about [Debugging](/docs/guide/debugging) to be even more productive when writing Kea code.  
+* Using [TypeScript](/docs/guide/typescript)? Read how it works with Kea!  
+* Read about [Debugging](/docs/guide/debugging) to be even more productive when working with Kea!  
 :::

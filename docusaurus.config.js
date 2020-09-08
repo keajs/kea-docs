@@ -1,7 +1,7 @@
 const React = require('react')
 
 module.exports = {
-    title: 'Kea 2.1',
+    title: 'Kea 2.2',
     tagline: 'Production Ready React State Management',
     url: 'https://kea.js.org',
     baseUrl: '/',
@@ -11,7 +11,7 @@ module.exports = {
     plugins: ['posthog-docusaurus'],
     themeConfig: {
         navbar: {
-            title: 'Kea 2.1',
+            title: 'Kea 2.2',
             logo: {
                 alt: 'Kea Logo',
                 src: 'img/logo.svg',
