@@ -98,7 +98,11 @@ export const githubLogic = kea<githubLogicType>({
 })
 ```
 
-It's a bit of extra work, but works like magic once you get the hang of things!
+It's a bit of extra work, but works like magic once set up!
+
+If, like in the screencast above, you have logic that connects to other logic or selectors that depend on other
+selectors `kea-typegen` will run in multiple passes
+until there are no more changes to write.
 
 ### Setup
 
@@ -138,7 +142,7 @@ I recommend keeping all the generated types in an adjacent folder to your app's
 sources and adding it to `.gitignore`.
 
 You can, of course, save the `logicType.ts` files next to the `logic.ts` files
-themselves, but [in my experience](https://github.com/PostHog/posthog/pull/1427)
+themselves and commit them in, but [in my experience](https://github.com/PostHog/posthog/pull/1427)
 doing so causes a lot of headache, especially when working with many branches and
 pull requests.  
 
@@ -160,9 +164,36 @@ to run `kea-typegen watch` together with webpack while developing and
 }
 ```
 
-Please note, if you have recursive definitions, for example selectors that depend on other selectors,
-`kea-typegen` will run in multiple passes until there are no more changes to write.
+### Types in Reducers
 
+`kea-typegen` automatically detects the types used in your actions, reducers,
+selectors and so on. It may however be the case that you need to manually specify the
+type of your reducers.
+
+In the following example the type of `blogId` is be autodetected as `null`,
+since we can't read more out of the default value. 
+
+Using the `as` keyword you can improve on this and provide the exact type for your
+reducer:
+
+```tsx
+const logic = kea({
+    actions: {
+        openBlog: (id: number) => ({ id }),
+        closeBlog: true,
+    },
+    reducers: {
+        blogId: [
+            null as number | null, // 👈 it can also be a number
+            {
+                openBlog: (_, { id }) => id,
+                closeBlog: () => null,
+            },
+        ],
+    },   
+})
+
+```
 
 ### Rough Edges
 
@@ -174,7 +205,7 @@ This is the very first version of `kea-typegen`, so there are still some rough e
 <img alt="Import Logic Type Manually" src="/img/blog/typescript/import-logic-type.gif" loading="lazy" />
 
 2. You must manually hook up all type dependencies by adding them on the `logicType`
-   in `logic.ts`. Kea-TypeGen will then put the same list inside `logicType`.
+   in `logic.ts`. `kea-typegen` will then put the same list inside `logicType`.
    This will also be done automatically in the future.
 
 <img alt="Send Type to Logic Type" src="/img/blog/typescript/send-type-to-type.gif" loading="lazy" />
