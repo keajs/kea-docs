@@ -154,7 +154,7 @@ to run `kea-typegen watch` together with webpack while developing and
 // package.json
 {
     "scripts": { 
-        "start": "concurrently start:webpack start:typegen -n WEBPACK,TYPEGEN -c blue,green",
+        "start": "concurrently \"yarn run start:webpack\" \"yarn run start:typegen\" -n WEBPACK,TYPEGEN -c blue,green",
         "start:typegen": "kea-typegen watch",
         "start:webpack": "webpack-dev-server",
         "build": "yarn run build:typegen && yarn run build:webpack",
