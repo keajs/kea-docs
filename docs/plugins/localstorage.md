@@ -86,3 +86,7 @@ const logic = kea({
     },
 })
 ```
+
+:::note
+Please be aware that under the hood `kea-localstorage` overrides the default value for the reducer with whatever was stored in `localStorage`. This means that **any listeners** hooked to any actions related to the reducer will **not be triggered** (this is also due to the fact that a reducer may have multiple actions, and there's no way of knowing which one to trigger).
+:::
