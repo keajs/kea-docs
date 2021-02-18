@@ -51,7 +51,7 @@ What's the difference?
 First, if you pass a function, it gets evaluated lazily when the logic is built.
 
 If you're using values that are not guaranteed to be there (e.g. a reducer that uses
-`otherLogic.actions.something`), pass a function:
+`otherLogic.actionTypes.something`), pass a function:
 
 ```javascript
 kea({
@@ -60,7 +60,7 @@ kea({
             increment: state => state + 1,
             // controlLogic.actions is undefined when loading this code
             // so we must wrap a function around it
-            [controlLogic.actions.setCounter]: (_, { counter }) => counter 
+            [controlLogic.actionTypes.setCounter]: (_, { counter }) => counter 
         }]
     })
 })
@@ -488,7 +488,7 @@ const dashboardLogic = kea({
         refreshDashboard: async () => {
             // pull data from the API, update values shown on the dashboard 
         },
-        [usersLogic.actions.loadUsersSuccess]: ({ users }) => {
+        [usersLogic.actionTypes.loadUsersSuccess]: ({ users }) => {
             actions.refreshDashboard()
             // we also get `users` in the payload, 
             // but we socially distance ourselves from them
@@ -500,7 +500,7 @@ const dashboardLogic = kea({
 :::note
 In the example above we had two options:
  
-1. The `dashboardLogic` could listen to the `usersLogic.actions.loadUsersSuccess` action and then call 
+1. The `dashboardLogic` could listen to the `usersLogic.actionTypes.loadUsersSuccess` action and then call 
    its own `refreshDashboard()` action.
 2. The `usersLogic` could listen to its own `loadUsersSuccess` action and then call 
    `dashboard.actions.refreshDashboard()`.
@@ -517,7 +517,7 @@ would mean that the `usersLogic` is *always* mounted together with `dashboardLog
 when we are not on the dashboard scene. That's probably not what we want.
 :::
 
-This `[otherLogic.actions.doSomething]` syntax also works in reducers:
+This `[otherLogic.actionTypes.doSomething]` syntax also works in reducers:
 
 ```javascript
 const usersLogic = kea({ ... })
@@ -530,7 +530,7 @@ const shadowUsersLogic = kea({
         users: [[], {
             reset: () => [], // action that's defined in this logic
             [actions.reset]: () => [], // another way to call a local action
-            [usersLogic.actions.loadUsersSuccess]: (_, { users }) => users
+            [usersLogic.actionTypes.loadUsersSuccess]: (_, { users }) => users
         }]
     })
 })
