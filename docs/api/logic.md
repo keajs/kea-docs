@@ -490,13 +490,13 @@ builtLogic.actionCreators.doSomething()
 builtLogic.actions.doSomething()
 
 // get the contants
-buildLogic.constants == { SOMETHING: 'SOMETHING' }
+builtLogic.constants == { SOMETHING: 'SOMETHING' }
 
 // a disconnected selector, will probably throw when called
-buildLogic.selectors.myValue(state)
+builtLogic.selectors.myValue(state)
 
 // this will throw since the logic is not mounted
-buildLogic.values.myValue
+builtLogic.values.myValue
 ```
 
 :::note
