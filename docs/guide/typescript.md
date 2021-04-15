@@ -104,7 +104,7 @@ If, like in the screencast above, you have logic that connects to other logic or
 selectors `kea-typegen` will run in multiple passes
 until there are no more changes to write.
 
-### Setup
+### Step 1. Packages
 
 First install the `kea-typegen` and `typescript` packages:
 
@@ -116,35 +116,27 @@ yarn add --dev kea-typegen typescript
 npm install kea-typegen typescript --save-dev
 ```
 
-Then create a `.kearc` file in the root of your project, with the relevant
-paths: 
+### Step 2. Understand the environment.
 
-```json
-{
-    "tsConfigPath": "./tsconfig.json",
-    "rootPath": "./src",
-    "typesPath": "./types"
-}
+`kea-typegen` will generate a `[filename]Type.ts` file next to every file that contains a `kea()` call.
+
+Thus a logic stored in `src/dashboardsLogic.ts` will get an accompanying `src/dashboardsLogicType.ts` file.
+
+I recommend **not committing** these to git and instead adding this to your `.gitignore`:
+
+```gitignore
+# file: .gitignore
+*Type.ts
 ```
 
-You may also specify these paths as arguments to the `kea-typegen` commands, though
-it's easier to have them in the `.kearc` file.
+These files are generated and used mainly for coding assistance and CI/CD, so it doesn't make sense to
+pollute commits with them. Plus they will cause merging issues at pull requests. Just ignore them.
 
-### Usage
+### Step 3. Run it
 
-* While developing, run `kea-typegen watch`, and it'll generate new types every time
-  your logic changes.
-* Run `kea-typegen write` to generate all the types, for example before a production
-  build.
-* Finally, `kea-typegen check` can be used to see if any types need to be written.  
-
-I recommend keeping all the generated types in an adjacent folder to your app's 
-sources and adding it to `.gitignore`.
-
-You can, of course, save the `logicType.ts` files next to the `logic.ts` files
-themselves and commit them in, but [in my experience](https://github.com/PostHog/posthog/pull/1427)
-doing so causes a lot of headache, especially when working with many branches and
-pull requests.  
+* While developing, run `kea-typegen watch`, and it'll generate new types every time your logic changes.
+* Run `kea-typegen write` to generate all the types, for example before a production build.
+* Finally, `kea-typegen check` can be used to see if any types need to be written
 
 Here's a sample `pacakge.json`, that uses [`concurrently`](https://www.npmjs.com/package/concurrently)
 to run `kea-typegen watch` together with webpack while developing and 
@@ -170,7 +162,7 @@ to run `kea-typegen watch` together with webpack while developing and
 selectors and so on. It may however be the case that you need to manually specify the
 type of your reducers.
 
-In the following example the type of `blogId` is be autodetected as `null`,
+In the following example the type of `blogId` is autodetected as `null`,
 since we can't read more out of the default value. 
 
 Using the `as` keyword you can improve on this and provide the exact type for your
@@ -226,6 +218,21 @@ This is the very first version of `kea-typegen`, so there are still some rough e
 These are all solvable issues. [Let me know](https://github.com/keajs/kea-typegen/issues) which ones to prioritise!
 
 
+### Advanced: changing where you store the types
+
+It's possible to write the type files into a different folder as arguments to the `kea-typegen` commands
+or with a `.kearc` file:
+
+```json
+{
+    "tsConfigPath": "./tsconfig.json",
+    "rootPath": "./src",
+    "typesPath": "./types"
+}
+```
+
+However, experience would suggest against doing so. Having the `logicType.ts` files in the same folder as the code 
+helps detect possible coding and typing issues sooner. Plus they're easier to import.
 
 ## Option 2: MakeLogicType<V, A, P>
 

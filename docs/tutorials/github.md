@@ -545,7 +545,7 @@ There are two final things to make this example complete.
 First, it would be nice to sort the list of repositories by the number of stars.
 
 For this we can either 1) sort the list in the React component before rendering, 2) sort the list 
-in the listener before handing it over to `setRepositories`... or use a 
+in the listener before handing it over to `setRepositories`... or 3) use a 
 [**selector**](/docs/guide/concepts#selectors) to sort it dynamically and automatically.
 
 Obviously we'll do the latter. 🤪

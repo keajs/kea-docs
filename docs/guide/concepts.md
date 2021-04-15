@@ -502,13 +502,19 @@ const logic = kea({
         users: [[], {
             loadUsers: async () => await api.get('users')
         }]
+    },
+    reducers: {
+        usersError: [null, {
+            loadUsers: () => null,
+            loadUsersFailure: (_, { error }) => error
+        }]
     }
 })
 ```
 
-The code above is identical to the block before it. It also creates three reducers: 
-`users`, `usersLoading` and `usersError`, along with three actions: `loadUsers`,
-`loadUsersSuccess` and `loadUsersFailure`.
+The code above is identical to the block before it. This `logic` now also contains three actions: `loadUsers`,
+`loadUsersSuccess` and `loadUsersFailure`, and three reducers: `users`, `userLoading` (via kea-loaders), 
+and `usersError` (defined manually, not added with kea-loaders). 
 
 See the [documentation for kea-loaders](/docs/plugins/loaders) to find out more.
 
