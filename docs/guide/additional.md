@@ -195,6 +195,18 @@ to the same logic.
 If you render `<User id={2} />`, it'll however get its own independent copy of this same base logic
 and do what is needed to load and display the second user. 
 
+### Keys and Paths
+
+Please note, if you [manually specify a path](/docs/guide/debugging#setting-the-path-manually) for your keyed logic, 
+you must specify it as a function that takes one argument, `key`, like so:
+
+```javascript
+const userLogic = kea({
+    key: (props) => props.id, // 🔑 the key
+    path: (key) => ['scenes', 'account', 'userLogic', key],
+    // ..
+})
+```
 
 ## Breakpoints
 
