@@ -84,14 +84,14 @@ Running `kea-typegen write` or `kea-typegen watch` will generate a bunch of `log
 
 <p><img alt="Kea-TypeGen" src="/img/blog/typescript/kea-typegen.gif" loading="lazy" style={{ width: '100%', maxWidth: 766 }} /></p>
 
-... which you must then import and pass on to the `kea()` call.
+... will then be automatically imported and pass on to the `kea()` call.
 
 ```typescript
 import { kea } from 'kea'
 import { githubLogicType } from './githubLogicType'
 
 export const githubLogic = kea<githubLogicType>({
-    //                        ^^^^^^^^^^^^^^^^^ 👈
+    //                        ^^^^^^^^^^^^^^^^^ 👈 added automatically
     actions: { ... },
     reducers: { ... },
     listeners: ({ actions }) => ({ ... })
@@ -142,17 +142,17 @@ Here's a sample `pacakge.json`, that uses [`concurrently`](https://www.npmjs.com
 to run `kea-typegen watch` together with webpack while developing and 
 `kea-typegen write` before building the production bundle.
 
+```shell
+yarn add --dev concurrently
+```
+
 ```json
-// package.json
 {
-    "scripts": { 
-        "start": "concurrently \"yarn run start:webpack\" \"yarn run start:typegen\" -n WEBPACK,TYPEGEN -c blue,green",
-        "start:typegen": "kea-typegen watch",
-        "start:webpack": "webpack-dev-server",
-        "build": "yarn run build:typegen && yarn run build:webpack",
-        "build:typegen": "kea-typegen write",
-        "build:webpack": "NODE_ENV=production webpack --config webpack.config.js"
-    }
+  "scripts": {
+    "start": "concurrently \"yarn start:app\" \"yarn start:kea\" -n APP,KEA -c blue,green",
+    "start:app": "webpack-dev-server  # put your old 'start' script here",
+    "start:kea": "kea-typegen watch"
+  }
 }
 ```
 
@@ -191,10 +191,11 @@ const logic = kea({
 
 This is the very first version of `kea-typegen`, so there are still some rough edges.
 
-1. You must manually import the `logicType` and insert it into your logic.
-   This will be done automatically in the future.
+1. ~~You must manually import the `logicType` and insert it into your logic.
+   This will be done automatically in the future.~~ Update: Since kea-typegen 0.7.0 imports
+   are now added automatically!
 
-<img alt="Import Logic Type Manually" src="/img/blog/typescript/import-logic-type.gif" loading="lazy" />
+<img alt="Auto Import Logic Type" src="/img/blog/typescript/auto-import.gif" loading="lazy" />
 
 2. You must manually hook up all type dependencies by adding them on the `logicType`
    in `logic.ts`. `kea-typegen` will then put the same list inside `logicType`.
