@@ -222,25 +222,19 @@ search and hash parts in the `url`.
 
 ### Link tag
 
-Create an `A` tag to make linking easier
+Use the included `<A>` tag to link via the router. This changes the URL via `router.actions.push()` instead of reloading the entire page.   
 
 ```javascript
 import React from 'react'
-import { router } from 'kea-router'
+import { A } from 'kea-router'
 
 // use <A href=''> instead of <a href=''> to open links via the router
-export function A(props) {
+export function Page() {
     return (
-        <a
-            {...props}
-            onClick={(event) => {
-                if (!props.target) {
-                    event.preventDefault()
-                    router.actions.push(props.href) // router is mounted automatically, so this is safe to call
-                }
-                props.onClick && props.onClick(event)
-            }}
-        />
+        <ul>
+            <li><A href='/about'>About me</A></li>
+            <li><A href='/contact'>Contact</A></li>
+        </ul>
     )
 }
 ```
