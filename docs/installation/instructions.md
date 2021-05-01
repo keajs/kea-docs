@@ -26,8 +26,8 @@ the plugins `kea-router` and `kea-loaders`. It's the fastest way to just try out
 
 ## Install Kea manually
 
-Installing `kea` is rather straightforward. You need to install some packages, reset kea's context and 
-wrap your app with react-redux's `<Provider />` tag.
+Installing `kea` is rather straightforward. You need to install some packages, optionally call `resetContext` 
+and wrap your app with a `<Provider />` tag.
 
 ### 1. Install some packages
 
@@ -52,15 +52,14 @@ To set it up, just call `resetContext(options)` before rendering your app.
 
 ### 3. Wrap with `<Provider />`
 
-Then wrap your `<App />` with Redux's `<Provider />`, getting the `store` from `getContext()`.
+Then wrap your `<App />` with `<Provider />`.
 
 This is how your `index.js` would look like if you used `create-react-app`:
 
 ```javascript
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { resetContext, getContext } from 'kea' // 👈 add this
-import { Provider } from 'react-redux' // 👈 add this
+import { resetContext, Provider } from 'kea' // 👈 add this
 import './index.css'
 import App from './App'
 
@@ -74,7 +73,7 @@ resetContext({ // 👈 add this
 })
 
 ReactDOM.render( // 👈 and update this    
-    <Provider store={getContext().store}>
+    <Provider>
         <App />
     </Provider>,
     document.getElementById('root')

@@ -35,7 +35,7 @@ of a really raw devtool that just displays all the logics and their values in bo
 ## Logic Path
 
 If you explore your store's state in the devtools, you'll notice that every kea logic is
-mounted under a path like `kea.inline.1`.
+mounted under a path like `kea.logic.1` (or `kea.inline.1` prior to Kea 2.4).
  
 Something like this:
 

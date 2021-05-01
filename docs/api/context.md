@@ -104,8 +104,8 @@ getContext() ==
         },
 
         input: {
-            inlinePathCreators: new Map(),
-            inlinePathCounter: 0,
+            logicPathCreators: new Map(),
+            logicPathCounter: 0,
             defaults: undefined,
         },
 
