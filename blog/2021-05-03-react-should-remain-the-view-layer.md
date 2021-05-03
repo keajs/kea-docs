@@ -1,6 +1,6 @@
 ---
 id: react-should-remain-the-view-layer
-title: 'React should remain the view layer'
+title: 'React should remain the View Layer'
 author: Marius Andra
 author_title: Kea Core Team, Software Engineer at PostHog
 author_url: https://github.com/mariusandra
@@ -8,55 +8,58 @@ author_image_url: https://avatars1.githubusercontent.com/u/53387?v=4
 tags: [kea, release]
 ---
 
-Back in 2016, shortly after learning about React and Redux, I fell in love with the *functional programming* paradigms behind them. 
+Back in 2016, shortly after learning about React and Redux, I fell in love with the *functional programming* paradigms behind them because of what they enabled. 
 
 By following a few principles of immutability and purity, React frontends were generally better written, stabler and easier to debug, when compared to alternative contemporary frameworks like Ember or Angular.
 
-Having seen what a bit of functional programming did to JavaScript, and believing the grass to be cut better in the functional programming world, I started looking into [Clojure](https://learnxinyminutes.com/docs/clojure/). More specifically, into ClojureScript frontend frameworks. 
+Having seen what a bit of functional programming did to JavaScript, and believing the grass to be greener and better cut in the functional programming world, I started looking into [Clojure](https://learnxinyminutes.com/docs/clojure/), the most popular FP language at the time. More specifically, into [ClojureScript](https://clojurescript.org/) frontend frameworks. 
 
-Frameworks such as [reagent](https://github.com/reagent-project/reagent) (dead), [quiescent](https://github.com/levand/quiescent) (dead), [om](https://github.com/omcljs/om) (dead), [om.next](https://github.com/omcljs/om/wiki/Quick-Start-(om.next)) (dead), [re-frame](https://github.com/day8/re-frame) (active). Now there's also [fulcro](https://github.com/fulcrologic/fulcro) that wasn't around back then.
+Frameworks such as [reagent](https://github.com/reagent-project/reagent) (dead), [quiescent](https://github.com/levand/quiescent) (dead), [om](https://github.com/omcljs/om) (dead), [om.next](https://github.com/omcljs/om/wiki/Quick-Start-(om.next)) (dead), [re-frame](https://github.com/day8/re-frame) (alive). Now there's also [fulcro](https://github.com/fulcrologic/fulcro) that wasn't around back then.
 
 What stood out was how they all handled *application state*. 
 
-They all had developed [at least three](http://day8.github.io/re-frame/a-loop/) globally isolated layers, such as:
+They all had developed [at least three](http://day8.github.io/re-frame/a-loop/) globally isolated layers:
 
 ```js
 // obviously pseudocode
 async function renderApp() {
     // gather the input
     const input = await getInputFromURLAndAPIs(window)
-    // convert that to an intermediary format
+    // normalize that to an intermediary app state
     const appState = convertInputToApplicationState(input)
-    // convert that intermediary format to HTML
+    // create HTML out of that intermediary state
     const html = convertApplicationStateToHTML(appState)
     return html
 }
 ```
 
-The rendering phase, what we call React, would just select slices of this state and put that HTML tags.
-
-No framework skipped the application d
+No framework skipped the application state step. Nobody did this:
 
 ```js
 async function renderApp() {
+    // gather the input
     const input = await getInputFromURLAndAPIs(window)
+    // create HTML out of that input
     const html = convertInputToHTML(input)
     return html
 }
 ```
 
-All these frameworks reached the conclusion that the best way to convert API responses to DOM nodes was to first convert them to an intermediary representation: a global application state.
+Yet that's exactly what it feels like React and its community are trying to get us to do.
 
-That's because these steps have overlapping, yet separate and parallel hierarchies. 
+React Hooks introduced an amazing abstraction to help your view layer organise its state. 
 
-[
-  Image: 
-  1. Input layer boxes: URL, users API response, searchfield text
-  2. Data layer boxes: account, scenes/users, sidebar, scenes/users/summary
-  3. View layer tree: <html><Header/><Nav/><Scene><Users /></Scene></html>
-]
+TODO
 
-The hierarchical structure of your input data is different than the hierarchical structure of your application state data, which is different than the hierarchical structure of your output DOM nodes.
+### The three layers
+
+All these frameworks reached the conclusion that the best way to convert API responses to DOM nodes was to first convert them to an intermediary representation: the global application state.
+
+These three layers (input, data and view) have overlapping, yet separate and parallel structures or hierarchies:
+
+<img alt="Kea TypeScript ResetContext" src="/img/blog/react/three-layers.png" loading="lazy" />
+
+The structure of your input data is different from the structure of your application state, which is different from the structure of your DOM nodes.
 
 The folks at React agree: [to build great user experiences, you benefit from having parallel data and view trees](https://reactjs.org/blog/2019/11/06/building-great-user-experiences-with-concurrent-mode-and-suspense.html#parallel-data-and-view-trees). They do use Relay after all for their state.
 
