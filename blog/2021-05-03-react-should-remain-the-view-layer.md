@@ -1,6 +1,6 @@
 ---
-id: suspense-is-the-wrong-abstraction
-title: 'Suspense is the wrong abstraction'
+id: react-should-remain-the-view-layer
+title: 'React should remain the view layer'
 author: Marius Andra
 author_title: Kea Core Team, Software Engineer at PostHog
 author_url: https://github.com/mariusandra
