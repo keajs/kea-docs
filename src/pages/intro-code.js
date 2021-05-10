@@ -115,21 +115,28 @@ export function IntroCode() {
                     <L>{'    // data that needs to be loaded from somewhere'}</L>
                     <L>
                         {'    loaders: { '}
-                        <Expand code="logic.actions" />
+                        <Expand code="logic.loaders" />
                         {' },'}
                     </L>
                     <L>{'    '}</L>
-                    <L>{'    // use the URL as a data source'}</L>
+                    <L>{'    // location.href change triggers an action'}</L>
                     <L>
-                        {'    router: { '}
-                        <Expand code="logic.actions" />
+                        {'    urlToAction: { '}
+                        <Expand code="logic.urlToAction" />
+                        {' },'}
+                    </L>
+                    <L>{'    '}</L>
+                    <L>{'    // change location.href when an action fires'}</L>
+                    <L>
+                        {'    actionToUrl: { '}
+                        <Expand code="logic.actionToUrl" />
                         {' },'}
                     </L>
                     <L>{'    '}</L>
                     <L>{'    // lifecycles: afterMount and beforeUnmount'}</L>
                     <L>
                         {'    events: { '}
-                        <Expand code="logic.actions" />
+                        <Expand code="logic.events" />
                         {' },'}
                     </L>
                     <L>{'    '}</L>
