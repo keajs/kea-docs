@@ -1,3 +1,8 @@
+
+.hero__subtitle {
+    text-align: center;
+}
+
 .hero.hero--primary {
     color: white !important;
 }
@@ -205,4 +210,16 @@ html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(4) {
 }
 html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(2) {
     stroke: hsla(219, 14%, 90%, 1);
+}
+
+.home-intro-code {
+    display: block;
+    margin: 0 auto;
+    text-align: left;
+    margin-bottom: 40px;
+    white-space: pre-wrap;
+}
+
+.home-intro-code .code-line {
+    min-height: 1.8em;
 }
