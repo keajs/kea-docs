@@ -7,7 +7,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 import styles from './styles.module.css'
 import './styles.css'
 import { Example } from '../../docs/tutorials/github/example'
-import { kea, getContext, useValues, useActions } from 'kea'
+import { getContext } from 'kea'
 import { Provider } from 'react-redux'
 import { IntroCode } from './intro-code'
 

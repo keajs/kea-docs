@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { kea, useActions, useValues } from 'kea'
 
 const introCodeLogic = kea({
@@ -31,7 +31,64 @@ function Shrink({ code }) {
 }
 
 function L({ children }) {
-    return <div className="code-line">{children}</div>
+    const { expanded } = useValues(introCodeLogic)
+
+    if (typeof children !== 'string') {
+        return children
+    }
+
+    const rules = {
+        '//.*': 'gray',
+        '[a-zA-Z_-]+: \\(': (str) => (
+            <span>
+                <span style={{ color: 'brown' }}>{str.substring(0, str.length - 2)}</span>
+                {' ('}
+            </span>
+        ),
+        '[a-zA-Z_-]+:': 'purple',
+        '"[^"]+"': 'green',
+        "'[^']+'": 'green',
+        const: 'blue',
+        '[{}()]': 'black',
+        '[0-9]': 'blue',
+        '#[[a-zA-Z]+]#': (str) => {
+            const code = str.substring(2, str.length - 2)
+            return expanded[code] ? <Shrink code={code} /> : <Expand code={code} />
+        },
+
+        kea: 'green',
+        '[a-zA-Z_-]+': 'black',
+    }
+
+    function split(element, recursion = 0, counter = 1) {
+        if (typeof element !== 'string' || recursion > 3 || element.trim() === '') {
+            return element
+        }
+        for (const [rule, colorOrFunction] of Object.entries(rules)) {
+            const parts = element.split(new RegExp(`(${rule})`))
+            if (parts.length > 1)
+                return parts
+                    .map((splitPart, index) => {
+                        const newCounter = counter * 100 + index
+                        if (index % 2 === 0) {
+                            return split(splitPart, recursion + 1, newCounter)
+                        } else {
+                            if (typeof colorOrFunction === 'function') {
+                                return <span key={`${newCounter}`}>{colorOrFunction(splitPart)}</span>
+                            }
+                            return (
+                                <span key={`${newCounter}`} style={{ color: colorOrFunction }}>
+                                    {splitPart}
+                                </span>
+                            )
+                        }
+                    })
+                    .flat(Infinity)
+        }
+        return element
+    }
+
+    return <div className={`code-line`}>{split(children)}</div>
 }
 
 export function IntroCode() {
@@ -42,17 +99,12 @@ export function IntroCode() {
             <L>{'// keep your state in Kea'}</L>
             {expanded?.logic ? (
                 <>
-                    <L>
-                        {'const logic = kea({ '}
-                        <Shrink code="logic" />
-                    </L>
+                    <L>{'const logic = kea({ #[logic]#'}</L>
+                    <L>{'    '}</L>
                     <L>{'    // everything starts with an action'}</L>
                     {expanded?.logicActions ? (
                         <>
-                            <L>
-                                {'    actions: { '}
-                                <Shrink code="logicActions" />
-                            </L>
+                            <L>{'    actions: { #[logicActions]#'}</L>
                             <L>{'        // some actions are simple'}</L>
                             <L>{'        reset: true,'}</L>
                             <L>{'        '}</L>
@@ -66,20 +118,13 @@ export function IntroCode() {
                             <L>{'    },'}</L>
                         </>
                     ) : (
-                        <L>
-                            {'    actions: { '}
-                            <Expand code="logicActions" />
-                            {' },'}
-                        </L>
+                        <L>{'    actions: { #[logicActions]# },'}</L>
                     )}
                     <L>{'    '}</L>
                     <L>{'    // store action payloads in reducers'}</L>
                     {expanded?.logicReducers ? (
                         <>
-                            <L>
-                                {'    reducers: { '}
-                                <Shrink code="logicReducers" />
-                            </L>
+                            <L>{'    reducers: { #[logicReducers]#'}</L>
                             <L>{'         // using the immutable reducer pattern from redux'}</L>
                             <L>{'         username: ['}</L>
                             <L>{'             "keajs", // default value'}</L>
@@ -91,71 +136,35 @@ export function IntroCode() {
                             <L>{'    },'}</L>
                         </>
                     ) : (
-                        <L>
-                            {'    reducers: { '}
-                            <Expand code="logicReducers" />
-                            {' },'}
-                        </L>
+                        <L>{'    reducers: { #[logicReducers]# },'}</L>
                     )}
                     <L>{'    '}</L>
                     <L>{'    // combine and memoize values'}</L>
-                    <L>
-                        {'    selectors: { '}
-                        <Expand code="logic.selectors" />
-                        {' },'}
-                    </L>
+                    <L>{'    selectors: { #[logicSelectors]# },'}</L>
                     <L>{'    '}</L>
                     <L>{'    // run random javascript on actions'}</L>
-                    <L>
-                        {'    listeners: { '}
-                        <Expand code="logic.listeners" />
-                        {' },'}
-                    </L>
+                    <L>{'    listeners: { #[logicListeners]# },'}</L>
                     <L>{'    '}</L>
                     <L>{'    // data that needs to be loaded from somewhere'}</L>
-                    <L>
-                        {'    loaders: { '}
-                        <Expand code="logic.loaders" />
-                        {' },'}
-                    </L>
+                    <L>{'    loaders: { #[logicLoaders]# },'}</L>
                     <L>{'    '}</L>
                     <L>{'    // location.href change triggers an action'}</L>
-                    <L>
-                        {'    urlToAction: { '}
-                        <Expand code="logic.urlToAction" />
-                        {' },'}
-                    </L>
+                    <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
                     <L>{'    '}</L>
                     <L>{'    // change location.href when an action fires'}</L>
-                    <L>
-                        {'    actionToUrl: { '}
-                        <Expand code="logic.actionToUrl" />
-                        {' },'}
-                    </L>
+                    <L>{'    actionToUrl: { #[logicActionToUrl]# },'}</L>
                     <L>{'    '}</L>
                     <L>{'    // lifecycles: afterMount and beforeUnmount'}</L>
-                    <L>
-                        {'    events: { '}
-                        <Expand code="logic.events" />
-                        {' },'}
-                    </L>
+                    <L>{'    events: { #[logicEvents]# },'}</L>
                     <L>{'    '}</L>
-                    <L>{'}'}</L>
+                    <L>{'})'}</L>
                 </>
             ) : (
-                <L>
-                    {'const logic = kea({ '}
-                    <Expand code="logic" />
-                    {' })'}
-                </L>
+                <L>{'const logic = kea({ #[logic]# })'}</L>
             )}
             <L>{''}</L>
             <L>{'// and your views in React'}</L>
-            <L>
-                {'function Component() { '}
-                <Expand code="component" />
-                {' }'}
-            </L>
+            <L>{'function Component() { #[component]# }'}</L>
         </>
     )
 }
