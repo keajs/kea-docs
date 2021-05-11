@@ -1,4 +1,3 @@
-
 .hero__subtitle {
     text-align: center;
 }
@@ -152,23 +151,22 @@ section.homepage-logos img.apprentus {
     text-decoration: underline;
 }
 
-html[data-theme="dark"] .homepage-testimonials {
+html[data-theme='dark'] .homepage-testimonials {
     background: hsla(220, 9%, 14%, 1);
     color: hsla(216, 8%, 95%, 1) !important;
 }
 
-html[data-theme="dark"] .homepage-testimonials a {
+html[data-theme='dark'] .homepage-testimonials a {
     color: hsla(216, 8%, 95%, 1) !important;
 }
 
 .homepage-testimonials .avatar__photo {
-    box-shadow: 1px 3px 5px rgba(0,0,0,0.1);
+    box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.1);
 }
 
-html[data-theme="dark"] .homepage-testimonials .avatar__photo {
+html[data-theme='dark'] .homepage-testimonials .avatar__photo {
     box-shadow: none;
 }
-
 
 .homepage-cta {
     background: hsl(220, 9%, 86%);
@@ -180,15 +178,14 @@ html[data-theme="dark"] .homepage-testimonials .avatar__photo {
     text-decoration: underline;
 }
 
-html[data-theme="dark"] .homepage-cta {
+html[data-theme='dark'] .homepage-cta {
     background: hsla(220, 9%, 10%, 1);
     color: hsla(216, 8%, 95%, 1) !important;
 }
 
-html[data-theme="dark"] .homepage-cta a {
+html[data-theme='dark'] .homepage-cta a {
     color: hsla(216, 8%, 95%, 1) !important;
 }
-
 
 svg.feature-foundations path,
 svg.feature-interconnected path,
@@ -201,14 +198,14 @@ svg.feature-sparks-joy path:nth-child(2) {
     stroke: hsla(123, 12%, 8%, 1);
 }
 
-html[data-theme="dark"] svg.feature-foundations path,
-html[data-theme="dark"] svg.feature-interconnected path,
-html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(1),
-html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(3),
-html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(4) {
+html[data-theme='dark'] svg.feature-foundations path,
+html[data-theme='dark'] svg.feature-interconnected path,
+html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(1),
+html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(3),
+html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(4) {
     fill: hsla(219, 14%, 90%, 1);
 }
-html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(2) {
+html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(2) {
     stroke: hsla(219, 14%, 90%, 1);
 }
 
@@ -222,4 +219,11 @@ html[data-theme="dark"] svg.feature-sparks-joy path:nth-child(2) {
 
 .home-intro-code .code-line {
     min-height: 1.8em;
+}
+
+.home-intro-code .code-line button {
+    border: none;
+    padding: 2px 8px;
+    background-color: #888;
+    color: #fff;
 }

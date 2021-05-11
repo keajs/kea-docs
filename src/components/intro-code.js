@@ -22,12 +22,12 @@ const introCodeLogic = kea({
 
 function Expand({ code }) {
     const { expand } = useActions(introCodeLogic)
-    return <button onClick={() => expand(code)}>... expand ...</button>
+    return <button className='expand' onClick={() => expand(code)}>+</button>
 }
 
 function Shrink({ code }) {
     const { shrink } = useActions(introCodeLogic)
-    return <button onClick={() => shrink(code)}>... shrink ...</button>
+    return <button className='shrink' onClick={() => shrink(code)}>-</button>
 }
 
 function L({ children }) {
@@ -48,7 +48,7 @@ function L({ children }) {
         '[a-zA-Z_-]+:': 'purple',
         '"[^"]+"': 'green',
         "'[^']+'": 'green',
-        const: 'blue',
+        'const|function': 'blue',
         '[{}()]': 'black',
         '[0-9]': 'blue',
         '#[[a-zA-Z]+]#': (str) => {
@@ -107,6 +107,7 @@ export function IntroCode() {
                             <L>{'    actions: { #[logicActions]#'}</L>
                             <L>{'        // some actions are simple'}</L>
                             <L>{'        reset: true,'}</L>
+                            <L>{'        capitalize: true,'}</L>
                             <L>{'        '}</L>
                             <L>{'        // some carry a payload'}</L>
                             <L>{'        setUsername: (username) => ({ username }),'}</L>
@@ -114,25 +115,43 @@ export function IntroCode() {
                             <L>{'        // some take multiple args and defaults'}</L>
                             <L>{'        openPage: (page, perPage = 50) => ({ page, perPage }),'}</L>
                             <L>{'        '}</L>
-                            <L>{'        // none modify any data nor call any API. pure functions FTW'}</L>
+                            <L>{'        // actions do not modify data nor call any API.'}</L>
+                            <L>{'        // they are pure functions'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
                         <L>{'    actions: { #[logicActions]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // store action payloads in reducers'}</L>
+                    <L>{'    // the payload of an action can be stored in a reducer'}</L>
                     {expanded?.logicReducers ? (
                         <>
                             <L>{'    reducers: { #[logicReducers]#'}</L>
-                            <L>{'         // using the immutable reducer pattern from redux'}</L>
-                            <L>{'         username: ['}</L>
-                            <L>{'             "keajs", // default value'}</L>
-                            <L>{'             {'}</L>
-                            <L>{'                 // '}</L>
-                            <L>{'                 setUsername: (_, { username }) => username'}</L>
-                            <L>{'             },'}</L>
-                            <L>{'         ]'}</L>
+                            <L>{'        // syntactic sugar over standard redux reducers'}</L>
+                            <L>{'        username: ['}</L>
+                            <L>{'            "keajs", // the default value'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                // update the value when any of these actions is dispatched'}</L>
+                            <L>{'                // actionName: (state, payload) => newState'}</L>
+                            <L>{'                setUsername: (_, { username }) => username,'}</L>
+                            <L>{'                capitalize: (state) => state.toUpperCase(),'}</L>
+                            <L>{'                reset: () => "keajs",'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        page: ['}</L>
+                            <L>{'            1,'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                setPage: (_, { page }) => page,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        perPage: ['}</L>
+                            <L>{'            50,'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                setPage: (_, { perPage }) => perPage,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        // reducers are pure functions as well'}</L>
+                            <L>{'        // you may not dispatch other actions nor call any API in them'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
