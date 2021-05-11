@@ -9,7 +9,7 @@ import './styles.css'
 import { Example } from '../../docs/tutorials/github/example'
 import { getContext } from 'kea'
 import { Provider } from 'react-redux'
-import { IntroCode } from './intro-code'
+import { IntroCode } from '../components/intro-code'
 
 const features = [
     {
