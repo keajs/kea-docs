@@ -96,43 +96,43 @@ export function IntroCode() {
 
     return (
         <>
-            <L>{'// keep your state in Kea'}</L>
+            <L>{'// 🦜 keep your state in Kea'}</L>
             {expanded?.logic ? (
                 <>
                     <L>{'const logic = kea({ #[logic]#'}</L>
                     <L>{'    '}</L>
-                    <L>{'    // everything starts with an action'}</L>
+                    <L>{'    // 🦾 everything starts with an action'}</L>
                     {expanded?.logicActions ? (
                         <>
                             <L>{'    actions: { #[logicActions]#'}</L>
-                            <L>{'        // some actions are simple'}</L>
+                            <L>{'        // ⛳ some actions are simple'}</L>
                             <L>{'        reset: true,'}</L>
                             <L>{'        capitalize: true,'}</L>
                             <L>{'        '}</L>
-                            <L>{'        // some carry a payload'}</L>
+                            <L>{'        // 📦 some carry a payload'}</L>
                             <L>{'        setUsername: (username) => ({ username }),'}</L>
                             <L>{'        '}</L>
-                            <L>{'        // some take multiple args and defaults'}</L>
+                            <L>{'        // 🍱 some take multiple args and defaults'}</L>
                             <L>{'        openPage: (page, perPage = 50) => ({ page, perPage }),'}</L>
                             <L>{'        '}</L>
-                            <L>{'        // actions do not modify data nor call any API.'}</L>
-                            <L>{'        // they are pure functions'}</L>
+                            <L>{'        // 🚫 actions do not modify data nor call any API.'}</L>
+                            <L>{'        // 😇 they are pure functions'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
                         <L>{'    actions: { #[logicActions]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // the payload of an action can be stored in a reducer'}</L>
+                    <L>{'    // 📦 the payload of an action can be stored in a reducer'}</L>
                     {expanded?.logicReducers ? (
                         <>
                             <L>{'    reducers: { #[logicReducers]#'}</L>
-                            <L>{'        // syntactic sugar over standard redux reducers'}</L>
+                            <L>{'        // 🍭 syntactic sugar over standard redux reducers'}</L>
                             <L>{'        username: ['}</L>
-                            <L>{'            "keajs", // the default value'}</L>
+                            <L>{'            "keajs", // 💬 the default value'}</L>
                             <L>{'            {'}</L>
-                            <L>{'                // update the value when any of these actions is dispatched'}</L>
-                            <L>{'                // actionName: (state, payload) => newState'}</L>
+                            <L>{'                // 🎯 update the value when any of these actions is dispatched'}</L>
+                            <L>{'                // 👀 actionName: (state, payload) => newState'}</L>
                             <L>{'                setUsername: (_, { username }) => username,'}</L>
                             <L>{'                capitalize: (state) => state.toUpperCase(),'}</L>
                             <L>{'                reset: () => "keajs",'}</L>
@@ -150,30 +150,30 @@ export function IntroCode() {
                             <L>{'                setPage: (_, { perPage }) => perPage,'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
-                            <L>{'        // reducers are pure functions as well'}</L>
-                            <L>{'        // you may not dispatch other actions nor call any API in them'}</L>
+                            <L>{'        // 😇 reducers are pure functions as well'}</L>
+                            <L>{'        // 🙅 you may not dispatch other actions nor call any APIs in them'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
                         <L>{'    reducers: { #[logicReducers]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // combine and memoize values'}</L>
+                    <L>{'    // 👨‍👩‍👧‍👦 combine and memoize values'}</L>
                     <L>{'    selectors: { #[logicSelectors]# },'}</L>
                     <L>{'    '}</L>
-                    <L>{'    // run random javascript on actions'}</L>
+                    <L>{'    // 🔥 run random javascript on actions'}</L>
                     <L>{'    listeners: { #[logicListeners]# },'}</L>
                     <L>{'    '}</L>
-                    <L>{'    // data that needs to be loaded from somewhere'}</L>
+                    <L>{'    // 💾 data that needs to be loaded from somewhere'}</L>
                     <L>{'    loaders: { #[logicLoaders]# },'}</L>
                     <L>{'    '}</L>
-                    <L>{'    // location.href change triggers an action'}</L>
+                    <L>{'    // 🌍 location.href change triggers an action'}</L>
                     <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
                     <L>{'    '}</L>
-                    <L>{'    // change location.href when an action fires'}</L>
+                    <L>{'    // 🎯 change location.href when an action fires'}</L>
                     <L>{'    actionToUrl: { #[logicActionToUrl]# },'}</L>
                     <L>{'    '}</L>
-                    <L>{'    // lifecycles: afterMount and beforeUnmount'}</L>
+                    <L>{'    // ☀️ lifecycles: afterMount and beforeUnmount'}</L>
                     <L>{'    events: { #[logicEvents]# },'}</L>
                     <L>{'    '}</L>
                     <L>{'})'}</L>
@@ -182,7 +182,7 @@ export function IntroCode() {
                 <L>{'const logic = kea({ #[logic]# })'}</L>
             )}
             <L>{''}</L>
-            <L>{'// and your views in React'}</L>
+            <L>{'// ⚛️ and your views in React'}</L>
             <L>{'function Component() { #[component]# }'}</L>
         </>
     )
