@@ -17,7 +17,7 @@ module.exports = {
                 src: 'img/logo.svg',
             },
             hideOnScroll: true,
-            links: [
+            items: [
                 {
                     to: 'docs/introduction/what-is-kea',
                     activeBasePath: 'docs',

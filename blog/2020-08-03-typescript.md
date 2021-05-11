@@ -1,5 +1,5 @@
 ---
-id: typescript
+slug: typescript
 title: 'TypeScript Support in Kea (The Long Road)'
 author: Marius Andra
 author_title: Kea Core Team

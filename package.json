@@ -9,16 +9,16 @@
     "deploy": "docusaurus deploy"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.54",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.54",
-    "classnames": "^2.2.6",
-    "kea": "2.2.0-beta.11",
+    "@docusaurus/core": "^2.0.0-alpha.75",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.75",
+    "classnames": "^2.3.1",
+    "kea": "2.4.0",
     "posthog-docusaurus": "^1.0.3",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-gist": "^1.2.1",
-    "react-redux": "^7.2.0",
-    "redux": "^4.0.5",
+    "react-redux": "^7.2.4",
+    "redux": "^4.1.0",
     "reselect": "^4.0.0"
   },
   "browserslist": {
@@ -34,10 +34,10 @@
     ]
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^2.0.0-alpha.51",
-    "husky": "^4.2.5",
-    "kea-typegen": "^0.1.0",
-    "prettier": "2.0.5",
+    "@docusaurus/module-type-aliases": "^2.0.0-alpha.75",
+    "husky": "^6.0.0",
+    "kea-typegen": "^0.7.1",
+    "prettier": "2.3.0",
     "pretty-quick": "^2.0.1",
     "typescript": "^3.9.7"
   }
