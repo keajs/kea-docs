@@ -138,24 +138,24 @@ export function IntroCode() {
                             <L>{'        openPage: (page, perPage = 50) => ({ page, perPage }),'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 😇 all actions must be pure functions'}</L>
-                            <L>{'        // 🚫 they do not call any APIs directly'}</L>
                             <L>{'        // 💡 they singal intent: something is about to happen'}</L>
+                            <L>{'        // 🚫 they do not call any APIs directly'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
                         <L>{'    actions: { #[logicActions]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // 📦 action payloads can be stored in a reducer'}</L>
+                    <L>{'    // 📦 actions modify values stored in reducers'}</L>
                     {expanded?.logicReducers ? (
                         <>
                             <L>{'    reducers: { #[logicReducers]#'}</L>
                             <L>{'        // 🍭 this is syntactic sugar over standard redux reducers'}</L>
                             <L>{'        username: ['}</L>
-                            <L>{'            "keajs", // 💬 the default value'}</L>
+                            <L>{'            // 💬 the default username'}</L>
+                            <L>{'            "keajs",'}</L>
                             <L>{'            {'}</L>
-                            <L>{'                // 🎯 update the value on any of these actions'}</L>
-                            <L>{'                // 👀 actionName: (state, payload) => newState'}</L>
+                            <L>{'                // 👀 action: (state, payload) => newState'}</L>
                             <L>{'                setUsername: (_, { username }) => username,'}</L>
                             <L>{'                capitalize: (state) => state.toUpperCase(),'}</L>
                             <L>{'                reset: () => "keajs",'}</L>
@@ -174,7 +174,7 @@ export function IntroCode() {
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        // 😇 reducers are pure functions as well'}</L>
-                            <L>{'        // 🙅 you may not dispatch other actions nor call any APIs in them'}</L>
+                            <L>{'        // 🚫 no API calls or other side effects allowed'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
