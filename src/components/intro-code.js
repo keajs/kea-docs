@@ -22,12 +22,20 @@ const introCodeLogic = kea({
 
 function Expand({ code }) {
     const { expand } = useActions(introCodeLogic)
-    return <button className='expand' onClick={() => expand(code)}>+</button>
+    return (
+        <button className="expand" onClick={() => expand(code)}>
+            +
+        </button>
+    )
 }
 
 function Shrink({ code }) {
     const { shrink } = useActions(introCodeLogic)
-    return <button className='shrink' onClick={() => shrink(code)}>-</button>
+    return (
+        <button className="shrink" onClick={() => shrink(code)}>
+            -
+        </button>
+    )
 }
 
 function L({ children }) {
@@ -43,6 +51,12 @@ function L({ children }) {
             <span>
                 <span style={{ color: 'brown' }}>{str.substring(0, str.length - 2)}</span>
                 {' ('}
+            </span>
+        ),
+        '[a-zA-Z_-]+: async': (str) => (
+            <span>
+                <span style={{ color: 'brown' }}>{str.substring(0, str.length - 5)}</span>
+                <span style={{ color: 'blue' }}>{'async'}</span>
             </span>
         ),
         '[a-zA-Z_-]+:': 'purple',
@@ -88,7 +102,15 @@ function L({ children }) {
         return element
     }
 
-    return <div className={`code-line`}>{split(children)}</div>
+    const commentMarginExtra = children.match(/ *\/\//) ? 52 : 20
+    const numberOfSpaces = children.replace(/^( *)[^ ]*.*$/, '$1').length
+    const style = { marginLeft: numberOfSpaces * 4 + commentMarginExtra, textIndent: -commentMarginExtra }
+
+    return (
+        <div className={`code-line`} style={style}>
+            {split(children.trim())}
+        </div>
+    )
 }
 
 export function IntroCode() {
@@ -115,23 +137,24 @@ export function IntroCode() {
                             <L>{'        // 🍱 some take multiple args and defaults'}</L>
                             <L>{'        openPage: (page, perPage = 50) => ({ page, perPage }),'}</L>
                             <L>{'        '}</L>
-                            <L>{'        // 🚫 actions do not modify data nor call any API.'}</L>
-                            <L>{'        // 😇 they are pure functions'}</L>
+                            <L>{'        // 😇 all actions must be pure functions'}</L>
+                            <L>{'        // 🚫 they do not call any APIs directly'}</L>
+                            <L>{'        // 💡 they singal intent: something is about to happen'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
                         <L>{'    actions: { #[logicActions]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // 📦 the payload of an action can be stored in a reducer'}</L>
+                    <L>{'    // 📦 action payloads can be stored in a reducer'}</L>
                     {expanded?.logicReducers ? (
                         <>
                             <L>{'    reducers: { #[logicReducers]#'}</L>
-                            <L>{'        // 🍭 syntactic sugar over standard redux reducers'}</L>
+                            <L>{'        // 🍭 this is syntactic sugar over standard redux reducers'}</L>
                             <L>{'        username: ['}</L>
                             <L>{'            "keajs", // 💬 the default value'}</L>
                             <L>{'            {'}</L>
-                            <L>{'                // 🎯 update the value when any of these actions is dispatched'}</L>
+                            <L>{'                // 🎯 update the value on any of these actions'}</L>
                             <L>{'                // 👀 actionName: (state, payload) => newState'}</L>
                             <L>{'                setUsername: (_, { username }) => username,'}</L>
                             <L>{'                capitalize: (state) => state.toUpperCase(),'}</L>
@@ -158,11 +181,23 @@ export function IntroCode() {
                         <L>{'    reducers: { #[logicReducers]# },'}</L>
                     )}
                     <L>{'    '}</L>
+                    <L>{'    // 🔨 listen to actions and run side-effects'}</L>
+                    {expanded?.logicListeners ? (
+                        <>
+                            <L>{'    listeners: { #[logicListeners]#'}</L>
+                            <L>{'        // called as soon as the setUsername action is dispatched'}</L>
+                            <L>{'        setUsername: async ({ username }, breakpoint) => {'}</L>
+                            <L>{'            await breakpoint(300) // debounce for 300ms'}</L>
+                            <L>{'            // breakpoints throw if the action is called while'}</L>
+                            <L>{'        }'}</L>
+                            <L>{'    },'}</L>
+                        </>
+                    ) : (
+                        <L>{'    listeners: { #[logicListeners]# },'}</L>
+                    )}
+                    <L>{'    '}</L>
                     <L>{'    // 👨‍👩‍👧‍👦 combine and memoize values'}</L>
                     <L>{'    selectors: { #[logicSelectors]# },'}</L>
-                    <L>{'    '}</L>
-                    <L>{'    // 🔥 run random javascript on actions'}</L>
-                    <L>{'    listeners: { #[logicListeners]# },'}</L>
                     <L>{'    '}</L>
                     <L>{'    // 💾 data that needs to be loaded from somewhere'}</L>
                     <L>{'    loaders: { #[logicLoaders]# },'}</L>
