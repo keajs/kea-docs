@@ -102,9 +102,12 @@ function L({ children }) {
         return element
     }
 
-    const commentMarginExtra = children.match(/ *\/\//) ? 52 : 20
-    const numberOfSpaces = children.replace(/^( *)[^ ]*.*$/, '$1').length
-    const style = { marginLeft: numberOfSpaces * 4 + commentMarginExtra, textIndent: -commentMarginExtra }
+    const commentMarginExtra = children.match(/ *\/\//) ? 5.7 * 0.6 : 2 * 0.6
+    const numberOfSpaces = children.replace(/^( *)[^ ]*.*$/, '$1').length / 2
+    const style = {
+        marginLeft: `${numberOfSpaces * 0.6 + commentMarginExtra}em`,
+        textIndent: `${-commentMarginExtra}em`,
+    }
 
     return (
         <div className={`code-line`} style={style}>
@@ -133,7 +136,7 @@ export function IntroCode() {
                             <L>{'        '}</L>
                             <L>{'        // 📦 some carry a payload'}</L>
                             <L>{'        setUsername: (username) => ({ username }),'}</L>
-                            <L>{'        repositoriesLoaded: (respositories) => ({ respositories }),'}</L>
+                            <L>{'        repositoriesLoaded: (repositories) => ({ repositories }),'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 🍱 some take multiple args and defaults'}</L>
                             <L>{'        openPage: (page, perPage = 50) => ({ page, perPage }),'}</L>
@@ -155,18 +158,19 @@ export function IntroCode() {
                             <L>{'        username: ['}</L>
                             <L>{'            // 💬 the default username'}</L>
                             <L>{'            "keajs",'}</L>
-                            <L>{'            // 👀 actions that modify its state'}</L>
+                            <L>{'            // 🚀 actions that modify its state'}</L>
                             <L>{'            {'}</L>
-                            <L>{'                // 👀 action: (state, payload) => newState'}</L>
                             <L>{'                setUsername: (_, { username }) => username,'}</L>
                             <L>{'                capitalize: (state) => state.toUpperCase(),'}</L>
                             <L>{'                reset: () => "keajs",'}</L>
+                            <L>{'                // 👀 action: (state, payload) => newState'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        repositories: ['}</L>
                             <L>{'            [],'}</L>
                             <L>{'            {'}</L>
-                            <L>{'                repositoriesLoaded: (_, { respositories }) => respositories,'}</L>
+                            <L>{'                repositoriesLoaded: (_, { repositories }) => repositories,'}</L>
+                            <L>{'                reset: () => [],'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        page: ['}</L>
@@ -193,7 +197,7 @@ export function IntroCode() {
                     {expanded?.logicListeners ? (
                         <>
                             <L>{'    listeners: ({ actions }) => ({ #[logicListeners]#'}</L>
-                            <L>{'        // 🎯 called as soon as the "setUsername" action is dispatched'}</L>
+                            <L>{'        // 🎯 called as soon as the "setUsername" action fires'}</L>
                             <L>{'        setUsername: async ({ username }, breakpoint) => {'}</L>
                             <L>{'            // ⏳ delay for 300ms'}</L>
                             <L>{'            // 💔 break if the action is triggered again while we wait'}</L>
@@ -201,19 +205,23 @@ export function IntroCode() {
                             <L>{'            await breakpoint(300)'}</L>
                             <L>{'            '}</L>
                             <L>{'            // 🌐 make an API call'}</L>
-                            <L>{'            const repositories = await api.fetch(username)'}</L>
+                            <L>{'            const repositories = await api.getRepositories(username)'}</L>
                             <L>{'            '}</L>
                             <L>
                                 {
-                                    '            // 💔 break if "setUsername" dispatched while we were waiting for the API'
+                                    '            // 💔 break if "setUsername" was called again while we were waiting for the API'
                                 }
                             </L>
                             <L>{'            // 💡 this avoids saving stale and out-of-order data'}</L>
                             <L>{'            breakpoint()'}</L>
                             <L>{'            '}</L>
-                            <L>{'            // 🔨 store the results by dispatching another action'}</L>
+                            <L>{'            // 🔨 store the results by calling another action'}</L>
                             <L>{'            actions.setRepositories(repositories)'}</L>
-                            <L>{'        }'}</L>
+                            <L>{'        },'}</L>
+                            <L>{'        // 🎯 called as soon as the "setPage" action fires'}</L>
+                            <L>{'        setPage: ({ page }) => {'}</L>
+                            <L>{'            console.log("page changed", { page }}'}</L>
+                            <L>{'        },'}</L>
                             <L>{'    }),'}</L>
                         </>
                     ) : (
@@ -221,19 +229,71 @@ export function IntroCode() {
                     )}
                     <L>{'    '}</L>
                     <L>{'    // 👨‍👩‍👧‍👦 combine and memoize values'}</L>
-                    <L>{'    selectors: { #[logicSelectors]# },'}</L>
+                    {expanded?.logicSelectors ? (
+                        <>
+                            <L>{'    selectors: { #[logicSelectors]#,'}</L>
+                            <L>{'    },'}</L>
+                        </>
+                    ) : (
+                        <L>{'    selectors: { #[logicSelectors]# },'}</L>
+                    )}
                     <L>{'    '}</L>
                     <L>{'    // 💾 data that needs to be loaded from somewhere'}</L>
-                    <L>{'    loaders: { #[logicLoaders]# },'}</L>
+                    {expanded?.logicLoaders ? (
+                        <>
+                            <L>{'    loaders: { #[logicLoaders]#,'}</L>
+                            <L>{'    },'}</L>
+                        </>
+                    ) : (
+                        <L>{'    loaders: { #[logicLoaders]# },'}</L>
+                    )}
                     <L>{'    '}</L>
                     <L>{'    // 🌍 location.href change triggers an action'}</L>
-                    <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
+                    {expanded?.logicUrlToAction ? (
+                        <>
+                            <L>{'    urlToAction: { #[logicUrlToAction]#,'}</L>
+                            <L>{'    },'}</L>
+                        </>
+                    ) : (
+                        <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
+                    )}
                     <L>{'    '}</L>
                     <L>{'    // 🎯 change location.href when an action fires'}</L>
-                    <L>{'    actionToUrl: { #[logicActionToUrl]# },'}</L>
+                    {expanded?.logicActionToUrl ? (
+                        <>
+                            <L>{'    actionToUrl: { #[logicActionToUrl]#,'}</L>
+                            <L>{'    },'}</L>
+                        </>
+                    ) : (
+                        <L>{'    actionToUrl: { #[logicActionToUrl]# },'}</L>
+                    )}
                     <L>{'    '}</L>
                     <L>{'    // ☀️ lifecycles: afterMount and beforeUnmount'}</L>
-                    <L>{'    events: { #[logicEvents]# },'}</L>
+                    {expanded?.logicEvents ? (
+                        <>
+                            <L>{'    events: ({ actions, values, cache }) => ({ #[logicEvents]#,'}</L>
+                            <L>{'        afterMount: () => {'}</L>
+                            <L>
+                                {
+                                    '            // 👻 set username to its value to trigger the listener and fetch repositories'
+                                }
+                            </L>
+                            <L>{'            actions.setUsername(values.username)'}</L>
+                            <L>{'            '}</L>
+                            <L>{'            // ⏰ use "cache" for temporary event listeners, timeouts, etc'}</L>
+                            <L>{'            cache.interval = window.setInterval(() => {'}</L>
+                            <L>{'                console.log("🏓 ping? pong!")'}</L>
+                            <L>{'            }, 1000)'}</L>
+                            <L>{'        },'}</L>
+                            <L>{'        beforeUnmount: () => {'}</L>
+                            <L>{'            console.log("👋 bye bye")'}</L>
+                            <L>{'            window.clearInterval(cache.interval)'}</L>
+                            <L>{'        },'}</L>
+                            <L>{'    }),'}</L>
+                        </>
+                    ) : (
+                        <L>{'    events: { #[logicEvents]# },'}</L>
+                    )}
                     <L>{'    '}</L>
                     <L>{'})'}</L>
                 </>
@@ -242,7 +302,15 @@ export function IntroCode() {
             )}
             <L>{''}</L>
             <L>{'// ⚛️ and your views in React'}</L>
-            <L>{'function Component() { #[component]# }'}</L>
+            {expanded?.component ? (
+                <>
+                    <L>{'function Component() { #[component]#'}</L>
+                    <L>{'    return <div />'}</L>
+                    <L>{'}'}</L>
+                </>
+            ) : (
+                <L>{'function Component() { #[component]# }'}</L>
+            )}
         </>
     )
 }
