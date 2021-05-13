@@ -47,6 +47,7 @@ function L({ children }) {
 
     const rules = {
         '//.*': 'gray',
+        '/\\*[^\\*]+\\*/': 'gray',
         '[a-zA-Z_-]+: \\(': (str) => (
             <span>
                 <span style={{ color: 'brown' }}>{str.substring(0, str.length - 2)}</span>
@@ -62,6 +63,7 @@ function L({ children }) {
         '[a-zA-Z_-]+:': 'purple',
         '"[^"]+"': 'green',
         "'[^']+'": 'green',
+        "`[^']+`": 'green',
         'const|function|async|await|true|false|return': 'blue',
         '[{}()]': 'black',
         '[0-9]': 'blue',
@@ -259,7 +261,11 @@ export function IntroCode() {
                             <L>{'        // 🚧 is anything loading'}</L>
                             <L>{'        isLoading: ['}</L>
                             <L>{'            (s) => [s.repositoriesLoading, s.userLoading],'}</L>
-                            <L>{'            (repositoriesLoading, userLoading) => repositoriesLoading || userLoading,'}</L>
+                            <L>
+                                {
+                                    '            (repositoriesLoading, userLoading) => repositoriesLoading || userLoading,'
+                                }
+                            </L>
                             <L>{'        ],'}</L>
                             <L>{'    },'}</L>
                         </>
@@ -271,7 +277,7 @@ export function IntroCode() {
                     {expanded?.logicLoaders ? (
                         <>
                             <L>{'    loaders: { #[logicLoaders]#,'}</L>
-                            <L>{'        // 🔌 loaders are enabled with the "kea-loaders" plugin'}</L>
+                            <L>{'        // 🔌 install the "kea-loaders" plugin to use'}</L>
                             <L>{'        // 🤠 the following creates two values: "user" and "userLoading"'}</L>
                             <L>{'        // 🙌 and two actions: "setUsernameSuccess" and "setUsernameFailure"'}</L>
                             <L>{'        user: {'}</L>
@@ -294,9 +300,11 @@ export function IntroCode() {
                     <L>{'    // 🌍 location.href change triggers an action'}</L>
                     {expanded?.logicUrlToAction ? (
                         <>
-                            <L>{'    urlToAction: { #[logicUrlToAction]#,'}</L>
-                            <L>{'        // 🔌 urlToAction is enabled with the "kea-router" plugin'}</L>
-                            <L>{'    },'}</L>
+                            <L>{'    urlToAction: ({ actions }) => ({ #[logicUrlToAction]#,'}</L>
+                            <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
+                            <L>{'        "/:username": ({ username }) => actions.setUsername(username),'}</L>
+                            <L>{'        "/": () => actions.setUsername("keajs"),'}</L>
+                            <L>{'    }),'}</L>
                         </>
                     ) : (
                         <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
@@ -306,7 +314,8 @@ export function IntroCode() {
                     {expanded?.logicActionToUrl ? (
                         <>
                             <L>{'    actionToUrl: { #[logicActionToUrl]#,'}</L>
-                            <L>{'        // 🔌 actionToUrl is enabled with the "kea-router" plugin'}</L>
+                            <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
+                            <L>{'        setUsername: ({ username }) => `/${username}`,'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
@@ -318,6 +327,8 @@ export function IntroCode() {
                         <>
                             <L>{'    events: ({ actions, values, cache }) => ({ #[logicEvents]#,'}</L>
                             <L>{'        afterMount: () => {'}</L>
+                            <L>{'            console.log("🏃 starting logic")'}</L>
+                            <L>{'            '}</L>
                             <L>
                                 {
                                     '            // 👻 set username to its value to trigger the listener and fetch repositories'
@@ -340,6 +351,69 @@ export function IntroCode() {
                         <L>{'    events: { #[logicEvents]# },'}</L>
                     )}
                     <L>{'    '}</L>
+                    <L>{'    #[logicMore]# // even more stuff'}</L>
+                    {expanded?.logicMore ? (
+                        <>
+                            <L>{'    '}</L>
+                            <L>{'    // 🪟 store values like window.innerWidth in the logic'}</L>
+                            {expanded?.logicWindowValues ? (
+                                <>
+                                    <L>{'    windowValues: { #[logicWindowValues]#,'}</L>
+                                    <L>{'        // 🔌 install the "kea-window-values" plugin to use'}</L>
+                                    <L>{'        isSmallScreen: (window) => window.innerWidth < 640,'}</L>
+                                    <L>{'        isRetina: (window) => window.devicePixelRatio > 2,'}</L>
+                                    <L>
+                                        {
+                                            '        scrollBarWidth: (window) => window.innerWidth - window.body.clientWidth,'
+                                        }
+                                    </L>
+                                    <L>{"        // 🚨 this obviously won't work with server side rendering"}</L>
+                                    <L>{'        // 💅 you should prefer CSS media queries if you need SSR'}</L>
+                                    <L>{'        // 🥊 this is perfect for full-screen client-side apps though'}</L>
+                                    <L>{'    },'}</L>
+                                </>
+                            ) : (
+                                <L>{'    windowValues: { #[logicWindowValues]# },'}</L>
+                            )}
+                            <L>{'    '}</L>
+                            <L>{'    // ⚒️ kea-saga: alternative side-effects via redux-saga'}</L>
+                            {expanded?.logicSagas ? (
+                                <>
+                                    <L>{'    sagas: [ #[logicSagas]#,'}</L>
+                                    <L>{'        function * () { /* sagas to start with the logic */ },'}</L>
+                                    <L>{'    ],'}</L>
+                                    <L>{'    // 🔌 install the "kea-saga" plugin to use'}</L>
+                                    <L>{'    start: function * () { /* run this on mount */ },'}</L>
+                                    <L>{'    stop: function * () { /* run this on unmount */ },'}</L>
+                                    <L>{'    takeEvery: () => ({ setUsername: function * () { ... } }),'}</L>
+                                    <L>{'    takeLatest: () => ({ setUsername: function * () { ... } }),'}</L>
+                                    <L>{'    workers: { /* shared code */ },'}</L>
+                                </>
+                            ) : (
+                                <L>{'    sagas: [ #[logicSagas]# ],'}</L>
+                            )}
+                            <L>{'    '}</L>
+                            <L>{'    // 🪵 kea-thunk: alternative side-effects via redux-thunk'}</L>
+                            {expanded?.logicThunks ? (
+                                <>
+                                    <L>{'    thunks: ({ actions }) => ({ #[logicThunks]#,'}</L>
+                                    <L>{'        // 🔌 install the "kea-thunk" plugin to use'}</L>
+                                    <L>{'        // 🤔 you probably want to use listeners instead'}</L>
+                                    <L>{'        // 🦕 because you can\'t use thunks in reducers'}</L>
+                                    <L>{'        fetchRepositories: ({ username }) => {,'}</L>
+                                    <L>{'            const repositories = await api.getRepositories(username)'}</L>
+                                    <L>{'            actions.setRepositories(repositories)'}</L>
+                                    <L>{'        },'}</L>
+                                    <L>{'    }),'}</L>
+                                </>
+                            ) : (
+                                <L>{'    thunks: { #[logicThunks]# },'}</L>
+                            )}
+                            <L>{'    '}</L>
+                            <L>{"    // 💯 don't see what you need? write your own plugin"}</L>
+                            <L>{'    youOwnPlugin: { /* go for it */ },'}</L>
+                        </>
+                    ) : null}
                     <L>{'})'}</L>
                 </>
             ) : (
