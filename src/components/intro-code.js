@@ -62,7 +62,7 @@ function L({ children }) {
         '[a-zA-Z_-]+:': 'purple',
         '"[^"]+"': 'green',
         "'[^']+'": 'green',
-        'const|function|async|await': 'blue',
+        'const|function|async|await|true|false|return': 'blue',
         '[{}()]': 'black',
         '[0-9]': 'blue',
         '#[[a-zA-Z]+]#': (str) => {
@@ -170,6 +170,13 @@ export function IntroCode() {
                             <L>{'                repositoriesLoaded: (_, { repositories }) => repositories,'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
+                            <L>{'        repositoriesLoading: ['}</L>
+                            <L>{'            false,'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                setUsername: () => true,'}</L>
+                            <L>{'                repositoriesLoaded: () => false,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
                             <L>{'        page: ['}</L>
                             <L>{'            1,'}</L>
                             <L>{'            {'}</L>
@@ -248,16 +255,36 @@ export function IntroCode() {
                             <L>{'                return repos.slice(perPage * (page - 1), perPage * page)'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
+                            <L>{'        '}</L>
+                            <L>{'        // 🚧 is anything loading'}</L>
+                            <L>{'        isLoading: ['}</L>
+                            <L>{'            (s) => [s.repositoriesLoading, s.userLoading],'}</L>
+                            <L>{'            (repositoriesLoading, userLoading) => repositoriesLoading || userLoading,'}</L>
+                            <L>{'        ],'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
                         <L>{'    selectors: { #[logicSelectors]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // 💾 data that needs to be loaded from somewhere'}</L>
+                    <L>{'    // 💾 use loaders for data that is loaded from somewhere'}</L>
                     {expanded?.logicLoaders ? (
                         <>
                             <L>{'    loaders: { #[logicLoaders]#,'}</L>
+                            <L>{'        // 🔌 loaders are enabled with the "kea-loaders" plugin'}</L>
+                            <L>{'        // 🤠 the following creates two values: "user" and "userLoading"'}</L>
+                            <L>{'        // 🙌 and two actions: "setUsernameSuccess" and "setUsernameFailure"'}</L>
+                            <L>{'        user: {'}</L>
+                            <L>{'            setUsername: async ({ username }, breakpoint) => {'}</L>
+                            <L>{'                // ⛹ debounce for 300ms, just like in the listener'}</L>
+                            <L>{'                await breakpoint(300)'}</L>
+                            <L>{'                // 👤 fetch the user'}</L>
+                            <L>{'                const user = await api.getUser(username)'}</L>
+                            <L>{'                // ✅ return it to store the value via "setUsernameSuccess"'}</L>
+                            <L>{'                return user'}</L>
+                            <L>{'                // 💣 all uncaught errors dispatch "setUsernameFailure"'}</L>
+                            <L>{'            }'}</L>
+                            <L>{'        },'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
@@ -268,6 +295,7 @@ export function IntroCode() {
                     {expanded?.logicUrlToAction ? (
                         <>
                             <L>{'    urlToAction: { #[logicUrlToAction]#,'}</L>
+                            <L>{'        // 🔌 urlToAction is enabled with the "kea-router" plugin'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
@@ -278,6 +306,7 @@ export function IntroCode() {
                     {expanded?.logicActionToUrl ? (
                         <>
                             <L>{'    actionToUrl: { #[logicActionToUrl]#,'}</L>
+                            <L>{'        // 🔌 actionToUrl is enabled with the "kea-router" plugin'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
