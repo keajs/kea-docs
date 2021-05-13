@@ -240,7 +240,7 @@ export function IntroCode() {
                     {expanded?.logicSelectors ? (
                         <>
                             <L>{'    selectors: { #[logicSelectors]#,'}</L>
-                            <L>{'        // ⭐ sort repos by star count'}</L>
+                            <L>{'        // ⭐ sort repositories by star count'}</L>
                             <L>{'        sortedRepositories: ['}</L>
                             <L>{'            (s) => [s.repositories],'}</L>
                             <L>
@@ -250,7 +250,7 @@ export function IntroCode() {
                             </L>
                             <L>{'        ],'}</L>
                             <L>{'        '}</L>
-                            <L>{'        // 👁️ only the currently visible repos'}</L>
+                            <L>{'        // 👁️ only show repositories for the active page'}</L>
                             <L>{'        repositoriesForPage: ['}</L>
                             <L>{'            (s) => [s.sortedRepositories, s.page, s.perPage],'}</L>
                             <L>{'            (repos, page, perPage) => {'}</L>
@@ -303,7 +303,7 @@ export function IntroCode() {
                         <L>{'    loaders: { #[logicLoaders]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // 🎯 change location.href when an action fires'}</L>
+                    <L>{'    // 🌍 change the browser URL when an action is dispatched'}</L>
                     {expanded?.logicActionToUrl ? (
                         <>
                             <L>{'    actionToUrl: { #[logicActionToUrl]#,'}</L>
@@ -315,7 +315,7 @@ export function IntroCode() {
                         <L>{'    actionToUrl: { #[logicActionToUrl]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // 🌍 location.href change triggers an action'}</L>
+                    <L>{'    // 🎯 dispatch an action when the browser URL changes'}</L>
                     {expanded?.logicUrlToAction ? (
                         <>
                             <L>{'    urlToAction: ({ actions }) => ({ #[logicUrlToAction]#,'}</L>
@@ -328,7 +328,7 @@ export function IntroCode() {
                         <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // ☀️ logic lifecycle: afterMount and beforeUnmount'}</L>
+                    <L>{'    // 🔁 logic lifecycle: afterMount and beforeUnmount'}</L>
                     {expanded?.logicEvents ? (
                         <>
                             <L>{'    events: ({ actions, values, cache }) => ({ #[logicEvents]#,'}</L>
@@ -383,7 +383,7 @@ export function IntroCode() {
                                 <L>{'    windowValues: { #[logicWindowValues]# },'}</L>
                             )}
                             <L>{'    '}</L>
-                            <L>{'    // ⚒️ kea-saga: alternative side-effects via redux-saga'}</L>
+                            <L>{'    // 🌅 kea-saga: alternative side-effects via redux-saga'}</L>
                             {expanded?.logicSagas ? (
                                 <>
                                     <L>{'    sagas: [ #[logicSagas]#,'}</L>
