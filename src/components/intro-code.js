@@ -196,7 +196,7 @@ export function IntroCode() {
                             <L>{'        // 🎯 called as soon as the "setUsername" action is dispatched'}</L>
                             <L>{'        setUsername: async ({ username }, breakpoint) => {'}</L>
                             <L>{'            // ⏳ delay for 300ms'}</L>
-                            <L>{'            // ✂️ break if the action is triggered again while we wait'}</L>
+                            <L>{'            // 💔 break if the action is triggered again while we wait'}</L>
                             <L>{'            // ⛹ this is effectively a built-in debounce'}</L>
                             <L>{'            await breakpoint(300)'}</L>
                             <L>{'            '}</L>
@@ -205,7 +205,7 @@ export function IntroCode() {
                             <L>{'            '}</L>
                             <L>
                                 {
-                                    '            // ✂️ break if "setUsername" dispatched while we were waiting for the API'
+                                    '            // 💔 break if "setUsername" dispatched while we were waiting for the API'
                                 }
                             </L>
                             <L>{'            // 💡 this avoids saving stale and out-of-order data'}</L>
