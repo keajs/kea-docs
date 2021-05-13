@@ -51,6 +51,10 @@ export const githubLogic = kea({
             console.log('page changed', { page })
         },
         setUsername: async ({ username }, breakpoint) => {
+            if (typeof window === 'undefined') {
+                // netlify ssr fix
+                return
+            }
             await breakpoint(300)
             const repositories = await api.getRepositories(username)
             breakpoint()
@@ -90,11 +94,6 @@ export const githubLogic = kea({
             },
         },
     },
-    // actionToUrl: { setUsername: ({ username }) => `/${username}` },
-    // urlToAction: ({ actions }) => ({
-    //     '/:username': ({ username }) => actions.setUsername(username),
-    //     '/': () => actions.setUsername('keajs'),
-    // }),
     events: ({ actions, values, cache }) => ({
         afterMount: () => {
             console.log('🏃 starting logic')
