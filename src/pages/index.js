@@ -193,7 +193,7 @@ function Home() {
                             )}
                             to={useBaseUrl('docs/introduction/what-is-kea')}
                         >
-                            Run the code above
+                            Read the docs to get started
                         </Link>
                     </div>
                 </div>
