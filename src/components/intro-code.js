@@ -72,7 +72,7 @@ function L({ children }) {
             return expanded[code] ? <Shrink code={code} /> : <Expand code={code} />
         },
 
-        kea: 'green',
+        'kea|useActions|useValues': 'green',
         '[a-zA-Z_-]+': 'black',
     }
 
@@ -251,11 +251,17 @@ export function IntroCode() {
                             <L>{'        ],'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 👁️ only the currently visible repos'}</L>
-                            <L>{'        repositoriesPerPage: ['}</L>
+                            <L>{'        repositoriesForPage: ['}</L>
                             <L>{'            (s) => [s.sortedRepositories, s.page, s.perPage],'}</L>
                             <L>{'            (repos, page, perPage) => {'}</L>
                             <L>{'                return repos.slice(perPage * (page - 1), perPage * page)'}</L>
                             <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        '}</L>
+                            <L>{'        // 📄 number of pages'}</L>
+                            <L>{'        pages: ['}</L>
+                            <L>{'            (s) => [s.sortedRepositories, s.perPage],'}</L>
+                            <L>{'            (repos, perPage) => Math.min(1, Math.ceil(repos.length / perPage)),'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 🚧 is anything loading'}</L>
@@ -322,7 +328,7 @@ export function IntroCode() {
                         <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // ☀️ lifecycles: afterMount and beforeUnmount'}</L>
+                    <L>{'    // ☀️ logic lifecycle: afterMount and beforeUnmount'}</L>
                     {expanded?.logicEvents ? (
                         <>
                             <L>{'    events: ({ actions, values, cache }) => ({ #[logicEvents]#,'}</L>
@@ -334,6 +340,7 @@ export function IntroCode() {
                                     '            // 👻 set username to its value to trigger the listener and fetch repositories'
                                 }
                             </L>
+                            <L>{'            // 💡 this is actually not needed because we are also using urlToAction, which dispatches an action after mount'}</L>
                             <L>{'            actions.setUsername(values.username)'}</L>
                             <L>{'            '}</L>
                             <L>{'            // ⏰ use "cache" for temporary event listeners, timeouts, etc'}</L>
@@ -424,7 +431,14 @@ export function IntroCode() {
             {expanded?.component ? (
                 <>
                     <L>{'function Component() { #[component]#'}</L>
-                    <L>{'    return <div />'}</L>
+                    <L>{'    const { setUsername, openPage } = useActions(logic)'}</L>
+                    <L>{'    const { repositoriesForPage, page, perPage, pages, user, username, isLoading } = useValues(logic)'}</L>
+                    <L>{'    '}</L>
+                    <L>{'    return ('}</L>
+                    <L>{'        <div>'}</L>
+                    <L>{'            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}>'}</L>
+                    <L>{'        </div>'}</L>
+                    <L>{'    )'}</L>
                     <L>{'}'}</L>
                 </>
             ) : (
