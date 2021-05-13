@@ -297,6 +297,18 @@ export function IntroCode() {
                         <L>{'    loaders: { #[logicLoaders]# },'}</L>
                     )}
                     <L>{'    '}</L>
+                    <L>{'    // 🎯 change location.href when an action fires'}</L>
+                    {expanded?.logicActionToUrl ? (
+                        <>
+                            <L>{'    actionToUrl: { #[logicActionToUrl]#,'}</L>
+                            <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
+                            <L>{'        setUsername: ({ username }) => `/${username}`,'}</L>
+                            <L>{'    },'}</L>
+                        </>
+                    ) : (
+                        <L>{'    actionToUrl: { #[logicActionToUrl]# },'}</L>
+                    )}
+                    <L>{'    '}</L>
                     <L>{'    // 🌍 location.href change triggers an action'}</L>
                     {expanded?.logicUrlToAction ? (
                         <>
@@ -308,18 +320,6 @@ export function IntroCode() {
                         </>
                     ) : (
                         <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
-                    )}
-                    <L>{'    '}</L>
-                    <L>{'    // 🎯 change location.href when an action fires'}</L>
-                    {expanded?.logicActionToUrl ? (
-                        <>
-                            <L>{'    actionToUrl: { #[logicActionToUrl]#,'}</L>
-                            <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
-                            <L>{'        setUsername: ({ username }) => `/${username}`,'}</L>
-                            <L>{'    },'}</L>
-                        </>
-                    ) : (
-                        <L>{'    actionToUrl: { #[logicActionToUrl]# },'}</L>
                     )}
                     <L>{'    '}</L>
                     <L>{'    // ☀️ lifecycles: afterMount and beforeUnmount'}</L>
