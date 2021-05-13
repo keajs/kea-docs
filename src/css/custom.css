@@ -15,6 +15,13 @@
   --ifm-color-primary-lighter: hsl(123, 43%, 49%);
   --ifm-color-primary-lightest: hsl(123, 43%, 54%);
   --ifm-code-font-size: 95%;
+
+  --code-color-blue: blue;
+  --code-color-brown: brown;
+  --code-color-purple: purple;
+  --code-color-green: green;
+  --code-color-gray: gray;
+  --code-color-black: black;
 }
 
 html[data-theme="dark"]:root  {
@@ -26,6 +33,13 @@ html[data-theme="dark"]:root  {
   --ifm-color-primary-lighter: hsl(123, 43%, 69%);
   --ifm-color-primary-lightest: hsl(123, 43%, 74%);
   --ifm-code-font-size: 95%;
+
+  --code-color-blue: #77b2ee;
+  --code-color-brown: #ffbc00;
+  --code-color-purple: #e390ff;
+  --code-color-green: #44d544;
+  --code-color-gray: #bbb;
+  --code-color-black: white;
 }
 
 .docusaurus-highlight-code-line {

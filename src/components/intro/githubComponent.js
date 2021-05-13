@@ -43,10 +43,10 @@ export function Github() {
                                 Showing page <strong>{page}</strong> out of <strong>{pages}</strong>.
                             </div>
                             <div>
-                                <button onClick={() => openPage(page - 1)} disabled={page <= 1}>
+                                <button onClick={() => openPage(page - 1)} disabled={page <= 1} className='button button--primary button--sm'>
                                     &laquo; Previous Page
                                 </button>{' '}
-                                <button onClick={() => openPage(page + 1)} disabled={page >= pages}>
+                                <button onClick={() => openPage(page + 1)} disabled={page >= pages} className='button button--primary button--sm'>
                                     Next Page &raquo;
                                 </button>
                             </div>

@@ -33,7 +33,7 @@ function Shrink({ code }) {
     const { shrink } = useActions(introCodeLogic)
     return (
         <button className="shrink" onClick={() => shrink(code)}>
-            -
+            −
         </button>
     )
 }
@@ -50,14 +50,14 @@ function L({ children }) {
         '/\\*[^\\*]+\\*/': 'gray',
         '[a-zA-Z_-]+: \\(': (str) => (
             <span>
-                <span style={{ color: 'brown' }}>{str.substring(0, str.length - 2)}</span>
+                <span style={{ color: 'var(--code-color-brown)' }}>{str.substring(0, str.length - 2)}</span>
                 {' ('}
             </span>
         ),
         '[a-zA-Z_-]+: async': (str) => (
             <span>
-                <span style={{ color: 'brown' }}>{str.substring(0, str.length - 5)}</span>
-                <span style={{ color: 'blue' }}>{'async'}</span>
+                <span style={{ color: 'var(--code-color-brown)' }}>{str.substring(0, str.length - 5)}</span>
+                <span style={{ color: 'var(--code-color-blue)' }}>{'async'}</span>
             </span>
         ),
         '[a-zA-Z_-]+:': 'purple',
@@ -98,7 +98,7 @@ function L({ children }) {
                                 return <span key={`${newCounter}`}>{colorOrFunction(splitPart)}</span>
                             }
                             return (
-                                <span key={`${newCounter}`} style={{ color: colorOrFunction }}>
+                                <span key={`${newCounter}`} style={{ color: `var(--code-color-${colorOrFunction})` }}>
                                     {splitPart}
                                 </span>
                             )

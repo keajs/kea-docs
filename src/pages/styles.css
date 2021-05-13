@@ -230,3 +230,16 @@ html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(2) {
     color: #fff;
     cursor: pointer;
 }
+
+.home-intro-code .code-line button:hover {
+    background-color: #555;
+}
+
+html[data-theme='dark'] .home-intro-code .code-line button {
+    background-color: hsl(120, 38%, 79%);
+    color: black;
+}
+
+html[data-theme='dark'] .home-intro-code .code-line button:hover {
+    background-color: hsl(120, 58%, 59%);
+}
