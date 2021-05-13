@@ -214,7 +214,6 @@ html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(2) {
     margin: 0 auto;
     text-align: left;
     margin-bottom: 40px;
-    white-space: pre-wrap;
 }
 
 .home-intro-code .code-line {
@@ -226,4 +225,5 @@ html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(2) {
     padding: 2px 8px;
     background-color: #888;
     color: #fff;
+    cursor: pointer;
 }

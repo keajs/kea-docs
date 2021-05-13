@@ -42,7 +42,7 @@ function L({ children }) {
     const { expanded } = useValues(introCodeLogic)
 
     if (typeof children !== 'string') {
-        return children
+        return children || ''
     }
 
     const rules = {
@@ -62,7 +62,7 @@ function L({ children }) {
         '[a-zA-Z_-]+:': 'purple',
         '"[^"]+"': 'green',
         "'[^']+'": 'green',
-        'const|function': 'blue',
+        'const|function|async|await': 'blue',
         '[{}()]': 'black',
         '[0-9]': 'blue',
         '#[[a-zA-Z]+]#': (str) => {
@@ -108,7 +108,7 @@ function L({ children }) {
 
     return (
         <div className={`code-line`} style={style}>
-            {split(children.trim())}
+            {split(children.substring(numberOfSpaces).trim())}
         </div>
     )
 }
@@ -133,6 +133,7 @@ export function IntroCode() {
                             <L>{'        '}</L>
                             <L>{'        // 📦 some carry a payload'}</L>
                             <L>{'        setUsername: (username) => ({ username }),'}</L>
+                            <L>{'        repositoriesLoaded: (respositories) => ({ respositories }),'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 🍱 some take multiple args and defaults'}</L>
                             <L>{'        openPage: (page, perPage = 50) => ({ page, perPage }),'}</L>
@@ -154,11 +155,18 @@ export function IntroCode() {
                             <L>{'        username: ['}</L>
                             <L>{'            // 💬 the default username'}</L>
                             <L>{'            "keajs",'}</L>
+                            <L>{'            // 👀 actions that modify its state'}</L>
                             <L>{'            {'}</L>
                             <L>{'                // 👀 action: (state, payload) => newState'}</L>
                             <L>{'                setUsername: (_, { username }) => username,'}</L>
                             <L>{'                capitalize: (state) => state.toUpperCase(),'}</L>
                             <L>{'                reset: () => "keajs",'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        repositories: ['}</L>
+                            <L>{'            [],'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                repositoriesLoaded: (_, { respositories }) => respositories,'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        page: ['}</L>
@@ -181,16 +189,32 @@ export function IntroCode() {
                         <L>{'    reducers: { #[logicReducers]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // 🔨 listen to actions and run side-effects'}</L>
+                    <L>{'    // 🔨 actions trigger listeners'}</L>
                     {expanded?.logicListeners ? (
                         <>
-                            <L>{'    listeners: { #[logicListeners]#'}</L>
-                            <L>{'        // called as soon as the setUsername action is dispatched'}</L>
+                            <L>{'    listeners: ({ actions }) => ({ #[logicListeners]#'}</L>
+                            <L>{'        // 🎯 called as soon as the "setUsername" action is dispatched'}</L>
                             <L>{'        setUsername: async ({ username }, breakpoint) => {'}</L>
-                            <L>{'            await breakpoint(300) // debounce for 300ms'}</L>
-                            <L>{'            // breakpoints throw if the action is called while'}</L>
+                            <L>{'            // ⏳ delay for 300ms'}</L>
+                            <L>{'            // ✂️ break if the action is triggered again while we wait'}</L>
+                            <L>{'            // ⛹ this is effectively a built-in debounce'}</L>
+                            <L>{'            await breakpoint(300)'}</L>
+                            <L>{'            '}</L>
+                            <L>{'            // 🌐 make an API call'}</L>
+                            <L>{'            const repositories = await api.fetch(username)'}</L>
+                            <L>{'            '}</L>
+                            <L>
+                                {
+                                    '            // ✂️ break if "setUsername" dispatched while we were waiting for the API'
+                                }
+                            </L>
+                            <L>{'            // 💡 this avoids saving stale and out-of-order data'}</L>
+                            <L>{'            breakpoint()'}</L>
+                            <L>{'            '}</L>
+                            <L>{'            // 🔨 store the results by dispatching another action'}</L>
+                            <L>{'            actions.setRepositories(repositories)'}</L>
                             <L>{'        }'}</L>
-                            <L>{'    },'}</L>
+                            <L>{'    }),'}</L>
                         </>
                     ) : (
                         <L>{'    listeners: { #[logicListeners]# },'}</L>
