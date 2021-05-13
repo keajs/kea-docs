@@ -13,6 +13,7 @@
     "@docusaurus/preset-classic": "^2.0.0-alpha.75",
     "classnames": "^2.3.1",
     "kea": "2.4.0",
+    "kea-loaders": "^0.4.0",
     "posthog-docusaurus": "^1.0.3",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",

@@ -5,6 +5,9 @@
 .hero.hero--primary {
     color: white !important;
 }
+.hero.hero--primary .example-panel {
+    color: var(--ifm-font-color-base);
+}
 
 .hero.hero--primary a.button:not(:hover) {
     color: white !important;

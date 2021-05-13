@@ -1,0 +1,57 @@
+import * as React from 'react'
+import { useActions, useValues } from 'kea'
+import { githubLogic } from './githubLogic'
+
+export function Github() {
+    const { user, username, isLoading, sortedRepositories, repositoriesForPage, page, pages } = useValues(githubLogic)
+    const { setUsername, openPage } = useActions(githubLogic)
+
+    return (
+        <div className="example-github-scene">
+            <div style={{ marginBottom: 20 }}>
+                <h3>Search for a GitHub user</h3>
+                <input value={username} type="text" onChange={(e) => setUsername(e.target.value)} />
+            </div>
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : repositoriesForPage.length > 0 ? (
+                <div>
+                    Found {sortedRepositories.length} repositories for user <strong>{username}</strong>
+                    {user?.name ? (
+                        <>
+                            {' '}
+                            (<strong>{user.name}</strong>)!
+                        </>
+                    ) : null}
+                    <br />
+                    {repositoriesForPage.map((repo) => (
+                        <div key={repo.id}>
+                            <a href={repo.html_url} target="_blank">
+                                {repo.full_name}
+                            </a>
+                            {' - '}
+                            {repo.stargazers_count} stars, {repo.forks} forks.
+                        </div>
+                    ))}
+                    {pages > 1 ? (
+                        <div style={{ marginTop: 20, textAlign: 'center' }}>
+                            <div style={{ marginBottom: 5 }}>
+                                Showing page <strong>{page}</strong> out of <strong>{pages}</strong>.
+                            </div>
+                            <div>
+                                <button onClick={() => openPage(page - 1)} disabled={page <= 1}>
+                                    &laquo; Previous Page
+                                </button>{' '}
+                                <button onClick={() => openPage(page + 1)} disabled={page >= pages}>
+                                    Next Page &raquo;
+                                </button>
+                            </div>
+                        </div>
+                    ) : null}
+                </div>
+            ) : (
+                <div>No repositories found</div>
+            )}
+        </div>
+    )
+}

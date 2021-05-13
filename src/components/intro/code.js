@@ -140,7 +140,7 @@ export function IntroCode() {
                             <L>{'        repositoriesLoaded: (repositories) => ({ repositories }),'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 🍱 some take multiple args and defaults'}</L>
-                            <L>{'        openPage: (page, perPage = 50) => ({ page, perPage }),'}</L>
+                            <L>{'        openPage: (page, perPage = 10) => ({ page, perPage }),'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 😇 all actions must be pure functions'}</L>
                             <L>{'        // 💡 they singal intent: something is about to happen'}</L>
@@ -182,14 +182,14 @@ export function IntroCode() {
                             <L>{'        page: ['}</L>
                             <L>{'            1,'}</L>
                             <L>{'            {'}</L>
-                            <L>{'                setPage: (_, { page }) => page,'}</L>
+                            <L>{'                openPage: (_, { page }) => page,'}</L>
                             <L>{'                repositoriesLoaded: () => 1,'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        perPage: ['}</L>
-                            <L>{'            20,'}</L>
+                            <L>{'            10,'}</L>
                             <L>{'            {'}</L>
-                            <L>{'                setPage: (_, { perPage }) => perPage,'}</L>
+                            <L>{'                openPage: (_, { perPage }) => perPage,'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        // 😇 reducers are pure functions as well'}</L>
@@ -204,9 +204,9 @@ export function IntroCode() {
                     {expanded?.logicListeners ? (
                         <>
                             <L>{'    listeners: ({ actions }) => ({ #[logicListeners]#'}</L>
-                            <L>{'        // 🎯 called as soon as the "setPage" action fires'}</L>
-                            <L>{'        setPage: ({ page }) => {'}</L>
-                            <L>{'            console.log("page changed", { page }}'}</L>
+                            <L>{'        // 🎯 called as soon as the "openPage" action fires'}</L>
+                            <L>{'        openPage: ({ page }) => {'}</L>
+                            <L>{'            console.log("page changed", { page })'}</L>
                             <L>{'        },'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 👜 fetch repositories when the "setUsername" action fires'}</L>
@@ -228,7 +228,7 @@ export function IntroCode() {
                             <L>{'            breakpoint()'}</L>
                             <L>{'            '}</L>
                             <L>{'            // 🔨 store the results by calling another action'}</L>
-                            <L>{'            actions.setRepositories(repositories)'}</L>
+                            <L>{'            actions.repositoriesLoaded(repositories)'}</L>
                             <L>{'        },'}</L>
                             <L>{'    }),'}</L>
                         </>
@@ -261,7 +261,7 @@ export function IntroCode() {
                             <L>{'        // 📄 number of pages'}</L>
                             <L>{'        pages: ['}</L>
                             <L>{'            (s) => [s.sortedRepositories, s.perPage],'}</L>
-                            <L>{'            (repos, perPage) => Math.min(1, Math.ceil(repos.length / perPage)),'}</L>
+                            <L>{'            (repos, perPage) => Math.ceil(repos.length / perPage),'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 🚧 is anything loading'}</L>

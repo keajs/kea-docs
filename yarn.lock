@@ -5498,6 +5498,11 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
+kea-loaders@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/kea-loaders/-/kea-loaders-0.4.0.tgz#4639dda7b213e45fe1276ec63f53fb4e8b4ee9fc"
+  integrity sha512-pIBGVdf25BxlZWK5gEa44DxM4GwRdtb4WTGYTcDUBeqSDsoaR0SE432C3Uio1xBxXPuty4B6Hfn+ShKeWo7uXw==
+
 kea-typegen@^0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/kea-typegen/-/kea-typegen-0.7.1.tgz#069b230fe00d10ca575bcd45c190bb1a2723dbd7"
