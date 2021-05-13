@@ -65,13 +65,16 @@ function L({ children }) {
         "'[^']+'": 'green',
         "`[^']+`": 'green',
         'const|function|async|await|true|false|return|throw|new': 'blue',
+        '(?<=<\)[a-zA-Z0-9]+(?=[> ])': 'blue',
+        '(?<=<\)[a-zA-Z0-9]+$': 'blue',
+        '(?<=<\\/)[a-zA-Z0-9]+(?=>)': 'blue',
+        '(?<=[^a-zA-Z0-9])[a-zA-Z0-9]+(?==)': 'blue',
         '[{}()]': 'black',
         '[0-9]': 'blue',
         '#[[a-zA-Z]+]#': (str) => {
             const code = str.substring(2, str.length - 2)
             return expanded[code] ? <Shrink code={code} /> : <Expand code={code} />
         },
-
         'kea|useActions|useValues': 'green',
         '[a-zA-Z_-]+': 'black',
     }
@@ -449,12 +452,53 @@ export function IntroCode() {
             {expanded?.component ? (
                 <>
                     <L>{'function Component() { #[component]#'}</L>
+                    <L>{'    // 🦜 fetch actions and values from Kea with hooks'}</L>
                     <L>{'    const { setUsername, openPage } = useActions(logic)'}</L>
-                    <L>{'    const { repositoriesForPage, page, perPage, pages, user, username, isLoading } = useValues(logic)'}</L>
+                    <L>{'    const { user, username, isLoading, sortedRepositories, repositoriesForPage, page, pages, error } = useValues(logic)'}</L>
                     <L>{'    '}</L>
+                    <L>{'    // 🎨 and then render the component'}</L>
                     <L>{'    return ('}</L>
-                    <L>{'        <div>'}</L>
-                    <L>{'            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}>'}</L>
+                    <L>{'        <div className="github-api-scene">'}</L>
+                    <L>{'            <div style={{ marginBottom: 20 }}>'}</L>
+                    <L>{'                <h3>Search for a GitHub user</h3>'}</L>
+                    <L>{'                <input value={username} type="text" onChange={(e) => setUsername(e.target.value)} />'}</L>
+                    <L>{'            </div>'}</L>
+                    <L>{'            {isLoading ? ('}</L>
+                    <L>{'                <div>Loading...</div>'}</L>
+                    <L>{'            ) : error ? ('}</L>
+                    <L>{'                <div>Error: {error}</div>'}</L>
+                    <L>{'            ) : repositoriesForPage.length === 0 ? ('}</L>
+                    <L>{'                <div>No repositories found</div>'}</L>
+                    <L>{'            ) : ('}</L>
+                    <L>{'                <div>'}</L>
+                    <L>{'                    <div style={{ marginBottom: 10 }}>'}</L>
+                    <L>{'                        Found {sortedRepositories.length} repositories for {user.type.toLowerCase()} <strong>{username}{user?.name ? ` (${user.name})` : \'\'}</strong>'}</L>
+                    <L>{'                    </div>'}</L>
+                    <L>{'                    {repositoriesForPage.map((repo) => ('}</L>
+                    <L>{'                        <div key={repo.id}>'}</L>
+                    <L>{'                            <a href={repo.html_url} target="_blank">'}</L>
+                    <L>{'                                {repo.full_name}'}</L>
+                    <L>{'                            </a>'}</L>
+                    <L>{'                            {` - ${repo.stargazers_count} stars, ${repo.forks} forks.`}'}</L>
+                    <L>{'                        </div>'}</L>
+                    <L>{'                    ))}'}</L>
+                    <L>{'                    {pages > 1 ? ('}</L>
+                    <L>{'                        <div style={{ marginTop: 20, textAlign: \'center\' }}>'}</L>
+                    <L>{'                            <div style={{ marginBottom: 5 }}>'}</L>
+                    <L>{'                                Showing page <strong>{page}</strong> out of <strong>{pages}</strong>.'}</L>
+                    <L>{'                            </div>'}</L>
+                    <L>{'                            <div>'}</L>
+                    <L>{'                                <button onClick={() => openPage(page - 1)} disabled={page <= 1}>'}</L>
+                    <L>{'                                    « Previous Page'}</L>
+                    <L>{'                                </button>{\' \'}'}</L>
+                    <L>{'                                <button onClick={() => openPage(page + 1)} disabled={page >= pages}>'}</L>
+                    <L>{'                                    Next Page »'}</L>
+                    <L>{'                                </button>'}</L>
+                    <L>{'                            </div>'}</L>
+                    <L>{'                        </div>'}</L>
+                    <L>{'                    ) : null}'}</L>
+                    <L>{'                </div>'}</L>
+                    <L>{'            )}'}</L>
                     <L>{'        </div>'}</L>
                     <L>{'    )'}</L>
                     <L>{'}'}</L>

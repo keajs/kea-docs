@@ -174,7 +174,7 @@ function Feature({ image, imageUrl, title, description }) {
 
 function Home() {
     const context = useDocusaurusContext()
-    const [showExample, setShowExample] = useState(false)
+    const [showExample, setShowExample] = useState(true)
 
     const { siteConfig = {} } = context
     return (

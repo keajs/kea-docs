@@ -18,12 +18,16 @@ export function Github() {
                 <div>Loading...</div>
             ) : error ? (
                 <div>Error: {error}</div>
-            ) : repositoriesForPage.length > 0 ? (
+            ) : repositoriesForPage.length === 0 ? (
+                <div>No repositories found</div>
+            ) : (
                 <div>
                     <div style={{ marginBottom: 10 }}>
-                        Found {sortedRepositories.length} repositories for{' '}
-                        {user.type === 'Organization' ? 'organization' : 'user'} <strong>{username}</strong>
-                        {user?.name ? <strong>{` (${user.name})`}</strong> : null}
+                        Found {sortedRepositories.length} repositories for {user.type.toLowerCase()}{' '}
+                        <strong>
+                            {username}
+                            {user?.name ? ` (${user.name})` : ''}
+                        </strong>
                     </div>
                     {repositoriesForPage.map((repo) => (
                         <div key={repo.id}>
@@ -49,8 +53,6 @@ export function Github() {
                         </div>
                     ) : null}
                 </div>
-            ) : (
-                <div>No repositories found</div>
             )}
         </div>
     )
