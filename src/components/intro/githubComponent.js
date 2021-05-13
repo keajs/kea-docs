@@ -3,7 +3,9 @@ import { useActions, useValues } from 'kea'
 import { githubLogic } from './githubLogic'
 
 export function Github() {
-    const { user, username, isLoading, sortedRepositories, repositoriesForPage, page, pages } = useValues(githubLogic)
+    const { user, username, isLoading, sortedRepositories, repositoriesForPage, page, pages, error } = useValues(
+        githubLogic
+    )
     const { setUsername, openPage } = useActions(githubLogic)
 
     return (
@@ -14,23 +16,21 @@ export function Github() {
             </div>
             {isLoading ? (
                 <div>Loading...</div>
+            ) : error ? (
+                <div>Error: {error}</div>
             ) : repositoriesForPage.length > 0 ? (
                 <div>
-                    Found {sortedRepositories.length} repositories for user <strong>{username}</strong>
-                    {user?.name ? (
-                        <>
-                            {' '}
-                            (<strong>{user.name}</strong>)!
-                        </>
-                    ) : null}
-                    <br />
+                    <div style={{ marginBottom: 10 }}>
+                        Found {sortedRepositories.length} repositories for{' '}
+                        {user.type === 'Organization' ? 'organization' : 'user'} <strong>{username}</strong>
+                        {user?.name ? <strong>{` (${user.name})`}</strong> : null}
+                    </div>
                     {repositoriesForPage.map((repo) => (
                         <div key={repo.id}>
                             <a href={repo.html_url} target="_blank">
                                 {repo.full_name}
                             </a>
-                            {' - '}
-                            {repo.stargazers_count} stars, {repo.forks} forks.
+                            {` - ${repo.stargazers_count} stars, ${repo.forks} forks.`}
                         </div>
                     ))}
                     {pages > 1 ? (

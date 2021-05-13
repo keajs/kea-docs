@@ -9,7 +9,7 @@ export const api = {
             const url = `${API_URL}/users/${user}`
             const response = await window.fetch(url)
             const json = await response.json()
-            usersCache.set(user, response.status === 200 ? json : null)
+            usersCache.set(user, response.status === 200 ? json : { error: json.message })
         }
         return usersCache.get(user) || null
     },
@@ -18,7 +18,7 @@ export const api = {
             const url = `${API_URL}/users/${user}/repos?per_page=250`
             const response = await window.fetch(url)
             const json = await response.json()
-            repoCache.set(user, response.status === 200 ? json : null)
+            repoCache.set(user, response.status === 200 ? json : { error: json.message })
         }
         return repoCache.get(user) || []
     },

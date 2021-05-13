@@ -6,6 +6,7 @@ export const githubLogic = kea({
         downcase: true,
         setUsername: (username) => ({ username }),
         repositoriesLoaded: (repositories) => ({ repositories }),
+        repositoryLoadError: (error) => ({ error }),
         openPage: (page, perPage = 10) => ({ page, perPage }),
     },
     reducers: {
@@ -27,8 +28,10 @@ export const githubLogic = kea({
             {
                 setUsername: () => true,
                 repositoriesLoaded: () => false,
+                repositoryLoadError: () => false,
             },
         ],
+        error: [null, { repositoryLoadError: (_, { error }) => error, setUsernameFailure: (_, { error }) => error }],
         page: [
             1,
             {
@@ -51,7 +54,11 @@ export const githubLogic = kea({
             await breakpoint(300)
             const repositories = await api.getRepositories(username)
             breakpoint()
-            actions.repositoriesLoaded(repositories)
+            if (repositories?.error) {
+                actions.repositoryLoadError(repositories.error)
+            } else {
+                actions.repositoriesLoaded(repositories)
+            }
         },
     }),
     selectors: {
@@ -65,10 +72,7 @@ export const githubLogic = kea({
                 return repos.slice(perPage * (page - 1), perPage * page)
             },
         ],
-        pages: [
-            (s) => [s.sortedRepositories, s.perPage],
-            (repos, perPage) => Math.ceil(repos.length / perPage),
-        ],
+        pages: [(s) => [s.sortedRepositories, s.perPage], (repos, perPage) => Math.ceil(repos.length / perPage)],
         isLoading: [
             (s) => [s.repositoriesLoading, s.userLoading],
             (repositoriesLoading, userLoading) => repositoriesLoading || userLoading,
@@ -79,6 +83,9 @@ export const githubLogic = kea({
             setUsername: async ({ username }, breakpoint) => {
                 await breakpoint(300)
                 const user = await api.getUser(username)
+                if (user?.error) {
+                    throw new Error(user.error)
+                }
                 return user
             },
         },

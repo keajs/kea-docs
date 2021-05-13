@@ -64,7 +64,7 @@ function L({ children }) {
         '"[^"]+"': 'green',
         "'[^']+'": 'green',
         "`[^']+`": 'green',
-        'const|function|async|await|true|false|return': 'blue',
+        'const|function|async|await|true|false|return|throw|new': 'blue',
         '[{}()]': 'black',
         '[0-9]': 'blue',
         '#[[a-zA-Z]+]#': (str) => {
@@ -138,6 +138,7 @@ export function IntroCode() {
                             <L>{'        // 📦 some carry a payload'}</L>
                             <L>{'        setUsername: (username) => ({ username }),'}</L>
                             <L>{'        repositoriesLoaded: (repositories) => ({ repositories }),'}</L>
+                            <L>{'        repositoryLoadError: (error) => ({ error }),'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 🍱 some take multiple args and defaults'}</L>
                             <L>{'        openPage: (page, perPage = 10) => ({ page, perPage }),'}</L>
@@ -177,6 +178,16 @@ export function IntroCode() {
                             <L>{'            {'}</L>
                             <L>{'                setUsername: () => true,'}</L>
                             <L>{'                repositoriesLoaded: () => false,'}</L>
+                            <L>{'                repositoryLoadError: () => false,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        error: ['}</L>
+                            <L>{'            null,'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                setUsername: () => null,'}</L>
+                            <L>{'                repositoryLoadError: (_, { error }) => error,'}</L>
+                            <L>{'                setUsernameFailure: (_, { error }) => error,'}</L>
+                            <L>{'                // 🤠 this last action comes from the loaders section below'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        page: ['}</L>
@@ -228,7 +239,11 @@ export function IntroCode() {
                             <L>{'            breakpoint()'}</L>
                             <L>{'            '}</L>
                             <L>{'            // 🔨 store the results by calling another action'}</L>
-                            <L>{'            actions.repositoriesLoaded(repositories)'}</L>
+                            <L>{'            if (repositories?.error) {'}</L>
+                            <L>{'                actions.repositoryLoadError(repositories.error)'}</L>
+                            <L>{'            } else {'}</L>
+                            <L>{'                actions.repositoriesLoaded(repositories)'}</L>
+                            <L>{'            }'}</L>
                             <L>{'        },'}</L>
                             <L>{'    }),'}</L>
                         </>
@@ -292,9 +307,12 @@ export function IntroCode() {
                             <L>{'                await breakpoint(300)'}</L>
                             <L>{'                // 👤 fetch the user'}</L>
                             <L>{'                const user = await api.getUser(username)'}</L>
-                            <L>{'                // ✅ return it to store the value via "setUsernameSuccess"'}</L>
-                            <L>{'                return user'}</L>
                             <L>{'                // 💣 all uncaught errors dispatch "setUsernameFailure"'}</L>
+                            <L>{'                if (user?.error) {'}</L>
+                            <L>{'                    throw new Error(user.error)'}</L>
+                            <L>{'                }'}</L>
+                            <L>{'                // ✅ return the user to dispatch "setUsernameSuccess" and store it'}</L>
+                            <L>{'                return user'}</L>
                             <L>{'            }'}</L>
                             <L>{'        },'}</L>
                             <L>{'    },'}</L>
