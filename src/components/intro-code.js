@@ -131,8 +131,7 @@ export function IntroCode() {
                         <>
                             <L>{'    actions: { #[logicActions]#'}</L>
                             <L>{'        // ⛳ some actions are simple'}</L>
-                            <L>{'        reset: true,'}</L>
-                            <L>{'        capitalize: true,'}</L>
+                            <L>{'        downcase: true,'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 📦 some carry a payload'}</L>
                             <L>{'        setUsername: (username) => ({ username }),'}</L>
@@ -161,8 +160,7 @@ export function IntroCode() {
                             <L>{'            // 🚀 actions that modify its state'}</L>
                             <L>{'            {'}</L>
                             <L>{'                setUsername: (_, { username }) => username,'}</L>
-                            <L>{'                capitalize: (state) => state.toUpperCase(),'}</L>
-                            <L>{'                reset: () => "keajs",'}</L>
+                            <L>{'                downcase: (state) => state.toLoweCase(),'}</L>
                             <L>{'                // 👀 action: (state, payload) => newState'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
@@ -170,17 +168,17 @@ export function IntroCode() {
                             <L>{'            [],'}</L>
                             <L>{'            {'}</L>
                             <L>{'                repositoriesLoaded: (_, { repositories }) => repositories,'}</L>
-                            <L>{'                reset: () => [],'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        page: ['}</L>
                             <L>{'            1,'}</L>
                             <L>{'            {'}</L>
                             <L>{'                setPage: (_, { page }) => page,'}</L>
+                            <L>{'                repositoriesLoaded: () => 1,'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        perPage: ['}</L>
-                            <L>{'            50,'}</L>
+                            <L>{'            20,'}</L>
                             <L>{'            {'}</L>
                             <L>{'                setPage: (_, { perPage }) => perPage,'}</L>
                             <L>{'            },'}</L>
@@ -197,7 +195,12 @@ export function IntroCode() {
                     {expanded?.logicListeners ? (
                         <>
                             <L>{'    listeners: ({ actions }) => ({ #[logicListeners]#'}</L>
-                            <L>{'        // 🎯 called as soon as the "setUsername" action fires'}</L>
+                            <L>{'        // 🎯 called as soon as the "setPage" action fires'}</L>
+                            <L>{'        setPage: ({ page }) => {'}</L>
+                            <L>{'            console.log("page changed", { page }}'}</L>
+                            <L>{'        },'}</L>
+                            <L>{'        '}</L>
+                            <L>{'        // 👜 fetch repositories when the "setUsername" action fires'}</L>
                             <L>{'        setUsername: async ({ username }, breakpoint) => {'}</L>
                             <L>{'            // ⏳ delay for 300ms'}</L>
                             <L>{'            // 💔 break if the action is triggered again while we wait'}</L>
@@ -218,10 +221,6 @@ export function IntroCode() {
                             <L>{'            // 🔨 store the results by calling another action'}</L>
                             <L>{'            actions.setRepositories(repositories)'}</L>
                             <L>{'        },'}</L>
-                            <L>{'        // 🎯 called as soon as the "setPage" action fires'}</L>
-                            <L>{'        setPage: ({ page }) => {'}</L>
-                            <L>{'            console.log("page changed", { page }}'}</L>
-                            <L>{'        },'}</L>
                             <L>{'    }),'}</L>
                         </>
                     ) : (
@@ -232,6 +231,20 @@ export function IntroCode() {
                     {expanded?.logicSelectors ? (
                         <>
                             <L>{'    selectors: { #[logicSelectors]#,'}</L>
+                            <L>{'        sortedRepositories: ['}</L>
+                            <L>{'            (s) => [s.repositories],'}</L>
+                            <L>
+                                {
+                                    '            (repositories) => repositories.sort((a, b) => b.stargazers_count - a.stargazers_count),'
+                                }
+                            </L>
+                            <L>{'        ],'}</L>
+                            <L>{'        repositoriesPerPage: ['}</L>
+                            <L>{'            (s) => [s.sortedRepositories, s.page, s.perPage],'}</L>
+                            <L>{'            (repos, page, perPage) => {'}</L>
+                            <L>{'                return repos.slice(perPage * (page - 1), perPage * page)'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
