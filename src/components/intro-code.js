@@ -227,10 +227,11 @@ export function IntroCode() {
                         <L>{'    listeners: { #[logicListeners]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // 👨‍👩‍👧‍👦 combine and memoize values'}</L>
+                    <L>{'    // 👨‍👩‍👧‍👦 selectors compute and memoize values'}</L>
                     {expanded?.logicSelectors ? (
                         <>
                             <L>{'    selectors: { #[logicSelectors]#,'}</L>
+                            <L>{'        // ⭐ sort repos by star count'}</L>
                             <L>{'        sortedRepositories: ['}</L>
                             <L>{'            (s) => [s.repositories],'}</L>
                             <L>
@@ -239,6 +240,8 @@ export function IntroCode() {
                                 }
                             </L>
                             <L>{'        ],'}</L>
+                            <L>{'        '}</L>
+                            <L>{'        // 👁️ only the currently visible repos'}</L>
                             <L>{'        repositoriesPerPage: ['}</L>
                             <L>{'            (s) => [s.sortedRepositories, s.page, s.perPage],'}</L>
                             <L>{'            (repos, page, perPage) => {'}</L>
