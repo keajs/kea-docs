@@ -5,7 +5,7 @@ author: Marius Andra
 author_title: Kea Core Team, Software Engineer at PostHog
 author_url: https://github.com/mariusandra
 author_image_url: https://avatars1.githubusercontent.com/u/53387?v=4
-tags: [kea, data-first, opinion]
+tags: [kea, opinion, data-first]
 ---
 
 Back in 2015, shortly after learning about React and Redux, I fell in love with the *functional programming* paradigms behind them *because* of what they enabled. 
@@ -104,5 +104,7 @@ It's time for a change. It's time for a paradigm shift. It's time for a revoluti
 
 Since you're reading this on the [Kea blog](https://kea.js.org/blog/), I'm obviously biased as to what's the [best data layer](https://kea.js.org) for frontend developers. Suggesting alternatives is made even more complicated by the fact that most other tools position themselves as "state management" libraries, at the mercy of React. 
 
-[Kea](https://kea.js.org) is one of the few frameworks for managing the complete lifecycle of your data. Go ahead and [check it out](https://kea.js.org). :)
+[Kea](https://kea.js.org) is one of the few frameworks for managing the complete lifecycle of your data. It uses [React](https://reactjs.org/) as the view layer and integrates nicely with the existing [Redux](https://redux.js.org/) ecosystem. 
+
+Go [check it out](https://kea.js.org) and then start writing webapps the way they were meant to be written: data first.
 
