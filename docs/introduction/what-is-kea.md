@@ -87,12 +87,7 @@ this style of writing code. I believe the time spent learning a bit of functiona
 is absolutely [worth it](http://www.paulgraham.com/avg.html) and will make you into a better programmer 
 overall. That said, this style is not for everyone.
 
-Third, as of Kea 2.0, we are still missing native TypeScript support. Kea works fine with TS if you
-[manually create interfaces](https://github.com/keajs/kea/issues/35#issuecomment-561814506), yet
-we could do better. Addressing this support is [one of the main goals](/blog/kea-2.0#typescript-support) 
-for the next versions of Kea.
-
-Fourth, did I mention Kea is opinionated? Sometimes it may be too explicit for your taste (*having
+Third, did I mention Kea is opinionated? Sometimes it may be too explicit for your taste (*having
 to explicitly define actions* for example), sometimes it might be too implicit or too magical. There 
 is thought put into each decision that went into Kea, taking into account developer happiness (neat and 
 clean code that just works) and developer productivity (limiting bugs). It's a tight rope to walk, 

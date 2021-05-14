@@ -1,5 +1,5 @@
 ---
-id: waitfor-gists-testing
+slug: waitfor-gists-testing
 title: "New stuff: Gists, WaitFor, Testing"
 author: Marius Andra
 author_title: Kea Core Team
