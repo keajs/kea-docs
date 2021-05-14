@@ -67,7 +67,7 @@ Yet the work with [Concurrent Mode](https://reactjs.org/docs/concurrent-mode-int
 I think this is a clear step backwards for maintainability.
 
 :::note Wild speculation
-This is pure speculation, but I think this is why Suspense is still considered [experimental](https://reactjs.org/docs/concurrent-mode-suspense.html) in 2021, despite having been in development for [over 3 years](https://reactjs.org/blog/2018/11/27/react-16-roadmap.html). It's just not that easy to merge the data and view layers in a way that makes everyone happy. Hence things keep being pushed til "when it's done".
+This is pure speculation, but I think this is why Suspense is still considered [experimental](https://reactjs.org/docs/concurrent-mode-suspense.html) in 2021, despite having been in development for [over 3 years](https://reactjs.org/blog/2018/11/27/react-16-roadmap.html). It's just not that easy to blend the data and view layers in a way that makes everyone happy. Hence things keep being pushed til "when it's done".
 :::
 
 ### Put your data first
