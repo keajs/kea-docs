@@ -67,7 +67,7 @@ function L({ children }) {
         'const|function|async|await|true|false|return|throw|new': 'blue',
         '(?<=<\)[a-zA-Z0-9_]+(?=[> ])': 'blue',
         '(?<=<\)[a-zA-Z0-9_]+$': 'blue',
-        '(?<=<\\/)[a-zA-Z0-9_]+(?=>)': 'blue',
+        '(?<=<\/)[a-zA-Z0-9_]+(?=>)': 'blue',
         '(?<=[^a-zA-Z0-9_])[a-zA-Z0-9_]+(?==)': 'blue',
         '(?<=[a-zA-Z0-9_]\\??\\.)[a-zA-Z0-9_]+(?=\\()': 'brown',
         '(?<=[a-zA-Z0-9_]\\??\\.)[a-zA-Z0-9_]+(?!=\\()': 'purple',
@@ -86,7 +86,14 @@ function L({ children }) {
             return element
         }
         for (const [rule, colorOrFunction] of Object.entries(rules)) {
-            const parts = element.split(new RegExp(`(${rule})`))
+            let parts = []
+            try {
+                parts = element.split(new RegExp(`(${rule})`))
+            } catch (e) {
+                // Safari does not support regexp lookbehind
+                // https://stackoverflow.com/questions/51568821/works-in-chrome-but-breaks-in-safari-invalid-regular-expression-invalid-group
+                // https://caniuse.com/js-regexp-lookbehind
+            }
             if (parts.length > 1)
                 return parts
                     .map((splitPart, index) => {
