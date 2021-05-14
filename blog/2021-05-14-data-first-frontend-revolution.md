@@ -5,7 +5,7 @@ author: Marius Andra
 author_title: Kea Core Team, Software Engineer at PostHog
 author_url: https://github.com/mariusandra
 author_image_url: https://avatars1.githubusercontent.com/u/53387?v=4
-tags: [kea, release]
+tags: [kea, data-first, opinion]
 ---
 
 Back in 2015, shortly after learning about React and Redux, I fell in love with the *functional programming* paradigms behind them *because* of what they enabled. 
