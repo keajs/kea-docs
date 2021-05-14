@@ -454,7 +454,7 @@ export function IntroCode() {
                     <L>{'})'}</L>
                 </>
             ) : (
-                <L>{'const logic = kea({ #[logic]# })'}</L>
+                <L>{'const logic = kea({ #[logic]# }) // 👈 click on the "+"'}</L>
             )}
             <L>{''}</L>
             <L>{'// ⚛️ and your views in React'}</L>
