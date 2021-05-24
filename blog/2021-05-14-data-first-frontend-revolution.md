@@ -12,7 +12,7 @@ Back in 2015, shortly after learning about React and Redux, I fell in love with 
 
 By following a few principles of immutability and purity, React frontends were generally better written, stabler and easier to debug, compared to contemporary alternatives such as Ember or Angular.
 
-Having seen what a bit of functional programming did to JavaScript, I started looking into [Clojure](https://learnxinyminutes.com/docs/clojure/), the most popular functional language at the time, and into [ClojureScript](https://clojurescript.org/) frontend frameworks: [reagent](https://github.com/reagent-project/reagent) (dead), [quiescent](https://github.com/levand/quiescent) (dead), [om](https://github.com/omcljs/om) (dead), [om.next](https://github.com/omcljs/om/wiki/Quick-Start-(om.next)) (dead), [re-frame](https://github.com/day8/re-frame) (still alive). Now there's also [fulcro](https://github.com/fulcrologic/fulcro) that wasn't around back then.
+Having seen what a bit of functional programming did to JavaScript, I started looking into [Clojure](https://learnxinyminutes.com/docs/clojure/), the most popular functional language at the time, and into [ClojureScript](https://clojurescript.org/) frontend frameworks: [reagent](https://github.com/reagent-project/reagent), [quiescent](https://github.com/levand/quiescent), [om](https://github.com/omcljs/om), [om.next](https://github.com/omcljs/om/wiki/Quick-Start-(om.next)), and [re-frame](https://github.com/day8/re-frame). Now there's also [fulcro](https://github.com/fulcrologic/fulcro) that wasn't around back then.
 
 What stood out was how they all handled *application state*. 
 
