@@ -65,9 +65,9 @@ function L({ children }) {
         "'[^']+'": 'green',
         "`[^']+`": 'green',
         'const|function|async|await|true|false|return|throw|new': 'blue',
-        '(?<=<\)[a-zA-Z0-9_]+(?=[> ])': 'blue',
-        '(?<=<\)[a-zA-Z0-9_]+$': 'blue',
-        '(?<=<\/)[a-zA-Z0-9_]+(?=>)': 'blue',
+        '(?<=<)[a-zA-Z0-9_]+(?=[> ])': 'blue',
+        '(?<=<)[a-zA-Z0-9_]+$': 'blue',
+        '(?<=</)[a-zA-Z0-9_]+(?=>)': 'blue',
         '(?<=[^a-zA-Z0-9_])[a-zA-Z0-9_]+(?==)': 'blue',
         '(?<=[a-zA-Z0-9_]\\??\\.)[a-zA-Z0-9_]+(?=\\()': 'brown',
         '(?<=[a-zA-Z0-9_]\\??\\.)[a-zA-Z0-9_]+(?!=\\()': 'purple',
@@ -266,7 +266,7 @@ export function IntroCode() {
                     <L>{'    // 👨‍👩‍👧‍👦 selectors compute and memoize values'}</L>
                     {expanded?.logicSelectors ? (
                         <>
-                            <L>{'    selectors: { #[logicSelectors]#,'}</L>
+                            <L>{'    selectors: { #[logicSelectors]#'}</L>
                             <L>{'        // ⭐ sort repositories by star count'}</L>
                             <L>{'        sortedRepositories: ['}</L>
                             <L>{'            (s) => [s.repositories],'}</L>
@@ -309,7 +309,7 @@ export function IntroCode() {
                     <L>{'    // 💾 use loaders for data that is loaded from somewhere'}</L>
                     {expanded?.logicLoaders ? (
                         <>
-                            <L>{'    loaders: { #[logicLoaders]#,'}</L>
+                            <L>{'    loaders: { #[logicLoaders]#'}</L>
                             <L>{'        // 🔌 install the "kea-loaders" plugin to use'}</L>
                             <L>{'        // 🤠 the following creates two values: "user" and "userLoading"'}</L>
                             <L>{'        // 🙌 and two actions: "setUsernameSuccess" and "setUsernameFailure"'}</L>
@@ -323,7 +323,9 @@ export function IntroCode() {
                             <L>{'                if (user?.error) {'}</L>
                             <L>{'                    throw new Error(user.error)'}</L>
                             <L>{'                }'}</L>
-                            <L>{'                // ✅ return the user to dispatch "setUsernameSuccess" and store it'}</L>
+                            <L>
+                                {'                // ✅ return the user to dispatch "setUsernameSuccess" and store it'}
+                            </L>
                             <L>{'                return user'}</L>
                             <L>{'            }'}</L>
                             <L>{'        },'}</L>
@@ -336,7 +338,7 @@ export function IntroCode() {
                     <L>{'    // 🌍 change the browser URL when an action is dispatched'}</L>
                     {expanded?.logicActionToUrl ? (
                         <>
-                            <L>{'    actionToUrl: { #[logicActionToUrl]#,'}</L>
+                            <L>{'    actionToUrl: { #[logicActionToUrl]#'}</L>
                             <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
                             <L>{'        setUsername: ({ username }) => `/${username}`,'}</L>
                             <L>{'    },'}</L>
@@ -348,7 +350,7 @@ export function IntroCode() {
                     <L>{'    // 🎯 dispatch an action when the browser URL changes'}</L>
                     {expanded?.logicUrlToAction ? (
                         <>
-                            <L>{'    urlToAction: ({ actions }) => ({ #[logicUrlToAction]#,'}</L>
+                            <L>{'    urlToAction: ({ actions }) => ({ #[logicUrlToAction]#'}</L>
                             <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
                             <L>{'        "/:username": ({ username }) => actions.setUsername(username),'}</L>
                             <L>{'        "/": () => actions.setUsername("keajs"),'}</L>
@@ -361,7 +363,7 @@ export function IntroCode() {
                     <L>{'    // 🔁 logic lifecycle: afterMount and beforeUnmount'}</L>
                     {expanded?.logicEvents ? (
                         <>
-                            <L>{'    events: ({ actions, values, cache }) => ({ #[logicEvents]#,'}</L>
+                            <L>{'    events: ({ actions, values, cache }) => ({ #[logicEvents]#'}</L>
                             <L>{'        afterMount: () => {'}</L>
                             <L>{'            console.log("🏃 starting logic")'}</L>
                             <L>{'            '}</L>
@@ -370,7 +372,11 @@ export function IntroCode() {
                                     '            // 👻 set username to its value to trigger the listener and fetch repositories'
                                 }
                             </L>
-                            <L>{'            // 💡 this is actually not needed because we are also using urlToAction, which dispatches an action after mount'}</L>
+                            <L>
+                                {
+                                    '            // 💡 this is actually not needed because we are also using urlToAction, which dispatches an action after mount'
+                                }
+                            </L>
                             <L>{'            actions.setUsername(values.username)'}</L>
                             <L>{'            '}</L>
                             <L>{'            // ⏰ use "cache" for temporary event listeners, timeouts, etc'}</L>
@@ -388,14 +394,14 @@ export function IntroCode() {
                         <L>{'    events: { #[logicEvents]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    #[logicMore]# // even more stuff'}</L>
-                    {expanded?.logicMore ? (
+                    <L>{'    #[logicPlugins]# // even more plugins'}</L>
+                    {expanded?.logicPlugins ? (
                         <>
                             <L>{'    '}</L>
                             <L>{'    // 🪟 store values like window.innerWidth in the logic'}</L>
                             {expanded?.logicWindowValues ? (
                                 <>
-                                    <L>{'    windowValues: { #[logicWindowValues]#,'}</L>
+                                    <L>{'    windowValues: { #[logicWindowValues]#'}</L>
                                     <L>{'        // 🔌 install the "kea-window-values" plugin to use'}</L>
                                     <L>{'        isSmallScreen: (window) => window.innerWidth < 640,'}</L>
                                     <L>{'        isRetina: (window) => window.devicePixelRatio > 2,'}</L>
@@ -416,7 +422,7 @@ export function IntroCode() {
                             <L>{'    // 🌅 kea-saga: alternative side-effects via redux-saga'}</L>
                             {expanded?.logicSagas ? (
                                 <>
-                                    <L>{'    sagas: [ #[logicSagas]#,'}</L>
+                                    <L>{'    sagas: [ #[logicSagas]#'}</L>
                                     <L>{'        function * () { /* sagas to start with the logic */ },'}</L>
                                     <L>{'    ],'}</L>
                                     <L>{'    // 🔌 install the "kea-saga" plugin to use'}</L>
@@ -433,10 +439,10 @@ export function IntroCode() {
                             <L>{'    // 🪵 kea-thunk: alternative side-effects via redux-thunk'}</L>
                             {expanded?.logicThunks ? (
                                 <>
-                                    <L>{'    thunks: ({ actions }) => ({ #[logicThunks]#,'}</L>
+                                    <L>{'    thunks: ({ actions }) => ({ #[logicThunks]#'}</L>
                                     <L>{'        // 🔌 install the "kea-thunk" plugin to use'}</L>
                                     <L>{'        // 🤔 you probably want to use listeners instead'}</L>
-                                    <L>{'        // 🦕 because you can\'t use thunks in reducers'}</L>
+                                    <L>{"        // 🦕 because you can't use thunks in reducers"}</L>
                                     <L>{'        fetchRepositories: ({ username }) => {,'}</L>
                                     <L>{'            const repositories = await api.getRepositories(username)'}</L>
                                     <L>{'            actions.setRepositories(repositories)'}</L>
@@ -451,6 +457,70 @@ export function IntroCode() {
                             <L>{'    youOwnPlugin: { /* go for it */ },'}</L>
                         </>
                     ) : null}
+
+                    <L>{'    '}</L>
+                    <L>{'    #[logicMore]# // logic inheritance, connections and extensions'}</L>
+                    {expanded?.logicMore ? (
+                        <>
+                            <L>{'    '}</L>
+                            <L>{'    // 👶 inherit actions and values from another logic'}</L>
+                            {expanded?.logicInherit ? (
+                                <>
+                                    <L>{'    inherit: [ #[logicInherit]#'}</L>
+                                    <L>{'        otherLogic,'}</L>
+                                    <L>
+                                        {
+                                            '        // 👷 build this "logic" on top of a copy of "otherLogic", inheriting all its actions, values, listeners, etc'
+                                        }
+                                    </L>
+                                    <L>{'    ],'}</L>
+                                </>
+                            ) : (
+                                <L>{'    inherit: [ #[logicInherit]# ],'}</L>
+                            )}
+                            <L>{'    '}</L>
+                            <L>{'    // 🔗 connect to actions and values from another logic'}</L>
+                            {expanded?.logicConnect ? (
+                                <>
+                                    <L>{'    connect: { #[logicConnect]#'}</L>
+                                    <L>{'        actions: [otherLogic, ["submitForm"]],'}</L>
+                                    <L>{'        values: [otherLogic, ["formState", "isSubmitting"]],'}</L>
+                                    <L>
+                                        {
+                                            '        // 🏞️ these will act as local actions/values, but their source will be in the original logic'
+                                        }
+                                    </L>
+                                    <L>
+                                        {
+                                            '        // 💡 normally you should not use "connect", but write "otherLogic.actions.submitForm" directly'
+                                        }
+                                    </L>
+                                    <L>{'    },'}</L>
+                                </>
+                            ) : (
+                                <L>{'    connect: { #[logicConnect]# },'}</L>
+                            )}
+                            <L>{'    '}</L>
+                            <L>{'    // ➕ extend with other input after building'}</L>
+                            {expanded?.logicExtend ? (
+                                <>
+                                    <L>{'    extend: [ #[logicExtend]#'}</L>
+                                    <L>{'        {'}</L>
+                                    <L>
+                                        {
+                                            '            // 🧑‍🏭 add even more actions, reducers, etc. This is mostly useful in plugins.'
+                                        }
+                                    </L>
+                                    <L>{'            actions: { doSomething: true, },'}</L>
+                                    <L>{'            reducers: {},'}</L>
+                                    <L>{'        },'}</L>
+                                    <L>{'    ],'}</L>
+                                </>
+                            ) : (
+                                <L>{'    extend: [ #[logicExtend]# ],'}</L>
+                            )}
+                        </>
+                    ) : null}
                     <L>{'})'}</L>
                 </>
             ) : (
@@ -463,14 +533,22 @@ export function IntroCode() {
                     <L>{'function Component() { #[component]#'}</L>
                     <L>{'    // 🦜 fetch actions and values from Kea with hooks'}</L>
                     <L>{'    const { setUsername, openPage } = useActions(logic)'}</L>
-                    <L>{'    const { user, username, isLoading, sortedRepositories, repositoriesForPage, page, pages, error } = useValues(logic)'}</L>
+                    <L>
+                        {
+                            '    const { user, username, isLoading, sortedRepositories, repositoriesForPage, page, pages, error } = useValues(logic)'
+                        }
+                    </L>
                     <L>{'    '}</L>
                     <L>{'    // 🎨 and then render the component'}</L>
                     <L>{'    return ('}</L>
                     <L>{'        <div className="github-api-scene">'}</L>
                     <L>{'            <div style={{ marginBottom: 20 }}>'}</L>
                     <L>{'                <h3>Search for a GitHub user</h3>'}</L>
-                    <L>{'                <input value={username} type="text" onChange={(e) => setUsername(e.target.value)} />'}</L>
+                    <L>
+                        {
+                            '                <input value={username} type="text" onChange={(e) => setUsername(e.target.value)} />'
+                        }
+                    </L>
                     <L>{'            </div>'}</L>
                     <L>{'            {isLoading ? ('}</L>
                     <L>{'                <div>Loading...</div>'}</L>
@@ -481,7 +559,11 @@ export function IntroCode() {
                     <L>{'            ) : ('}</L>
                     <L>{'                <div>'}</L>
                     <L>{'                    <div style={{ marginBottom: 10 }}>'}</L>
-                    <L>{'                        Found {sortedRepositories.length} repositories for {user.type.toLowerCase()} <strong>{username}{user?.name ? ` (${user.name})` : \'\'}</strong>'}</L>
+                    <L>
+                        {
+                            "                        Found {sortedRepositories.length} repositories for {user.type.toLowerCase()} <strong>{username}{user?.name ? ` (${user.name})` : ''}</strong>"
+                        }
+                    </L>
                     <L>{'                    </div>'}</L>
                     <L>{'                    {repositoriesForPage.map((repo) => ('}</L>
                     <L>{'                        <div key={repo.id}>'}</L>
@@ -492,15 +574,27 @@ export function IntroCode() {
                     <L>{'                        </div>'}</L>
                     <L>{'                    ))}'}</L>
                     <L>{'                    {pages > 1 ? ('}</L>
-                    <L>{'                        <div style={{ marginTop: 20, textAlign: \'center\' }}>'}</L>
+                    <L>{"                        <div style={{ marginTop: 20, textAlign: 'center' }}>"}</L>
                     <L>{'                            <div style={{ marginBottom: 5 }}>'}</L>
-                    <L>{'                                Showing page <strong>{page}</strong> out of <strong>{pages}</strong>.'}</L>
+                    <L>
+                        {
+                            '                                Showing page <strong>{page}</strong> out of <strong>{pages}</strong>.'
+                        }
+                    </L>
                     <L>{'                            </div>'}</L>
                     <L>{'                            <div>'}</L>
-                    <L>{'                                <button onClick={() => openPage(page - 1)} disabled={page <= 1}>'}</L>
+                    <L>
+                        {
+                            '                                <button onClick={() => openPage(page - 1)} disabled={page <= 1}>'
+                        }
+                    </L>
                     <L>{'                                    « Previous Page'}</L>
-                    <L>{'                                </button>{\' \'}'}</L>
-                    <L>{'                                <button onClick={() => openPage(page + 1)} disabled={page >= pages}>'}</L>
+                    <L>{"                                </button>{' '}"}</L>
+                    <L>
+                        {
+                            '                                <button onClick={() => openPage(page + 1)} disabled={page >= pages}>'
+                        }
+                    </L>
                     <L>{'                                    Next Page »'}</L>
                     <L>{'                                </button>'}</L>
                     <L>{'                            </div>'}</L>
