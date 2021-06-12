@@ -25,7 +25,7 @@ const introCodeLogic = kea({
 function Expand({ code }) {
     const { expand } = useActions(introCodeLogic)
     return (
-        <button className="expand" onClick={() => expand(code)}>
+        <button className="expand" onClick={() => expand(code)} data-attr={`homepage-expand/${code}`}>
             +
         </button>
     )
@@ -34,7 +34,7 @@ function Expand({ code }) {
 function Shrink({ code }) {
     const { shrink } = useActions(introCodeLogic)
     return (
-        <button className="shrink" onClick={() => shrink(code)}>
+        <button className="shrink" onClick={() => shrink(code)} data-attr={`homepage-expand/${code}`}>
             −
         </button>
     )
