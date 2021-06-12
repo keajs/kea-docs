@@ -8,7 +8,9 @@ const introCodeLogic = kea({
     },
     reducers: {
         expanded: [
-            {},
+            {
+                component: true,
+            },
             {
                 expand: (state, { code }) => ({ ...state, [code]: true }),
                 shrink: (state, { code }) => {
@@ -135,10 +137,104 @@ export function IntroCode() {
 
     return (
         <>
-            <L>{'// 🦜 keep your state in Kea'}</L>
+            <L>{'// ⚛️ keep your views in React'}</L>
+            {expanded?.component ? (
+                <>
+                    <L>{'function GithubSearch() { #[component]#'}</L>
+                    <L>{'    // 🦜 fetch actions and values from Kea with hooks'}</L>
+                    <L>{'    const { setUsername, openPage } = useActions(githubSearchLogic)'}</L>
+                    <L>
+                        {
+                            '    const { user, username, isLoading, sortedRepositories, repositoriesForPage, page, pages, error } = useValues(githubSearchLogic)'
+                        }
+                    </L>
+                    <L>{'    '}</L>
+                    <L>{'    // 🎨 and then render the component'}</L>
+                    <L>{'    return ('}</L>
+                    {expanded?.componentDiv ? (
+                        <>
+                            <L>{'        <div className="github-search-scene"> #[componentDiv]#'}</L>
+                            <L>{'            <div style={{ marginBottom: 20 }}>'}</L>
+                            <L>{'                <h3>Search for a GitHub user</h3>'}</L>
+                            <L>
+                                {
+                                    '                <input value={username} type="text" onChange={(e) => setUsername(e.target.value)} />'
+                                }
+                            </L>
+                            <L>{'            </div>'}</L>
+                            <L>{'            {isLoading ? ('}</L>
+                            <L>{'                <div>Loading...</div>'}</L>
+                            <L>{'            ) : error ? ('}</L>
+                            <L>{'                <div>Error: {error}</div>'}</L>
+                            <L>{'            ) : repositoriesForPage.length === 0 ? ('}</L>
+                            <L>{'                <div>No repositories found</div>'}</L>
+                            <L>{'            ) : ('}</L>
+                            <L>{'                <div>'}</L>
+                            <L>{'                    <div style={{ marginBottom: 10 }}>'}</L>
+                            <L>
+                                {
+                                    "                        Found {sortedRepositories.length} repositories for {user.type.toLowerCase()} <strong>{username}{user?.name ? ` (${user.name})` : ''}</strong>"
+                                }
+                            </L>
+                            <L>{'                    </div>'}</L>
+                            <L>{'                    {repositoriesForPage.map((repo) => ('}</L>
+                            <L>{'                        <div key={repo.id}>'}</L>
+                            <L>{'                            <a href={repo.html_url} target="_blank">'}</L>
+                            <L>{'                                {repo.full_name}'}</L>
+                            <L>{'                            </a>'}</L>
+                            <L>
+                                {
+                                    '                            {` - ${repo.stargazers_count} stars, ${repo.forks} forks.`}'
+                                }
+                            </L>
+                            <L>{'                        </div>'}</L>
+                            <L>{'                    ))}'}</L>
+                            <L>{'                    {pages > 1 ? ('}</L>
+                            <L>{"                        <div style={{ marginTop: 20, textAlign: 'center' }}>"}</L>
+                            <L>{'                            <div style={{ marginBottom: 5 }}>'}</L>
+                            <L>
+                                {
+                                    '                                Showing page <strong>{page}</strong> out of <strong>{pages}</strong>.'
+                                }
+                            </L>
+                            <L>{'                            </div>'}</L>
+                            <L>{'                            <div>'}</L>
+                            <L>
+                                {
+                                    '                                <button onClick={() => openPage(page - 1)} disabled={page <= 1}>'
+                                }
+                            </L>
+                            <L>{'                                    « Previous Page'}</L>
+                            <L>{"                                </button>{' '}"}</L>
+                            <L>
+                                {
+                                    '                                <button onClick={() => openPage(page + 1)} disabled={page >= pages}>'
+                                }
+                            </L>
+                            <L>{'                                    Next Page »'}</L>
+                            <L>{'                                </button>'}</L>
+                            <L>{'                            </div>'}</L>
+                            <L>{'                        </div>'}</L>
+                            <L>{'                    ) : null}'}</L>
+                            <L>{'                </div>'}</L>
+                            <L>{'            )}'}</L>
+                            <L>{'        </div>'}</L>
+                        </>
+                    ) : (
+                        <L>{'        <div className="github-search-scene"> #[componentDiv]# </div>'}</L>
+                    )}
+                    <L>{'    )'}</L>
+                    <L>{'}'}</L>
+                </>
+            ) : (
+                <L>{'function GithubSearch() { #[component]# }'}</L>
+            )}
+
+            <L>{''}</L>
+            <L>{'// 🦜 and everything else in Kea'}</L>
             {expanded?.logic ? (
                 <>
-                    <L>{'const logic = kea({ #[logic]#'}</L>
+                    <L>{'const githubSearchLogic = kea({ #[logic]#'}</L>
                     <L>{'    '}</L>
                     <L>{'    // 🦾 everything starts with an action'}</L>
                     {expanded?.logicActions ? (
@@ -179,6 +275,7 @@ export function IntroCode() {
                             <L>{'                // 👀 action: (state, payload) => newState'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
+                            <L>{'        // 🍭 reducers can be simple'}</L>
                             <L>{'        repositories: ['}</L>
                             <L>{'            [],'}</L>
                             <L>{'            {'}</L>
@@ -193,13 +290,13 @@ export function IntroCode() {
                             <L>{'                repositoryLoadError: () => false,'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
+                            <L>{'        // 🍭 ... or complicated with many modifiers'}</L>
                             <L>{'        error: ['}</L>
                             <L>{'            null,'}</L>
                             <L>{'            {'}</L>
                             <L>{'                setUsername: () => null,'}</L>
                             <L>{'                repositoryLoadError: (_, { error }) => error,'}</L>
                             <L>{'                setUsernameFailure: (_, { error }) => error,'}</L>
-                            <L>{'                // 🤠 this last action comes from the loaders section below'}</L>
                             <L>{'            },'}</L>
                             <L>{'        ],'}</L>
                             <L>{'        page: ['}</L>
@@ -306,60 +403,6 @@ export function IntroCode() {
                         <L>{'    selectors: { #[logicSelectors]# },'}</L>
                     )}
                     <L>{'    '}</L>
-                    <L>{'    // 💾 use loaders for data that is loaded from somewhere'}</L>
-                    {expanded?.logicLoaders ? (
-                        <>
-                            <L>{'    loaders: { #[logicLoaders]#'}</L>
-                            <L>{'        // 🔌 install the "kea-loaders" plugin to use'}</L>
-                            <L>{'        // 🤠 the following creates two values: "user" and "userLoading"'}</L>
-                            <L>{'        // 🙌 and two actions: "setUsernameSuccess" and "setUsernameFailure"'}</L>
-                            <L>{'        user: {'}</L>
-                            <L>{'            setUsername: async ({ username }, breakpoint) => {'}</L>
-                            <L>{'                // ⛹ debounce for 300ms, just like in the listener'}</L>
-                            <L>{'                await breakpoint(300)'}</L>
-                            <L>{'                // 👤 fetch the user'}</L>
-                            <L>{'                const user = await api.getUser(username)'}</L>
-                            <L>{'                // 💣 all uncaught errors dispatch "setUsernameFailure"'}</L>
-                            <L>{'                if (user?.error) {'}</L>
-                            <L>{'                    throw new Error(user.error)'}</L>
-                            <L>{'                }'}</L>
-                            <L>
-                                {'                // ✅ return the user to dispatch "setUsernameSuccess" and store it'}
-                            </L>
-                            <L>{'                return user'}</L>
-                            <L>{'            }'}</L>
-                            <L>{'        },'}</L>
-                            <L>{'    },'}</L>
-                        </>
-                    ) : (
-                        <L>{'    loaders: { #[logicLoaders]# },'}</L>
-                    )}
-                    <L>{'    '}</L>
-                    <L>{'    // 🌍 change the browser URL when an action is dispatched'}</L>
-                    {expanded?.logicActionToUrl ? (
-                        <>
-                            <L>{'    actionToUrl: { #[logicActionToUrl]#'}</L>
-                            <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
-                            <L>{'        setUsername: ({ username }) => `/${username}`,'}</L>
-                            <L>{'    },'}</L>
-                        </>
-                    ) : (
-                        <L>{'    actionToUrl: { #[logicActionToUrl]# },'}</L>
-                    )}
-                    <L>{'    '}</L>
-                    <L>{'    // 🎯 dispatch an action when the browser URL changes'}</L>
-                    {expanded?.logicUrlToAction ? (
-                        <>
-                            <L>{'    urlToAction: ({ actions }) => ({ #[logicUrlToAction]#'}</L>
-                            <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
-                            <L>{'        "/:username": ({ username }) => actions.setUsername(username),'}</L>
-                            <L>{'        "/": () => actions.setUsername("keajs"),'}</L>
-                            <L>{'    }),'}</L>
-                        </>
-                    ) : (
-                        <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
-                    )}
-                    <L>{'    '}</L>
                     <L>{'    // 🔁 logic lifecycle: afterMount and beforeUnmount'}</L>
                     {expanded?.logicEvents ? (
                         <>
@@ -393,6 +436,81 @@ export function IntroCode() {
                     ) : (
                         <L>{'    events: { #[logicEvents]# },'}</L>
                     )}
+
+                    <L>{'    '}</L>
+                    <L>{'    #[logicIntegrations]# // sync values with APIs and the address bar'}</L>
+                    {expanded?.logicIntegrations ? (
+                        <>
+                            <L>{'    '}</L>
+                            <L>{'    // 💾 use loaders to load data from APIs'}</L>
+                            {expanded?.logicLoaders ? (
+                                <>
+                                    <L>{'    loaders: { #[logicLoaders]#'}</L>
+                                    <L>{'        // 🔌 install the "kea-loaders" plugin to use'}</L>
+                                    <L>{'        // 🤠 the following creates two values: "user" and "userLoading"'}</L>
+                                    <L>
+                                        {
+                                            '        // 🙌 and three actions: "setUsername", "setUsernameSuccess" and "setUsernameFailure"'
+                                        }
+                                    </L>
+                                    <L>{'        user: {'}</L>
+                                    <L>{'            setUsername: async ({ username }, breakpoint) => {'}</L>
+                                    <L>{'                // ⛹ debounce for 300ms, just like in the listener'}</L>
+                                    <L>{'                await breakpoint(300)'}</L>
+                                    <L>{'                // 👤 fetch the user'}</L>
+                                    <L>{'                const user = await api.getUser(username)'}</L>
+                                    <L>{'                // 💣 all uncaught errors dispatch "setUsernameFailure"'}</L>
+                                    <L>{'                if (user?.error) {'}</L>
+                                    <L>{'                    throw new Error(user.error)'}</L>
+                                    <L>{'                }'}</L>
+                                    <L>{'                // ✅ return the user in the loader'}</L>
+                                    <L>
+                                        {
+                                            '                // 🎯 this dispatches "setUsernameSuccess" and sets the "user" reducer\'s value'
+                                        }
+                                    </L>
+                                    <L>{'                return user'}</L>
+                                    <L>{'            },'}</L>
+
+                                    <L>
+                                        {
+                                            '            // 💡 tip: use a listener for "setUsernameSuccess" to run additional code'
+                                        }
+                                    </L>
+                                    <L>{'        },'}</L>
+                                    <L>{'    },'}</L>
+                                </>
+                            ) : (
+                                <L>{'    loaders: { #[logicLoaders]# },'}</L>
+                            )}
+                            <L>{'    '}</L>
+                            <L>{'    // 🎯 dispatch an action when the browser URL changes'}</L>
+                            {expanded?.logicUrlToAction ? (
+                                <>
+                                    <L>{'    urlToAction: ({ actions }) => ({ #[logicUrlToAction]#'}</L>
+                                    <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
+                                    <L>{'        "/:username": ({ username }) => actions.setUsername(username),'}</L>
+                                    <L>{'        "/": () => actions.setUsername("keajs"),'}</L>
+                                    <L>{'    }),'}</L>
+                                </>
+                            ) : (
+                                <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
+                            )}
+                            <L>{'    '}</L>
+                            <L>{'    // 🌍 change the browser URL when an action is dispatched'}</L>
+                            {expanded?.logicActionToUrl ? (
+                                <>
+                                    <L>{'    actionToUrl: { #[logicActionToUrl]#'}</L>
+                                    <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
+                                    <L>{'        setUsername: ({ username }) => `/${username}`,'}</L>
+                                    <L>{'    },'}</L>
+                                </>
+                            ) : (
+                                <L>{'    actionToUrl: { #[logicActionToUrl]# },'}</L>
+                            )}
+                        </>
+                    ) : null}
+
                     <L>{'    '}</L>
                     <L>{'    #[logicPlugins]# // even more plugins'}</L>
                     {expanded?.logicPlugins ? (
@@ -524,91 +642,9 @@ export function IntroCode() {
                     <L>{'})'}</L>
                 </>
             ) : (
-                <L>{'const logic = kea({ #[logic]# }) // 👈 click on the "+"'}</L>
+                <L>{'const githubSearchLogic = kea({ #[logic]# }) // 👈 click on the "+"'}</L>
             )}
             <L>{''}</L>
-            <L>{'// ⚛️ and your views in React'}</L>
-            {expanded?.component ? (
-                <>
-                    <L>{'function Component() { #[component]#'}</L>
-                    <L>{'    // 🦜 fetch actions and values from Kea with hooks'}</L>
-                    <L>{'    const { setUsername, openPage } = useActions(logic)'}</L>
-                    <L>
-                        {
-                            '    const { user, username, isLoading, sortedRepositories, repositoriesForPage, page, pages, error } = useValues(logic)'
-                        }
-                    </L>
-                    <L>{'    '}</L>
-                    <L>{'    // 🎨 and then render the component'}</L>
-                    <L>{'    return ('}</L>
-                    <L>{'        <div className="github-api-scene">'}</L>
-                    <L>{'            <div style={{ marginBottom: 20 }}>'}</L>
-                    <L>{'                <h3>Search for a GitHub user</h3>'}</L>
-                    <L>
-                        {
-                            '                <input value={username} type="text" onChange={(e) => setUsername(e.target.value)} />'
-                        }
-                    </L>
-                    <L>{'            </div>'}</L>
-                    <L>{'            {isLoading ? ('}</L>
-                    <L>{'                <div>Loading...</div>'}</L>
-                    <L>{'            ) : error ? ('}</L>
-                    <L>{'                <div>Error: {error}</div>'}</L>
-                    <L>{'            ) : repositoriesForPage.length === 0 ? ('}</L>
-                    <L>{'                <div>No repositories found</div>'}</L>
-                    <L>{'            ) : ('}</L>
-                    <L>{'                <div>'}</L>
-                    <L>{'                    <div style={{ marginBottom: 10 }}>'}</L>
-                    <L>
-                        {
-                            "                        Found {sortedRepositories.length} repositories for {user.type.toLowerCase()} <strong>{username}{user?.name ? ` (${user.name})` : ''}</strong>"
-                        }
-                    </L>
-                    <L>{'                    </div>'}</L>
-                    <L>{'                    {repositoriesForPage.map((repo) => ('}</L>
-                    <L>{'                        <div key={repo.id}>'}</L>
-                    <L>{'                            <a href={repo.html_url} target="_blank">'}</L>
-                    <L>{'                                {repo.full_name}'}</L>
-                    <L>{'                            </a>'}</L>
-                    <L>{'                            {` - ${repo.stargazers_count} stars, ${repo.forks} forks.`}'}</L>
-                    <L>{'                        </div>'}</L>
-                    <L>{'                    ))}'}</L>
-                    <L>{'                    {pages > 1 ? ('}</L>
-                    <L>{"                        <div style={{ marginTop: 20, textAlign: 'center' }}>"}</L>
-                    <L>{'                            <div style={{ marginBottom: 5 }}>'}</L>
-                    <L>
-                        {
-                            '                                Showing page <strong>{page}</strong> out of <strong>{pages}</strong>.'
-                        }
-                    </L>
-                    <L>{'                            </div>'}</L>
-                    <L>{'                            <div>'}</L>
-                    <L>
-                        {
-                            '                                <button onClick={() => openPage(page - 1)} disabled={page <= 1}>'
-                        }
-                    </L>
-                    <L>{'                                    « Previous Page'}</L>
-                    <L>{"                                </button>{' '}"}</L>
-                    <L>
-                        {
-                            '                                <button onClick={() => openPage(page + 1)} disabled={page >= pages}>'
-                        }
-                    </L>
-                    <L>{'                                    Next Page »'}</L>
-                    <L>{'                                </button>'}</L>
-                    <L>{'                            </div>'}</L>
-                    <L>{'                        </div>'}</L>
-                    <L>{'                    ) : null}'}</L>
-                    <L>{'                </div>'}</L>
-                    <L>{'            )}'}</L>
-                    <L>{'        </div>'}</L>
-                    <L>{'    )'}</L>
-                    <L>{'}'}</L>
-                </>
-            ) : (
-                <L>{'function Component() { #[component]# }'}</L>
-            )}
         </>
     )
 }
