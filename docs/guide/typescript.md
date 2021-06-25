@@ -8,9 +8,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 Starting with **version 2.2**, Kea officially supports TypeScript!
 
-In addition to increased type safety, this massively improves developer ergonomics,
-as you can now autocomplete all your actions and values, both while using logic
-in a component:
+Get type completion when `use`ing logic:
 
 <p><img alt="Kea TypeScript React Component" src={useBaseUrl('img/guide/typescript-using.gif')} loading="lazy" style={{ width: '100%', maxWidth: 753 }} /></p>
 
@@ -66,25 +64,25 @@ function Blog () {
 
 I tried many ways to get this to work, but it was just not possible. 
 Even if I'd totally change the syntax of Kea itself, several things would
-still not be possible with today's TypeScript. For example typing selectors that 
-recursively depend on each other... or supporting plugins. 
+still ~~not be possible~~ be hard to implement or have big limitations 
+with today's TypeScript. For example selectors that 
+recursively depend on each other... or plugins. 
 
 Check out [this blog post](/blog/typescript) for a full overview of all the failed 
 approaches.
 
 Thus a workaround was needed.
 
-## Option 1: `kea-typegen`
+## Automatic types with `kea-typegen`
 
-The best way to get types in your logic is with [`kea-typegen`](https://github.com/keajs/kea-typegen),
-which uses the [TypeScript Compiler API](https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API) to
+[`kea-typegen`](https://github.com/keajs/kea-typegen) uses the [TypeScript Compiler API](https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API) to
 analyse your `.ts` files and generate type definitions for your logic.
 
-Running `kea-typegen write` or `kea-typegen watch` will generate a bunch of `logicType.ts` files:
+Run `kea-typegen write` or `kea-typegen watch` and get a bunch of `logicType.ts` files:
 
-<p><img alt="Kea-TypeGen" src="/img/blog/typescript/kea-typegen.gif" loading="lazy" style={{ width: '100%', maxWidth: 766 }} /></p>
+<p><img alt="Kea-TypeGen" src="/img/blog/typescript/typegen-write.gif" loading="lazy" style={{ width: '100%', maxWidth: 766 }} /></p>
 
-... will then be automatically imported and pass on to the `kea()` call.
+The generated types will be automatically added to the `kea()` call.
 
 ```typescript
 import { kea } from 'kea'
@@ -100,11 +98,7 @@ export const githubLogic = kea<githubLogicType>({
 
 It's a bit of extra work, but works like magic once set up!
 
-If, like in the screencast above, you have logic that connects to other logic or selectors that depend on other
-selectors `kea-typegen` will run in multiple passes
-until there are no more changes to write.
-
-### Step 1. Packages
+### Step 1. Install packages
 
 First install the `kea-typegen` and `typescript` packages:
 
@@ -116,21 +110,18 @@ yarn add --dev kea-typegen typescript
 npm install kea-typegen typescript --save-dev
 ```
 
-### Step 2. Understand the environment.
+### Step 2. Actually ignore the types
 
-`kea-typegen` will generate a `[filename]Type.ts` file next to every file that contains a `kea()` call.
-
-Thus a logic stored in `src/dashboardsLogic.ts` will get an accompanying `src/dashboardsLogicType.ts` file.
-
-I recommend **not committing** these to git and instead adding this to your `.gitignore`:
+Add this to your `.gitignore`:
 
 ```gitignore
-# file: .gitignore
 *Type.ts
 ```
 
-These files are generated and used mainly for coding assistance and CI/CD, so it doesn't make sense to
+Typefiles are generated and used mainly for coding assistance and CI/CD, so it doesn't make sense to
 pollute commits with them. Plus they will cause merging issues at pull requests. Just ignore them.
+
+If you're transpiling TypeScript via `babel`, you won't need to generate any types before a build.
 
 ### Step 3. Run it
 
@@ -150,76 +141,62 @@ yarn add --dev concurrently
 {
   "scripts": {
     "start": "concurrently \"yarn start:app\" \"yarn start:kea\" -n APP,KEA -c blue,green",
-    "start:app": "webpack-dev-server  # put your old 'start' script here",
+    "start:app": "webpack-dev-server",
     "start:kea": "kea-typegen watch"
   }
 }
 ```
 
-### Types in Reducers
+### Step 4. Specify types for actions and defaults
 
-`kea-typegen` automatically detects the types used in your actions, reducers,
-selectors and so on. It may however be the case that you need to manually specify the
-type of your reducers.
-
-In the following example the type of `blogId` is autodetected as `null`,
-since we can't read more out of the default value. 
-
-Using the `as` keyword you can improve on this and provide the exact type for your
-reducer:
+The only places you need to specify types are `action` parameters and defaults (e.g. for `reducers` or `loaders`)
 
 ```tsx
-const logic = kea({
+import { Blog } from './blog'
+import { logicType } from './logicType'
+
+export const LocalType = 'YES' | 'NO'
+
+const logic = kea<logicType<LocalType>>({ // 👈🦜 managed automatically by typegen 
     actions: {
-        openBlog: (id: number) => ({ id }),
-        closeBlog: true,
+        openBlog: (id: number, blog?: Blog) => ({ id, blog }), // 👈 add types here
+        closeBlog: (answer: LocalType) => ({ answer }),
     },
     reducers: {
         blogId: [
-            null as number | null, // 👈 it can also be a number
+            null as number | null, // 👈 null now, but sometimes a number 🙀
             {
                 openBlog: (_, { id }) => id,
                 closeBlog: () => null,
+                // use `actionTypes` instead of `actions`
+                [funLogic.actionTypes.randomBlogPage]: () => 4, // chosen by a fair dice roll
             },
         ],
-    },   
+    },
+    listeners: () => ({ 
+        closeBlog: ({ answer }) => { // no types needed here
+            console.log(answer)
+        }
+    })
 })
-
 ```
 
-### Rough Edges
+Files generated with kea-typegen will automatically import any types they can, and add the rest as type arguments
+for `kea<logicType<LocalType, LocalUser>>`
 
-This is the very first version of `kea-typegen`, so there are still some rough edges.
+### Caveats
 
-1. ~~You must manually import the `logicType` and insert it into your logic.
-   This will be done automatically in the future.~~ Update: Since kea-typegen 0.7.0 imports
-   are now added automatically!
+1. With some tools you might need to "Reload All Files" or explicitly open `logicType.ts` to see the changes.
 
-<img alt="Auto Import Logic Type" src="/img/blog/typescript/auto-import.gif" loading="lazy" />
-
-2. You must manually hook up all type dependencies by adding them on the `logicType`
-   in `logic.ts`. `kea-typegen` will then put the same list inside `logicType`.
-   This will also be done automatically in the future.
-
-<img alt="Send Type to Logic Type" src="/img/blog/typescript/send-type-to-type.gif" loading="lazy" />
-
-3. When [connecting logic together](https://kea.js.org/docs/guide/additional#connecting-logic-together),
-   you must use `[otherLogic.actionTypes.doSomething]` instead of `[otherLogic.actions.doSomething]`
-
-<img alt="Use ActionTypes" src="/img/blog/typescript/action-types.gif" loading="lazy" />
-
-4. Sometimes you might need to "Reload All Files" in your editor... or
-   explicitly open `logicType.ts` to see the changes.
-
-5. Plugins aren't supported yet. I've hardcoded a few of them (loaders, router, window-values)
+2. Plugins aren't supported yet. I've hardcoded a few of them (loaders, router, window-values)
    into the typegen library, yet that's not a long term solution.
 
-6. `logic.extend()` doesn't work yet.
+3. `logic.extend()` doesn't work yet
 
-These are all solvable issues. [Let me know](https://github.com/keajs/kea-typegen/issues) which ones to prioritise!
+Found a bug? Some type wrongly detected? [Post an issue here](https://github.com/keajs/kea-typegen/issues).
 
 
-### Advanced: changing where you store the types
+### Different path for types (not recommended)
 
 It's possible to write the type files into a different folder as arguments to the `kea-typegen` commands
 or with a `.kearc` file:
@@ -233,9 +210,9 @@ or with a `.kearc` file:
 ```
 
 However, experience would suggest against doing so. Having the `logicType.ts` files in the same folder as the code 
-helps detect possible coding and typing issues sooner. Plus they're easier to import.
+helps detect possible coding and typing issues sooner (the files show up red in the sidebar).
 
-## Option 2: MakeLogicType<V, A, P>
+## Alternative: MakeLogicType<V, A, P>
 
 At the end of the day, we are forced to make our own `logicTypes` and feed them to `kea()` calls.
 
