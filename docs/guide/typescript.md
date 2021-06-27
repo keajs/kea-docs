@@ -184,14 +184,24 @@ const logic = kea<logicType<LocalType>>({ // 👈🦜 managed automatically by t
 Files generated with kea-typegen will automatically import any types they can, and add the rest as type arguments
 for `kea<logicType<LocalType, LocalUser>>`
 
-### Caveats
+### Caveats / Known issues
 
-1. With some tools you might need to "Reload All Files" or explicitly open `logicType.ts` to see the changes.
+1. Using namespaced types like `ExportedApi.RandomThing` is slightly broken. 
+   You may sometimes need to create an `interface` that `extends` the original type. Creating a `type` alias
+   [will not work](https://github.com/microsoft/TypeScript/issues/19198#issuecomment-342596525), as 
+   "One difference is that interfaces create a new name that is used everywhere. 
+   Type aliases don’t create a new name — for instance, error messages won’t use the alias name. "
 
-2. Plugins aren't supported yet. I've hardcoded a few of them (loaders, router, window-values)
+```ts
+interface RandomThing extends ExportedApi.RandomThing {}
+```
+
+2. With some tools you might need to "Reload All Files" or explicitly open `logicType.ts` to see the changes.
+
+3. Plugins aren't supported yet. I've hardcoded a few of them (loaders, router, window-values)
    into the typegen library, yet that's not a long term solution.
 
-3. `logic.extend()` doesn't work yet
+4. `logic.extend()` doesn't work yet
 
 Found a bug? Some type wrongly detected? [Post an issue here](https://github.com/keajs/kea-typegen/issues).
 
