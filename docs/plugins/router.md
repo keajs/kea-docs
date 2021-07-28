@@ -262,12 +262,13 @@ const otherLogic = kea({
 Here's sample code for a global scene router
 
 ```javascript
-import React, { lazy, useMemo } from 'react'
+import React, { lazy } from 'react'
 
 export const scenes = {
-    'dashboard': () => import(/* webpackChunkName: 'dashboard' */'./dashboard/DashboardScene'),
-    'login': () => import(/* webpackChunkName: 'login' */'./login/LoginScene'),
-    'projects': () => import(/* webpackChunkName: 'projects' */'./projects/ProjectsScene'),
+    'unmatch': () => <div>404</div>,
+    'dashboard': lazy(() => import(/* webpackChunkName: 'dashboard' */'./dashboard/DashboardScene')),
+    'login': lazy(() => import(/* webpackChunkName: 'login' */'./login/LoginScene')),
+    'projects': lazy(() => import(/* webpackChunkName: 'projects' */'./projects/ProjectsScene')),
 }
 
 export const routes = {
@@ -312,9 +313,7 @@ export function Layout({ children }) {
 export function Scenes() {
     const { scene, params } = useValues(sceneLogic)
     
-    const Scene = useMemo(() => {
-        return scenes[scene] ? lazy(scenes[scene]) : () => <div>404</div>
-    }, [scene])
+    const Scene = scenes[scene] || scenes.unmatch
     
     return (
         <Layout>
