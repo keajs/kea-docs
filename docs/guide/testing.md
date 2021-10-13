@@ -3,29 +3,62 @@ id: testing
 title: Testing
 ---
 
-:::note
-Kea comes with over [120+ tests](https://github.com/keajs/kea/tree/master/src/__tests__) that verify things work like they should!
+## Why test your logics?
 
-Feel free to browse the test suite. It's better to look at recently modified files, since some tests haven't been changed for years
-and test in funky ways (not in line with Kea 2.0's best practices aka *don't do this at home*). 
-:::
+...
 
-## Testing with Jest
+## Install Jest and Kea-Test-Utils
 
-[Jest](https://jestjs.io/) is our testing framework of choice.
+Kea provides a set of utilities that makes testing logic with Jest a real treat.
+
+### Install the pacakges
+
+- [Install and configure jest](https://jestjs.io/docs/getting-started).
+- Install `kea-test-utils` with either:
+  - `yarn add --dev kea-test-utils`
+  - `npm install --save-dev kea-test-utils`
+
+### Reset the context before each test
 
 When testing with Jest, call [`resetContext()`](/docs/api/context#resetcontext) before each test to reset Kea's brain.
 
-```javascript
+```ts
 /* global test, expect, beforeEach */
-import { kea, resetContext } from '../index'
+import { kea, resetContext } from 'kea'
+import { testUtilsPlugin } from 'kea-test-utils'
 
 beforeEach(() => {
-  resetContext()
+  resetContext({
+    plugins: [testUtilsPlugin, /* other plugins */]  
+  })
 })
 
 test('runs before and after mount events', async () => {
   // your test here
+})
+```
+
+### Adapt `kea-router` to run in nodejs
+
+To run `kea-router` in a jest test, you need to pass it a mocked history object. Otherwise and especially when using `jsdom`, the URL might persist between tests.
+
+Install the `memory` package, and adapt as needed:
+
+```ts
+import { createMemoryHistory } from 'history'
+
+beforeEach(() => {
+  const history = createMemoryHistory()
+  ;(history as any).pushState = history.push
+  ;(history as any).replaceState = history.replace
+  
+  resetContext({
+    plugins: [
+      testUtilsPlugin, 
+      routerPlugin({ history: history, location: history.location }),
+      /* other plugins */  
+    ]
+  })
 })
 ```
 
