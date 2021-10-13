@@ -1,0 +1,247 @@
+---
+id: testing
+title: Testing
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+:::note Caution
+This is the only frontend testing framework that sparks joy.
+:::
+
+## Why test your logics in the first place?
+
+While adding a new feature into a logic, such as **"make it possible to duplicate dashboards"** into
+a fictional `dashboardsLogic.ts`, you write a clear set of actions, listeners, reducers and so forth.
+
+However, in a logic with multiple features, the code is grouped by functionality, and
+the original intent behind each feature is lost:
+
+<p><img alt="Redux Devtools" src={useBaseUrl('img/guide/testing-why-1.png')} style={{ maxWidth: 866/2 }} /></p>
+
+When code for one feature is spread out in a file, it's easy to make mistakes. E.g. You could
+change an action without understanding all the reducers that depend on it.
+
+That's why we write tests.
+
+<p><img alt="Redux Devtools" src={useBaseUrl('img/guide/testing-why-2.png')} style={{ maxWidth: 856/2 }} /></p>
+
+When building a feature, write the same story twice. Once in a test, code grouped together in one place,
+and once more in the logic, code split up by functionality.
+
+One side checking the other. Two factor authentication for your code.
+
+## Live-Replay testing
+
+To test a logic, you make sure that the actions you dispatch change the right values, and that their
+listeners in turn dispatch other actions.
+
+You literally just write down the story that you implemented:
+
+```ts
+import { expectLogic } from 'kea-test-utils'
+
+it('setting search query loads remote items', async () => {
+    await expectLogic(logic, () => {
+        logic.actions.setSearchQuery('event')
+    })
+        .toDispatchActions(['setSearchQuery', 'loadRemoteItems'])
+        .toMatchValues({
+            searchQuery: 'event',
+            remoteItems: expect.objectContaining({
+                count: 56, // old values from initial load
+            }),
+            remoteItemsLoading: true,
+        })
+        .toDispatchActions(['loadRemoteItemsSuccess'])
+        .toMatchValues({
+            searchQuery: 'event',
+            remoteItems: expect.objectContaining({
+                count: 3, // got new results
+                results: expect.arrayContaining([expect.objectContaining({ name: 'event1' })]),
+            }),
+            remoteItemsLoading: false,
+        })
+})
+```
+
+It doesn't matter if the actions you're matching have already been dispatched or if we need to wait for them.
+`toDispatchActions` can both query a recorded history of actions, and wait for new ones to come in.
+
+In turn, `.toMatchValues` matches values as they were after the last matched action, not as how they are now.
+
+Describing your features this declaratively allows for some pretty nifty code.
+
+## Install Jest and Kea-Test-Utils
+
+Kea provides a set of utilities that makes testing logic with Jest a real treat.
+
+### Install the pacakges#
+- Install and configure jest.
+- Install kea-test-utils with either:
+  - `yarn add --dev kea-test-utils`
+  - `npm install --save-dev kea-test-utils`
+
+### Reset the context before each test
+When testing with Jest, call resetContext() before each test to reset Kea's brain.
+
+```ts
+/* global test, expect, beforeEach */
+import { kea, resetContext } from 'kea'
+import { testUtilsPlugin } from 'kea-test-utils'
+
+beforeEach(() => {
+  resetContext({
+    plugins: [testUtilsPlugin, /* other plugins */]  
+  })
+})
+
+test('runs before and after mount events', async () => {
+  // your test here
+})
+```
+
+
+## Testing with Jest
+
+[Jest](https://jestjs.io/) is our testing framework of choice.
+
+When testing with Jest, call [`resetContext()`](/docs/api/context#resetcontext) before each test to reset Kea's brain.
+
+```javascript
+/* global test, expect, beforeEach */
+import { kea, resetContext } from '../index'
+
+beforeEach(() => {
+  resetContext()
+})
+
+test('runs before and after mount events', async () => {
+  // your test here
+})
+```
+
+## Testing logic
+
+Before writing tests for logic, read the [advanced](/docs/guide/advanced) sections on [Lifecycles](/docs/guide/advanced#lifecycles)
+and [Mounting and Unmounting](/docs/guide/advanced#mounting-and-unmounting).
+
+Normally in a test you would mount a logic, call some actions on it and assure the values.
+
+Here's a simple example:
+
+```javascript
+/* global test, expect, beforeEach */
+import { kea, resetContext } from '../index'
+
+beforeEach(() => {
+  resetContext()
+})
+
+test('runs before and after mount events', async () => {
+  const logic = kea({
+    actions: {
+      increment: (amount = 1) => ({ amount }),
+    },
+    reducers: {
+      counter: [0, {
+        increment: (_, { name }) => name,
+      }],
+    },
+  })
+
+  logic.mount()
+  expect(logic.values.counter).toBe(0)
+
+  logic.actions.increment(1)
+  expect(logic.values.counter).toBe(1)
+})
+```
+
+## Wait for actions
+
+Sometimes you need to wait for a specific action to complete before you can end your test.
+
+Use the [kea-waitfor](/docs/plugins/waitfor) plugin for that. 
+
+```javascript
+/* global test, expect, beforeEach */
+import { resetContext, kea } from 'kea'
+
+import { waitForAction, waitForPlugin } from 'kea-waitfor'
+
+beforeEach(() => {
+  resetContext({
+    plugins: [waitForPlugin]
+  })
+})
+
+const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms))
+
+test('can wait for an action', async () => {
+  const logic = kea({
+    actions: {
+      setValue: value => ({ value }),
+      valueWasSet: value => ({ value })
+    },
+
+    listeners: ({ actions }) => ({
+      setValue: async ({ value }) => {
+        await delay(300)
+        actions.valueWasSet(value)
+      }
+    })
+  })
+
+  // wait just for an action
+  const unmount1 = logic.mount()
+  logic.actions.setValue('hamburger')
+  const { value } = await waitForAction(logic.actions.valueWasSet)
+  expect(value).toBe('hamburger')
+  unmount1()
+ 
+  // any random check on the action
+  const unmount2 = logic.mount()
+  logic.actions.setValue('cheeseburger')
+  const { value } = await waitForCondition(action => {
+    return action.type === logic.actions.valueWasSet.toString() && 
+           action.payload.value === 'cheeseburger'
+  })
+  expect(value).toBe('cheeseburger')
+  unmount2()
+})
+```
+
+## Testing Kea and React together
+
+I'm not yet ready to recommend a best practice. But a year ago [this approach](https://github.com/keajs/kea/blob/master/src/__tests__/hooks.js)
+got the job done. 
+
+TODO! :)
+
+
+## Common issues
+
+### Adapt kea-router to run in nodejs
+
+To run kea-router in a jest test, you need to pass it a mocked history object. Otherwise and especially when using jsdom, the URL might persist between tests.
+
+Install the `memory` package, and adapt as needed:
+
+```ts
+import { createMemoryHistory } from 'history'
+
+beforeEach(() => {
+  const history = createMemoryHistory()
+  ;(history as any).pushState = history.push
+  ;(history as any).replaceState = history.replace
+  
+  resetContext({
+    plugins: [
+      testUtilsPlugin, 
+      routerPlugin({ history: history, location: history.location }),
+      /* other plugins */  
+    ]
+  })
+})
+```
