@@ -228,7 +228,7 @@ await expectLogic().toFinishAllListeners()
 
 ### `.toMatchValues()`
 
-Match the store's state as it was after a matched action
+Match the store's state as it was **after a matched action**.
 
 ```ts
 await expectLogic(logic, () => logic.actions.doSomething())
@@ -237,15 +237,16 @@ await expectLogic(logic, () => logic.actions.doSomething())
         something: 'done',
         somethingLoading: 'true'
     })
+    .toDispatchActions(['doSomethingElse'])
     .toMatchValues(otherLogic, {
-        id: 123
+        something: 'else',
     })
 ```
 
 Use the `truth` helper or jest's `expect` matchers to make matching easier:
 
 ```ts
-import { truth } from 'kea-test-utils'
+import { expectLogic, truth } from 'kea-test-utils'
 
 await expectLogic(logic, () => logic.actions.loadResults())
     .toHaveDispatchedActions(['loadResultsSuccess'])
@@ -256,6 +257,11 @@ await expectLogic(logic, () => logic.actions.loadResults())
         })
     })
 ```
+
+To match values as they are now, and not as they are at the end of a matched action, either:
+
+1. Actually match a better action with `.toDispatchActions(['doSomethingElse'])` if applicable
+2. Use `.clearHistory()` to reset all matched actions.
 
 ### `.toMount()`
 
@@ -287,6 +293,16 @@ Wait the time in `ms`.
 await expectLogic(logic, () => logic.actions.setSearchQuery())
     .wait(100)
     .printActions()
+```
+
+### `.clearHistory()`
+
+Forget anything ever happened
+
+```ts
+await expectLogic(logic, () => logic.actions.setSearchQuery())
+    .clearHistory()
+    .printActions() // nothing
 ```
 
 
