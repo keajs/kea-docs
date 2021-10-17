@@ -11,12 +11,6 @@ import { getContext, kea } from 'kea'
 
 <Provider store={getContext().store}>
 
-## kea(input)
-Create a new kea `logic`.
-
-## Usage
-Here is a complete example with all the options available.
-
 <IntroCode />
 
 ```js
@@ -51,45 +45,6 @@ const logic = kea({
     reducerKey: selectors.allProps(state).firstProp
   }),
 
-  // Reducers store data in logic.
-  // You must specify the default value and any actions that change it.
-
-  // Optionally you can also give each reducer a PropType and it will be automatically
-  // injected into React class-based Components. This is not useful if you're using hooks.
-
-  // You can also give an options object as the last parameter before the actions.
-  // Some plugins (e.g. localStorage) use it to manipulate the reducers
-  reducers: ({ actions, constants, props, selectors }) => ({
-    // The defaults for reducers can come from props (if you're using a key and passing props)
-    defaultFromProps: [props.id, PropTypes.number, {
-      [actions.clearSomething]: () => constants.STRING,
-      [actions.someOtherAction]: (_, payload) => payload.value
-    }],
-
-    // ... or from a selector that you have connected to
-    defaultFromSelectors: [selectors.otherValable, PropTypes.number, {
-      [actions.clearSomething]: () => constants.STRING,
-      [actions.someOtherAction]: (_, payload) => payload.value
-    }],
-  }),
-
-  // Selectors take the input of one or more selectors (created automatically for reducers)
-  // and return a combined output. Selectors are recalculated only if one of the inputs
-  // changes.
-  selectors: ({ selectors }) => ({
-    computedValue: [
-      (selectors) => [ // get selectors from the argument here or from above
-        selectors.reducerKey,
-        selectors.constantDefault,
-        state => state.variable.from.redux,
-        (_, props) => props.id // you can access props like this
-      ],
-      (reducerKey, constantDefault, variable, id) => {
-        return expensiveComputation(reducerKey, constantDefault, variable, id)
-      },
-      PropTypes.object
-    ]
-  }),
 })
 ```
 

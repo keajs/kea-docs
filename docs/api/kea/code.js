@@ -11,7 +11,7 @@ const introCodeLogic = kea({
     reducers: {
         expanded: [
             {
-                // component: true,
+                core: true,
             },
             {
                 expand: (state, { code }) => ({ ...state, [code]: true }),
@@ -28,15 +28,17 @@ const introCodeLogic = kea({
             router.values.location.pathname,
             router.values.searchParams,
             { expanded: Object.keys(values.expanded).join(',') },
+            { replace: true },
         ],
         shrink: () => [
             router.values.location.pathname,
             router.values.searchParams,
             { expanded: Object.keys(values.expanded).join(',') },
+            { replace: true },
         ],
     }),
     urlToAction: ({ actions, values }) => ({
-        '/docs/api/kea': (_, __, { expanded }) => {
+        '*': (_, __, { expanded }) => {
             if (typeof expanded !== 'undefined' && Object.keys(values.expanded).join(',') !== expanded) {
                 actions.setExpanded(Object.fromEntries(expanded.split(',').map((e) => [e, true])))
             }
@@ -159,8 +161,8 @@ export function IntroCode() {
 
     return (
         <code className="example-panel home-intro-code">
-            <L>{'// 🦜 '}</L>
-            <L>{'const githubSearchLogic = kea({ #[logic]#'}</L>
+            <L>{'// 🦜 Here is a complete example with all the options available.'}</L>
+            <L>{'const githubSearchLogic = kea<githubSearchLogicType>({ #[logic]#'}</L>
             <L>{'    #[core]# // core concepts'}</L>
             {expanded?.core ? (
                 <>
@@ -173,12 +175,12 @@ export function IntroCode() {
                             <L>{'        downcase: true,'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 📦 some carry a payload'}</L>
-                            <L>{'        setUsername: (username) => ({ username }),'}</L>
-                            <L>{'        repositoriesLoaded: (repositories) => ({ repositories }),'}</L>
-                            <L>{'        repositoryLoadError: (error) => ({ error }),'}</L>
+                            <L>{'        setUsername: (username: string) => ({ username }),'}</L>
+                            <L>{'        repositoriesLoaded: (repositories: Repsitory[]) => ({ repositories }),'}</L>
+                            <L>{'        repositoryLoadError: (error: string) => ({ error }),'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 🍱 some take multiple args and defaults'}</L>
-                            <L>{'        openPage: (page, perPage = 10) => ({ page, perPage }),'}</L>
+                            <L>{'        openPage: (page: number, perPage = 10) => ({ page, perPage }),'}</L>
                             <L>{'        '}</L>
                             <L>{'        // 😇 all actions must be pure functions'}</L>
                             <L>{'        // 💡 they singal intent: something is about to happen'}</L>
@@ -188,66 +190,7 @@ export function IntroCode() {
                     ) : (
                         <L>{'    actions: { #[actions]# },'}</L>
                     )}
-                    <L>{'    '}</L>
-                    <L>{'    // 📦 actions modify values stored in reducers'}</L>
-                    {expanded?.reducers ? (
-                        <>
-                            <L>{'    reducers: { #[reducers]#'}</L>
-                            <L>{'        // 🍭 this is syntactic sugar over standard redux reducers'}</L>
-                            <L>{'        username: ['}</L>
-                            <L>{'            // 💬 the default username'}</L>
-                            <L>{'            "keajs",'}</L>
-                            <L>{'            // 🚀 actions that modify its state'}</L>
-                            <L>{'            {'}</L>
-                            <L>{'                setUsername: (_, { username }) => username,'}</L>
-                            <L>{'                downcase: (state) => state.toLoweCase(),'}</L>
-                            <L>{'                // 👀 action: (state, payload) => newState'}</L>
-                            <L>{'            },'}</L>
-                            <L>{'        ],'}</L>
-                            <L>{'        // 🍭 reducers can be simple'}</L>
-                            <L>{'        repositories: ['}</L>
-                            <L>{'            [],'}</L>
-                            <L>{'            {'}</L>
-                            <L>{'                repositoriesLoaded: (_, { repositories }) => repositories,'}</L>
-                            <L>{'            },'}</L>
-                            <L>{'        ],'}</L>
-                            <L>{'        repositoriesLoading: ['}</L>
-                            <L>{'            false,'}</L>
-                            <L>{'            {'}</L>
-                            <L>{'                setUsername: () => true,'}</L>
-                            <L>{'                repositoriesLoaded: () => false,'}</L>
-                            <L>{'                repositoryLoadError: () => false,'}</L>
-                            <L>{'            },'}</L>
-                            <L>{'        ],'}</L>
-                            <L>{'        // 🍭 ... or complicated with many modifiers'}</L>
-                            <L>{'        error: ['}</L>
-                            <L>{'            null,'}</L>
-                            <L>{'            {'}</L>
-                            <L>{'                setUsername: () => null,'}</L>
-                            <L>{'                repositoryLoadError: (_, { error }) => error,'}</L>
-                            <L>{'                setUsernameFailure: (_, { error }) => error,'}</L>
-                            <L>{'            },'}</L>
-                            <L>{'        ],'}</L>
-                            <L>{'        page: ['}</L>
-                            <L>{'            1,'}</L>
-                            <L>{'            {'}</L>
-                            <L>{'                openPage: (_, { page }) => page,'}</L>
-                            <L>{'                repositoriesLoaded: () => 1,'}</L>
-                            <L>{'            },'}</L>
-                            <L>{'        ],'}</L>
-                            <L>{'        perPage: ['}</L>
-                            <L>{'            10,'}</L>
-                            <L>{'            {'}</L>
-                            <L>{'                openPage: (_, { perPage }) => perPage,'}</L>
-                            <L>{'            },'}</L>
-                            <L>{'        ],'}</L>
-                            <L>{'        // 😇 reducers are pure functions as well'}</L>
-                            <L>{'        // 🚫 no API calls or other side effects allowed'}</L>
-                            <L>{'    },'}</L>
-                        </>
-                    ) : (
-                        <L>{'    reducers: { #[reducers]# },'}</L>
-                    )}
+
                     <L>{'    '}</L>
                     <L>{'    // 🔨 actions trigger listeners'}</L>
                     {expanded?.listeners ? (
@@ -288,6 +231,83 @@ export function IntroCode() {
                     ) : (
                         <L>{'    listeners: { #[listeners]# },'}</L>
                     )}
+
+                    <L>{'    '}</L>
+                    <L>{'    // 📦 actions modify values stored in reducers'}</L>
+                    {expanded?.reducers ? (
+                        <>
+                            <L>{'    reducers: { #[reducers]#'}</L>
+                            <L>{'        // 🍭 this is syntactic sugar over standard redux reducers'}</L>
+                            <L>{'        username: ['}</L>
+                            <L>{'            // 💬 the default username'}</L>
+                            <L>{'            "keajs",'}</L>
+                            <L>{'            // 🚀 actions that modify its state'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                setUsername: (_, { username }) => username,'}</L>
+                            <L>{'                downcase: (state) => state.toLoweCase(),'}</L>
+                            <L>{'                // 👀 action: (state, payload) => newState'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        // 🍭 reducers can be simple'}</L>
+                            <L>{'        repositories: ['}</L>
+                            <L>{'            [] as Respository[],'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                repositoriesLoaded: (_, { repositories }) => repositories,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        repositoriesLoading: ['}</L>
+                            <L>{'            false,'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                setUsername: () => true,'}</L>
+                            <L>{'                repositoriesLoaded: () => false,'}</L>
+                            <L>{'                repositoryLoadError: () => false,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        // 🍭 ... or complicated with many modifiers'}</L>
+                            <L>{'        error: ['}</L>
+                            <L>{'            null as string | null,'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                setUsername: () => null,'}</L>
+                            <L>{'                repositoryLoadError: (_, { error }) => error,'}</L>
+                            <L>{'                setUsernameFailure: (_, { error }) => error,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        page: ['}</L>
+                            <L>{'            1,'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                openPage: (_, { page }) => page,'}</L>
+                            <L>{'                repositoriesLoaded: () => 1,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        perPage: ['}</L>
+                            <L>{'            10,'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                openPage: (_, { perPage }) => perPage,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ],'}</L>
+                            <L>{'        // 😇 reducers are pure functions as well'}</L>
+                            <L>{'        // 🚫 no API calls or other side effects allowed'}</L>
+                            <L>{'    },'}</L>
+                            <L>{'    // 💌 you can also use props and selectors as defaults'}</L>
+                            <L>{'    reducers: ({ props, selectors }) => ({'}</L>
+                            <L>{'        pageId: ['}</L>
+                            <L>{'            props.id'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                setPage: ({ id }) => id,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ]'}</L>
+                            <L>{'        pageWithOffset: ['}</L>
+                            <L>{'            (state, props) => selectors.page(state) + props.offset,'}</L>
+                            <L>{'            {'}</L>
+                            <L>{'                setPage: ({ id }) => id + props.offset,'}</L>
+                            <L>{'            },'}</L>
+                            <L>{'        ]'}</L>
+                            <L>{'    }),'}</L>
+                        </>
+                    ) : (
+                        <L>{'    reducers: { #[reducers]# },'}</L>
+                    )}
+
                     <L>{'    '}</L>
                     <L>{'    // 👨‍👩‍👧‍👦 selectors compute and memoize values'}</L>
                     {expanded?.selectors ? (
@@ -326,6 +346,14 @@ export function IntroCode() {
                                 }
                             </L>
                             <L>{'        ],'}</L>
+                            <L>{'        // 💌 selectors are functions (state, props) => value'}</L>
+                            <L>{'        urlChanged: ['}</L>
+                            <L>{'            () => [,'}</L>
+                            <L>{'                (state) => state.kea.router.searchParams.id,'}</L>
+                            <L>{'                (_, props) => props.id,'}</L>
+                            <L>{'            ],'}</L>
+                            <L>{'            (urlId, propsId) => urlId !== propsId,'}</L>
+                            <L>{'        ],'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
@@ -338,6 +366,15 @@ export function IntroCode() {
             <L>{'    #[additional]# // additional concepts'}</L>
             {expanded?.additional ? (
                 <>
+                    <L>{'    '}</L>
+                    <L>{'    // 🔁 path'}</L>
+                    {expanded?.path ? (
+                        <>
+                            <L>{'    path: [] #[path]#'}</L>
+                        </>
+                    ) : (
+                        <L>{'    path: [] #[path]#'}</L>
+                    )}
                     <L>{'    '}</L>
                     <L>{'    // 🔁 lifecycle events: afterMount and beforeUnmount'}</L>
                     {expanded?.events ? (
@@ -381,9 +418,9 @@ export function IntroCode() {
                 <>
                     <L>{'    '}</L>
                     <L>{'    // 🔗 connect to actions and values from another logic'}</L>
-                    {expanded?.logicConnect ? (
+                    {expanded?.connect ? (
                         <>
-                            <L>{'    connect: { #[logicConnect]#'}</L>
+                            <L>{'    connect: { #[connect]#'}</L>
                             <L>{'        // 🏞️ these will act as local actions/values'}</L>
                             <L>{'        actions: ['}</L>
                             <L>{'            // fetch from another logic'}</L>
@@ -408,13 +445,13 @@ export function IntroCode() {
                             <L>{'    }),'}</L>
                         </>
                     ) : (
-                        <L>{'    connect: { #[logicConnect]# },'}</L>
+                        <L>{'    connect: { #[connect]# },'}</L>
                     )}
                     <L>{'    '}</L>
                     <L>{'    // 👶 inherit actions and values from another logic'}</L>
-                    {expanded?.logicInherit ? (
+                    {expanded?.inherit ? (
                         <>
-                            <L>{'    inherit: [ #[logicInherit]#'}</L>
+                            <L>{'    inherit: [ #[inherit]#'}</L>
                             <L>{'        otherLogic,'}</L>
                             <L>
                                 {
@@ -424,13 +461,13 @@ export function IntroCode() {
                             <L>{'    ],'}</L>
                         </>
                     ) : (
-                        <L>{'    inherit: [ #[logicInherit]# ],'}</L>
+                        <L>{'    inherit: [ #[inherit]# ],'}</L>
                     )}
                     <L>{'    '}</L>
                     <L>{'    // ➕ extend with other input after building'}</L>
-                    {expanded?.logicExtend ? (
+                    {expanded?.extend ? (
                         <>
-                            <L>{'    extend: [ #[logicExtend]#'}</L>
+                            <L>{'    extend: [ #[extend]#'}</L>
                             <L>{'        {'}</L>
                             <L>
                                 {
@@ -443,7 +480,7 @@ export function IntroCode() {
                             <L>{'    ],'}</L>
                         </>
                     ) : (
-                        <L>{'    extend: [ #[logicExtend]# ],'}</L>
+                        <L>{'    extend: [ #[extend]# ],'}</L>
                     )}
                 </>
             ) : null}
@@ -454,9 +491,9 @@ export function IntroCode() {
                 <>
                     <L>{'    '}</L>
                     <L>{'    // 💾 kea-loaders: use loaders to load data from APIs'}</L>
-                    {expanded?.logicLoaders ? (
+                    {expanded?.loaders ? (
                         <>
-                            <L>{'    loaders: { #[logicLoaders]#'}</L>
+                            <L>{'    loaders: { #[loaders]#'}</L>
                             <L>{'        // 🔌 install the "kea-loaders" plugin to use'}</L>
                             <L>{'        // 🤠 the following creates two values: "user" and "userLoading"'}</L>
                             <L>
@@ -492,39 +529,39 @@ export function IntroCode() {
                             <L>{'    },'}</L>
                         </>
                     ) : (
-                        <L>{'    loaders: { #[logicLoaders]# },'}</L>
+                        <L>{'    loaders: { #[loaders]# },'}</L>
                     )}
                     <L>{'    '}</L>
                     <L>{'    // 🎯 kea-router: dispatch an action when the browser URL changes'}</L>
-                    {expanded?.logicUrlToAction ? (
+                    {expanded?.urlToAction ? (
                         <>
-                            <L>{'    urlToAction: ({ actions }) => ({ #[logicUrlToAction]#'}</L>
+                            <L>{'    urlToAction: ({ actions }) => ({ #[urlToAction]#'}</L>
                             <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
                             <L>{'        "/:username": ({ username }) => actions.setUsername(username),'}</L>
                             <L>{'        "/": () => actions.setUsername("keajs"),'}</L>
                             <L>{'    }),'}</L>
                         </>
                     ) : (
-                        <L>{'    urlToAction: { #[logicUrlToAction]# },'}</L>
+                        <L>{'    urlToAction: { #[urlToAction]# },'}</L>
                     )}
                     <L>{'    '}</L>
                     <L>{'    // 🌍 kea-router: change the browser URL when an action is dispatched'}</L>
-                    {expanded?.logicActionToUrl ? (
+                    {expanded?.actionToUrl ? (
                         <>
-                            <L>{'    actionToUrl: { #[logicActionToUrl]#'}</L>
+                            <L>{'    actionToUrl: { #[actionToUrl]#'}</L>
                             <L>{'        // 🔌 install the "kea-router" plugin to use'}</L>
                             <L>{'        setUsername: ({ username }) => `/${username}`,'}</L>
                             <L>{'    },'}</L>
                         </>
                     ) : (
-                        <L>{'    actionToUrl: { #[logicActionToUrl]# },'}</L>
+                        <L>{'    actionToUrl: { #[actionToUrl]# },'}</L>
                     )}
 
                     <L>{'    '}</L>
                     <L>{'    // 🪟 kea-window-values: store values like window.innerWidth in the logic'}</L>
-                    {expanded?.logicWindowValues ? (
+                    {expanded?.windowValues ? (
                         <>
-                            <L>{'    windowValues: { #[logicWindowValues]#'}</L>
+                            <L>{'    windowValues: { #[windowValues]#'}</L>
                             <L>{'        // 🔌 install the "kea-window-values" plugin to use'}</L>
                             <L>{'        isSmallScreen: (window) => window.innerWidth < 640,'}</L>
                             <L>{'        isRetina: (window) => window.devicePixelRatio > 2,'}</L>
@@ -535,13 +572,13 @@ export function IntroCode() {
                             <L>{'    },'}</L>
                         </>
                     ) : (
-                        <L>{'    windowValues: { #[logicWindowValues]# },'}</L>
+                        <L>{'    windowValues: { #[windowValues]# },'}</L>
                     )}
                     <L>{'    '}</L>
                     <L>{'    // 🌅 kea-saga: alternative side-effects via redux-saga'}</L>
-                    {expanded?.logicSagas ? (
+                    {expanded?.sagas ? (
                         <>
-                            <L>{'    sagas: [ #[logicSagas]#'}</L>
+                            <L>{'    sagas: [ #[sagas]#'}</L>
                             <L>{'        function * () { /* sagas to start with the logic */ },'}</L>
                             <L>{'    ],'}</L>
                             <L>{'    // 🔌 install the "kea-saga" plugin to use'}</L>
@@ -552,13 +589,13 @@ export function IntroCode() {
                             <L>{'    workers: { /* shared code */ },'}</L>
                         </>
                     ) : (
-                        <L>{'    sagas: [ #[logicSagas]# ],'}</L>
+                        <L>{'    sagas: [ #[sagas]# ],'}</L>
                     )}
                     <L>{'    '}</L>
                     <L>{'    // 🪵 kea-thunk: alternative side-effects via redux-thunk'}</L>
-                    {expanded?.logicThunks ? (
+                    {expanded?.thunks ? (
                         <>
-                            <L>{'    thunks: ({ actions }) => ({ #[logicThunks]#'}</L>
+                            <L>{'    thunks: ({ actions }) => ({ #[thunks]#'}</L>
                             <L>{'        // 🔌 install the "kea-thunk" plugin to use'}</L>
                             <L>{'        // 🤔 you probably want to use listeners instead'}</L>
                             <L>{"        // 🦕 because you can't use thunks in reducers"}</L>
@@ -569,7 +606,7 @@ export function IntroCode() {
                             <L>{'    }),'}</L>
                         </>
                     ) : (
-                        <L>{'    thunks: { #[logicThunks]# },'}</L>
+                        <L>{'    thunks: { #[thunks]# },'}</L>
                     )}
                     <L>{'    '}</L>
                     <L>{"    // 💯 don't see what you need? write your own plugin"}</L>
