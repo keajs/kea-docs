@@ -2,7 +2,7 @@ const React = require('react')
 
 module.exports = {
     title: 'Kea 2.5',
-    tagline: 'Keep your state in Kea and your views in React',
+    tagline: 'State management for ambitious apps',
     url: 'https://kea.js.org',
     baseUrl: '/',
     favicon: 'img/favicon.ico',

@@ -1,3 +1,4 @@
+import '../resetKea'
 import React, { useState } from 'react'
 import classnames from 'classnames'
 import Layout from '@theme/Layout'
@@ -6,16 +7,8 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import styles from './styles.module.css'
 import './styles.css'
-import { Example } from '../../docs/tutorials/github/example'
-import { getContext, resetContext } from 'kea'
+import { getContext } from 'kea'
 import { Provider } from 'react-redux'
-import { IntroCode } from '../components/intro/code'
-import { Github } from '../components/intro/githubComponent'
-import { loadersPlugin } from 'kea-loaders'
-
-resetContext({
-    plugins: [loadersPlugin],
-})
 
 const features = [
     {
@@ -184,27 +177,11 @@ function Home() {
         >
             <header className={classnames('hero hero--primary', styles.heroBanner)}>
                 <div className="container">
-                    {/*<h1 className="hero__title">{siteConfig.title}</h1>*/}
+                    <h1 className="hero__title" style={{ textAlign: 'center' }}>
+                        {siteConfig.title}
+                    </h1>
                     <p className="hero__subtitle">{siteConfig.tagline}</p>
-                    <div>
-                        <code className="example-panel home-intro-code">
-                            <IntroCode />
-                        </code>
-                    </div>
-                    <Example style={{ marginBottom: 30 }}>
-                        {showExample ? (
-                            <Github />
-                        ) : (
-                            <div style={{ textAlign: 'center', marginRight: 80, paddingTop: 17, paddingBottom: 17 }}>
-                                <p>
-                                    This example is halted to avoid rate-limiting the GitHub API.
-                                </p>
-                                <button onClick={() => setShowExample(true)} className="button button--success">
-                                    Click here to load the example
-                                </button>
-                            </div>
-                        )}
-                    </Example>
+
                     <div className={styles.buttons}>
                         <Link
                             className={classnames(

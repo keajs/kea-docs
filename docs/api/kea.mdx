@@ -1,0 +1,96 @@
+---
+id: kea
+title: Kea
+sidebar_label: Kea
+---
+
+import '../../src/resetKea'
+import { IntroCode } from './kea/code'
+import { Provider } from 'react-redux'
+import { getContext, kea } from 'kea'
+
+<Provider store={getContext().store}>
+
+## kea(input)
+Create a new kea `logic`.
+
+## Usage
+Here is a complete example with all the options available.
+
+<IntroCode />
+
+```js
+const logic = kea({
+
+  // you may *optionally* name your logic and specify where it ends up in redux:
+  path: () => ['scenes', 'myRandomScene', 'index'],
+
+  // if you wish to instantiate many independent copies of the same logic, use
+  // the key attribute and take the unique key from the props, then *optionally*
+  // pass it to the path
+  key: props => props.id,
+  path: key => ['scenes', 'myRandomScene', 'index', key],
+
+  // you can create constants that will be accessible later in the "constants"
+  // object in the format { STRING: 'STRING', OTHER_STRING: 'OTHER_STRING' }
+  constants: () => ['STRING', 'OTHER_STRING'],
+
+  // Defaults are specified as the first parameter to the reducers.
+  // However you can have a separate "defaults" key that overrides that.
+  // Feel free to use selectors in any way you like in this object.
+  // Some examples follow:
+  defaults: {
+    reducerKey: 'yes please'
+  },
+
+  defaults: ({ selectors }) => ({
+    reducerKey: selectors.firstProp
+  }),
+
+  defaults: ({ selectors }) => state => ({
+    reducerKey: selectors.allProps(state).firstProp
+  }),
+
+  // Reducers store data in logic.
+  // You must specify the default value and any actions that change it.
+
+  // Optionally you can also give each reducer a PropType and it will be automatically
+  // injected into React class-based Components. This is not useful if you're using hooks.
+
+  // You can also give an options object as the last parameter before the actions.
+  // Some plugins (e.g. localStorage) use it to manipulate the reducers
+  reducers: ({ actions, constants, props, selectors }) => ({
+    // The defaults for reducers can come from props (if you're using a key and passing props)
+    defaultFromProps: [props.id, PropTypes.number, {
+      [actions.clearSomething]: () => constants.STRING,
+      [actions.someOtherAction]: (_, payload) => payload.value
+    }],
+
+    // ... or from a selector that you have connected to
+    defaultFromSelectors: [selectors.otherValable, PropTypes.number, {
+      [actions.clearSomething]: () => constants.STRING,
+      [actions.someOtherAction]: (_, payload) => payload.value
+    }],
+  }),
+
+  // Selectors take the input of one or more selectors (created automatically for reducers)
+  // and return a combined output. Selectors are recalculated only if one of the inputs
+  // changes.
+  selectors: ({ selectors }) => ({
+    computedValue: [
+      (selectors) => [ // get selectors from the argument here or from above
+        selectors.reducerKey,
+        selectors.constantDefault,
+        state => state.variable.from.redux,
+        (_, props) => props.id // you can access props like this
+      ],
+      (reducerKey, constantDefault, variable, id) => {
+        return expensiveComputation(reducerKey, constantDefault, variable, id)
+      },
+      PropTypes.object
+    ]
+  }),
+})
+```
+
+</Provider>
