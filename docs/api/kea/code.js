@@ -162,7 +162,7 @@ export function IntroCode() {
     return (
         <code className="example-panel home-intro-code">
             <L>{'// 🦜 Here is a complete example with all the options available.'}</L>
-            <L>{'const githubSearchLogic = kea<githubSearchLogicType>({ #[logic]#'}</L>
+            <L>{'const githubSearchLogic = kea<githubSearchLogicType>({'}</L>
             <L>{'    #[core]# // core concepts'}</L>
             {expanded?.core ? (
                 <>
@@ -367,14 +367,38 @@ export function IntroCode() {
             {expanded?.additional ? (
                 <>
                     <L>{'    '}</L>
-                    <L>{'    // 🔁 path'}</L>
+                    <L>{'    // 🔑 key: instantiate multiple copies of this logic'}</L>
+                    <L>{'    key: (props) => props.id,'}</L>
+
+                    <L>{'    '}</L>
+                    <L>{'    // 🛣 path: where in the Redux state do we store this logic'}</L>
                     {expanded?.path ? (
                         <>
-                            <L>{'    path: [] #[path]#'}</L>
+                            <L>{'    path: ["scenes", "root", "index"], #[path]#'}</L>
+                            <L>{'    path: (key) => ["scenes", "profile", key],'}</L>
                         </>
                     ) : (
-                        <L>{'    path: [] #[path]#'}</L>
+                        <L>{'    path: [ #[path]# ],'}</L>
                     )}
+
+                    <L>{'    '}</L>
+                    <L>{'    // 🛣 defaults: optionally specify defaults for reducers here'}</L>
+                    {expanded?.defaults ? (
+                        <>
+                            <L>{'    defaults: { #[defaults]#'}</L>
+                            <L>{'        reducerKey: "yes",'}</L>
+                            <L>{'    },'}</L>
+                            <L>{'    defaults: ({ selectors }) => ({'}</L>
+                            <L>{'        reducerKey: selectors.firstProp,'}</L>
+                            <L>{'    }),'}</L>
+                            <L>{'    defaults: ({ selectors }) => state => ({'}</L>
+                            <L>{'        reducerKey: selectors.allProps(state).firstProp,'}</L>
+                            <L>{'    }),'}</L>
+                        </>
+                    ) : (
+                        <L>{'    defaults: { #[defaults]# },'}</L>
+                    )}
+
                     <L>{'    '}</L>
                     <L>{'    // 🔁 lifecycle events: afterMount and beforeUnmount'}</L>
                     {expanded?.events ? (
