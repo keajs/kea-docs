@@ -1,0 +1,16 @@
+---
+id: kea
+title: Kea
+sidebar_label: Kea
+---
+
+import '../../src/resetKea'
+import { IntroCode } from './kea/code'
+import { Provider } from 'react-redux'
+import { getContext, kea } from 'kea'
+
+<Provider store={getContext().store}>
+
+<IntroCode />
+
+</Provider>
