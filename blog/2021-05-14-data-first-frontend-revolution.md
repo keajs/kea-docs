@@ -1,5 +1,5 @@
 ---
-id: data-first-frontend-revolution
+slug: data-first-frontend-revolution
 title: It's time for a data-first frontend revolution
 author: Marius Andra
 author_title: Kea Core Team, Software Engineer at PostHog

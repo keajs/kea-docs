@@ -1,5 +1,5 @@
 ---
-id: kea-test-utils
+slug: kea-test-utils
 title: "Live-Replay Logic Testing"
 author: Marius Andra
 author_title: Kea Core Team, Software Engineer at PostHog
