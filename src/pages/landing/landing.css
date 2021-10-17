@@ -1,0 +1,41 @@
+.landing-page h1 {
+    font-size: 7vw;
+    line-height: 9vw;
+    font-weight: 400;
+}
+.landing-page h1 strong {
+    font-weight: 800;
+}
+.landing-page h1 strong.huge {
+    font-weight: 800;
+    font-size: 21vw;
+}
+
+.landing-page .block {
+    text-align: center;
+    padding: 2.3em 1em;
+    font-size: 5vw;
+    line-height: 7.5vw;
+}
+.landing-page .code-block {
+    text-align: left;
+    font-size: 2vw;
+    line-height: 1.2em;
+    background: #eeeeee;
+    font-family: monospace;
+    white-space: pre;
+}
+.landing-page ul.square-block {
+    text-align: left;
+    font-size: 4vw;
+    line-height: 6vw;
+    margin: 0 2em;
+    background: #eeeeee;
+}
+
+
+.landing-page .hero-bg {
+  background-color: #388e3c;
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%,rgba(0,0,0,0) 100%), url('/img/pattern.png');
+  color: #fff;
+}
