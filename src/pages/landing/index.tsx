@@ -3,9 +3,9 @@ import { getContext } from 'kea'
 import Layout from '@theme/Layout'
 import React from 'react'
 
-import { KeaReact } from './img/KeaReact'
-import { WebDev } from './img/WebDev'
-import { BuildingBlocks } from './img/BuildingBlocks'
+import { KeaReact } from '../../components/img/KeaReact'
+import { WebDev } from '../../components/img/WebDev'
+import { BuildingBlocks } from '../../components/img/BuildingBlocks'
 
 import './landing.css'
 
