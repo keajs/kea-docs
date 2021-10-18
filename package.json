@@ -9,8 +9,8 @@
     "deploy": "docusaurus deploy"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-beta.7",
-    "@docusaurus/preset-classic": "^2.0.0-beta.7",
+    "@docusaurus/core": "2.0.0-beta.0",
+    "@docusaurus/preset-classic": "2.0.0-beta.0",
     "classnames": "^2.3.1",
     "kea": "2.5.1",
     "kea-loaders": "^0.5.1",
@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^2.0.0-beta.7",
+    "history": "^5.0.1",
     "husky": "^7.0.2",
     "kea-typegen": "^1.2.2",
     "prettier": "2.4.1",

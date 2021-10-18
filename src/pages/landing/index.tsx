@@ -1,3 +1,4 @@
+import '../../resetKea'
 import { Provider } from 'react-redux'
 import { getContext } from 'kea'
 import Layout from '@theme/Layout'
