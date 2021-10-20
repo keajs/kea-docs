@@ -3,7 +3,7 @@ id: testing
 title: Testing
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
+import useBaseUrl from '@docusaurus/useBaseUrl'
 
 :::note Caution
 This is the only frontend testing framework that sparks joy.
@@ -17,7 +17,9 @@ a fictional `dashboardsLogic.ts`, you write a clear set of actions, listeners, r
 However, when you read `dashboardsLogic.ts`, its code is grouped by functionality: first all actions, then all reducers.
 The original intent behind each line of code is lost:
 
-<p><img alt="Redux Devtools" src={useBaseUrl('img/guide/testing-why-1.png')} style={{ maxWidth: 866/2 }} /></p>
+<p>
+    <img alt="Redux Devtools" src={useBaseUrl('img/guide/testing-why-1.png')} style={{ maxWidth: 866 / 2 }} />
+</p>
 
 There is a lot of value in having a logic grouped by functionality. It ultimately makes it easy to add new features,
 as you have a clear overview of what's already there.
@@ -27,7 +29,9 @@ in an existing feature, and break things.
 
 That is why we write logic tests.
 
-<p><img alt="Redux Devtools" src={useBaseUrl('img/guide/testing-why-2.png')} style={{ maxWidth: 856/2 }} /></p>
+<p>
+    <img alt="Redux Devtools" src={useBaseUrl('img/guide/testing-why-2.png')} style={{ maxWidth: 856 / 2 }} />
+</p>
 
 When building a feature, write the same story twice. Once in a test, grouping all new code together,
 and once more in the logic, code split up by functionality.
@@ -41,7 +45,7 @@ To test a logic, you dispatch some actions, and make sure they in turn change th
 You literally just write down what should happen in a chain of dispatched actions and matched values:
 
 ```ts
-import { expectLogic } from 'kea-test-utils'
+import { expectLogic, partial } from 'kea-test-utils'
 
 it('setting search query loads remote items', async () => {
     await expectLogic(logic, () => {
@@ -50,17 +54,18 @@ it('setting search query loads remote items', async () => {
         .toDispatchActions(['setSearchQuery', 'loadRemoteItems'])
         .toMatchValues({
             searchQuery: 'event',
-            remoteItems: expect.objectContaining({
-                count: 56, // old values from initial load
+            remoteItems: partial({
+                count: 0,
+                results: [],
             }),
             remoteItemsLoading: true,
         })
         .toDispatchActions(['loadRemoteItemsSuccess'])
         .toMatchValues({
             searchQuery: 'event',
-            remoteItems: expect.objectContaining({
+            remoteItems: partial({
                 count: 3, // got new results
-                results: expect.arrayContaining([expect.objectContaining({ name: 'event1' })]),
+                results: partial([partial({ name: 'event1' })]),
             }),
             remoteItemsLoading: false,
         })
@@ -78,10 +83,10 @@ In turn, `.toMatchValues` matches values as they were after the matched action, 
 
 ### Installing
 
-- [Install and configure jest](https://jestjs.io/docs/getting-started)
-- Install `kea-test-utils` with either:
-  - `yarn add --dev kea-test-utils`
-  - `npm install --save-dev kea-test-utils`
+-   [Install and configure jest](https://jestjs.io/docs/getting-started)
+-   Install `kea-test-utils` with either:
+    -   `yarn add --dev kea-test-utils`
+    -   `npm install --save-dev kea-test-utils`
 
 ### Reset the context before each test
 
@@ -94,7 +99,7 @@ import { testUtilsPlugin } from 'kea-test-utils'
 
 beforeEach(() => {
     resetContext({
-        plugins: [testUtilsPlugin, /* other plugins */]
+        plugins: [testUtilsPlugin /* other plugins */],
     })
 })
 
@@ -114,11 +119,11 @@ let unmount: () => void
 let logic: ReturnType<typeof dashboardLogic.build>
 
 beforeEach(() => {
-  logic = dashboardLogic({ id: 123 })
-  unmount = logic.mount()
+    logic = dashboardLogic({ id: 123 })
+    unmount = logic.mount()
 })
 afterEach(() => {
-  unmount()
+    unmount()
 })
 ```
 
@@ -128,22 +133,18 @@ The entrypoint to the Live-Replay logic testing. All of these options work:
 
 ```ts
 // option 1
-await expectLogic(logic, () => logic.actions.doSomething())
-    .toDispatchActions(['doSomething'])
+await expectLogic(logic, () => logic.actions.doSomething()).toDispatchActions(['doSomething'])
 
 // option 2
-await expectLogic(() => logic.actions.doSomething())
-    .toDispatchActions(logic, ['doSomething'])
+await expectLogic(() => logic.actions.doSomething()).toDispatchActions(logic, ['doSomething'])
 
 // option 3
 logic.actions.doSomething()
-await expectLogic(logic)
-    .toDispatchActions(['doSomething'])
+await expectLogic(logic).toDispatchActions(['doSomething'])
 
 // option 4
 logic.actions.doSomething()
-await expectLogic()
-    .toDispatchActions(logic, ['doSomething'])
+await expectLogic().toDispatchActions(logic, ['doSomething'])
 ```
 
 ### `.toDispatchActions()`
@@ -153,18 +154,17 @@ Match dispatched actions in order. Waits up to `3s` and requires `await` if any 
 ```ts
 await expectLogic(logic, () => {
     logic.actions.setSearchQuery('hello')
-})
-    .toDispatchActions([ // array of actions
-        // short form
-        'setSearchQuery',
-        // redux type
-        logic.actionTypes.setSearchQuery,
-        // full redux action
-        logic.actionCreators.setSearchQuery('hello'),
-        // custom matcher
-        (action) => action.type === logic.actionTypes.setSearchQuery &&
-                    action.payload.searchQuery === 'hello',
-    ])
+}).toDispatchActions([
+    // array of actions
+    // short form
+    'setSearchQuery',
+    // redux type
+    logic.actionTypes.setSearchQuery,
+    // full redux action
+    logic.actionCreators.setSearchQuery('hello'),
+    // custom matcher
+    (action) => action.type === logic.actionTypes.setSearchQuery && action.payload.searchQuery === 'hello',
+])
 ```
 
 ### `.toDispatchActionsInAnyOrder()`
@@ -174,18 +174,17 @@ Match dispatched actions in any order. Waits up to `3s` and requires `await` if 
 ```ts
 await expectLogic(logic, () => {
     logic.actions.setSearchQuery('hello')
-})
-    .toDispatchActionsInAnyOrder([ // array of actions
-        // short form
-        'setSearchQuery',
-        // redux type
-        logic.actionTypes.setSearchQuery,
-        // full redux action
-        logic.actionCreators.setSearchQuery('hello'),
-        // custom matcher
-        (action) => action.type === logic.actionTypes.setSearchQuery &&
-                    action.payload.searchQuery === 'hello',
-    ])
+}).toDispatchActionsInAnyOrder([
+    // array of actions
+    // short form
+    'setSearchQuery',
+    // redux type
+    logic.actionTypes.setSearchQuery,
+    // full redux action
+    logic.actionCreators.setSearchQuery('hello'),
+    // custom matcher
+    (action) => action.type === logic.actionTypes.setSearchQuery && action.payload.searchQuery === 'hello',
+])
 ```
 
 ### `.toNotHaveDispatchedActions()`
@@ -195,18 +194,17 @@ Make sure none of the given actions have been dispatched. Use with `delay` or `t
 ```ts
 await expectLogic(logic, () => {
     logic.actions.setSearchQuery('hello')
-})
-    .toNotHaveDispatchedActions([ // array of actions
-        // short form
-        'setSearchQuery',
-        // redux type
-        logic.actionTypes.setSearchQuery,
-        // full redux action
-        logic.actionCreators.setSearchQuery('hello'),
-        // custom matcher
-        (action) => action.type === logic.actionTypes.setSearchQuery &&
-                    action.payload.searchQuery === 'hello',
-    ])
+}).toNotHaveDispatchedActions([
+    // array of actions
+    // short form
+    'setSearchQuery',
+    // redux type
+    logic.actionTypes.setSearchQuery,
+    // full redux action
+    logic.actionCreators.setSearchQuery('hello'),
+    // custom matcher
+    (action) => action.type === logic.actionTypes.setSearchQuery && action.payload.searchQuery === 'hello',
+])
 ```
 
 ### `.toFinishListeners()`
@@ -214,8 +212,7 @@ await expectLogic(logic, () => {
 Wait for all listeners on a logic to finish.
 
 ```ts
-await expectLogic(logic, () => logic.actions.doSomething())
-    .toFinishListeners()
+await expectLogic(logic, () => logic.actions.doSomething()).toFinishListeners()
 ```
 
 ### `.toFinishAllListeners()`
@@ -235,7 +232,7 @@ await expectLogic(logic, () => logic.actions.doSomething())
     .toDispatchActions(['doSomething'])
     .toMatchValues({
         something: 'done',
-        somethingLoading: 'true'
+        somethingLoading: 'true',
     })
     .toDispatchActions(['doSomethingElse'])
     .toMatchValues(otherLogic, {
@@ -251,10 +248,10 @@ import { expectLogic, truth } from 'kea-test-utils'
 await expectLogic(logic, () => logic.actions.loadResults())
     .toHaveDispatchedActions(['loadResultsSuccess'])
     .toMatchValues({
-        results: truth(results => results.length === 42),
+        results: truth((results) => results.length === 42),
         selectedResult: expect.objectContaining({
             id: 33,
-        })
+        }),
     })
 ```
 
@@ -268,10 +265,7 @@ To match values as they are now, and not as they are at the end of a matched act
 Expect specific logics to be mounted
 
 ```ts
-await expectLogic(logic).toMount([
-    userLogic,
-    otherLogic({ id: insight.id }),
-])
+await expectLogic(logic).toMount([userLogic, otherLogic({ id: insight.id })])
 ```
 
 ### `.printActions()`
@@ -297,14 +291,15 @@ await expectLogic(logic, () => logic.actions.setSearchQuery())
 
 ### `.clearHistory()`
 
-Forget anything ever happened
+Forget anything ever happened. This can be useful if you want to reset the index used for `toMatchValues` after matching
+with `toDispatchActions`.
 
 ```ts
 await expectLogic(logic, () => logic.actions.setSearchQuery())
     .clearHistory()
-    .printActions() // nothing
+    .printActions() // nothing to print
+    .toMatchValues({ results: [] }) // checks the current state of values
 ```
-
 
 ## Common issues
 
@@ -318,17 +313,17 @@ Install the `memory` package, and adapt as needed:
 import { createMemoryHistory } from 'history'
 
 beforeEach(() => {
-  const history = createMemoryHistory()
-  ;(history as any).pushState = history.push
-  ;(history as any).replaceState = history.replace
-  
-  resetContext({
-    plugins: [
-      testUtilsPlugin, 
-      routerPlugin({ history: history, location: history.location }),
-      /* other plugins */  
-    ]
-  })
+    const history = createMemoryHistory()
+    ;(history as any).pushState = history.push
+    ;(history as any).replaceState = history.replace
+
+    resetContext({
+        plugins: [
+            testUtilsPlugin,
+            routerPlugin({ history: history, location: history.location }),
+            /* other plugins */
+        ],
+    })
 })
 ```
 

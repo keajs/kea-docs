@@ -1,6 +1,6 @@
 ---
 slug: kea-test-utils
-title: "Live-Replay Logic Testing"
+title: 'Live-Replay Logic Testing'
 author: Marius Andra
 author_title: Kea Core Team, Software Engineer at PostHog
 author_url: https://github.com/mariusandra
@@ -15,7 +15,7 @@ Read all about it in the updated [Testing guide](/docs/guide/testing)!
 Here's a teaser:
 
 ```tsx
-import { expectLogic } from 'kea-test-utils'
+import { expectLogic, partial } from 'kea-test-utils'
 
 it('setting search query loads remote items', async () => {
     await expectLogic(logic, () => {
@@ -24,17 +24,18 @@ it('setting search query loads remote items', async () => {
         .toDispatchActions(['setSearchQuery', 'loadRemoteItems'])
         .toMatchValues({
             searchQuery: 'event',
-            remoteItems: expect.objectContaining({
-                count: 56, // old values from initial load
+            remoteItems: partial({
+                count: 0,
+                results: [],
             }),
             remoteItemsLoading: true,
         })
         .toDispatchActions(['loadRemoteItemsSuccess'])
         .toMatchValues({
             searchQuery: 'event',
-            remoteItems: expect.objectContaining({
+            remoteItems: partial({
                 count: 3, // got new results
-                results: expect.arrayContaining([expect.objectContaining({ name: 'event1' })]),
+                results: partial([partial({ name: 'event1' })]),
             }),
             remoteItemsLoading: false,
         })
