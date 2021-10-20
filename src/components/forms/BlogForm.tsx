@@ -8,9 +8,9 @@ interface BlogFormProps {
 }
 
 export function BlogForm({
-    heading = 'Hey, You!',
-    subtext = 'Stay informed and get the latest blog posts via email.',
-}: BlogFormProps) {
+    heading = 'Kea is growing.',
+    subtext = 'Stay in the loop and get the latest updates via email.',
+}: Partial<BlogFormProps>) {
     useScript('https://f.convertkit.com/ckjs/ck.5.js')
     return (
         <form
