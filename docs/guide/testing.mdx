@@ -240,25 +240,35 @@ await expectLogic(logic, () => logic.actions.doSomething())
     })
 ```
 
-Use the `truth` helper or jest's `expect` matchers to make matching easier:
+#### `truth` and `partial`
+
+Use the `truth` and `partial` helpers, or jest's `expect` matchers to make matching easier:
 
 ```ts
-import { expectLogic, truth } from 'kea-test-utils'
+import { expectLogic, partial, truth } from 'kea-test-utils'
 
 await expectLogic(logic, () => logic.actions.loadResults())
     .toHaveDispatchedActions(['loadResultsSuccess'])
     .toMatchValues({
-        results: truth((results) => results.length === 42),
-        selectedResult: expect.objectContaining({
-            id: 33,
-        }),
+        results: partial([partial({ id: 33 })]), // has a result with id: 33
+    })
+    .toMatchValues({
+        results: truth((results) => results.length === 42), // has 42 results
+    })
+    .toMatchValues({
+        results: expect.arrayContaining([expect.objectContaining({ id: 33 })]), // jest matchers work too
     })
 ```
 
-To match values as they are now, and not as they are at the end of a matched action, either:
+#### Match values at the end of history
+
+If you use `toDispatchActions([])`, we lock the history index that `toMatchValues` uses to the last matched action.
+
+This allows you to effortlessly query history, but sometimes you might want to see what are the current values. Here
+you have two options.
 
 1. Actually match a better action with `.toDispatchActions(['doSomethingElse'])` if applicable
-2. Use `.clearHistory()` to reset all matched actions.
+2. Use `.clearHistory()` to reset all matched actions. See below for details.
 
 ### `.toMount()`
 
