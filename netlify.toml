@@ -4,4 +4,9 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "https://kea.js.org"
+  to = "https://keajs.org"
+  status = 301
+  force = true
 
