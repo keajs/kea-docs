@@ -4,9 +4,9 @@ title: Router
 sidebar_label: Router
 ---
 
-The `kea-router` plugin provides a nice wrapper around `window.History` and helps manage the URL 
-in your application. Use it to listen to route changes or change the URL yourself. There are a 
-few helpers (`actionToUrl` and `urlToAction`) that help track the URL changes, or access the 
+The `kea-router` plugin provides a nice wrapper around `window.History` and helps manage the URL
+in your application. Use it to listen to route changes or change the URL yourself. There are a
+few helpers (`actionToUrl` and `urlToAction`) that help track the URL changes, or access the
 `router` directly to manually control the browser history object.
 
 ## Installation
@@ -31,7 +31,7 @@ resetContext({
     plugins: [
         routerPlugin({
             /* options */
-        })
+        }),
     ],
 })
 ```
@@ -60,7 +60,7 @@ routerPlugin({
     // kea-router has support for (de)serializing the search and hash parameters
     // It comes with sensible default functions, yet you can override them here
     encodeParams: (obj = { key: 'value' }, symbol = '?') => '?key=value',
-    decodeParams: (input = '?key=value', symbol = '?') => ({ key: 'value' })
+    decodeParams: (input = '?key=value', symbol = '?') => ({ key: 'value' }),
 })
 ```
 
@@ -72,19 +72,13 @@ Use `actionToUrl` to change the URL in response to actions and `urlToAction` to 
 import { kea } from 'kea'
 
 export const articlesLogic = kea({
-    // define the actions from below
-    actions: { ... },
-    
-    // define article = { id, ... }
-    reducers: { ... },
-    
     actionToUrl: ({ values }) => ({
         openList: ({ id }) => `/articles`,
         openArticle: ({ id }) => `/articles/${id}`,
         openComments: () => `/articles/${values.article.id}/comments`,
         closeComments: () => `/articles/${values.article.id}`
     }),
-    
+
     urlToAction: ({ actions }) => ({
         '/articles': () => actions.openList(),
         '/articles/:id(/:extra)': ({ id, extra }) => {
@@ -95,7 +89,12 @@ export const articlesLogic = kea({
                 actions.closeComments()
             }
         },
-    })
+    }),
+
+    // Skipped in the examples: the actions, reducers, etc for the above
+    actions: { ... },
+    reducers: { ... },
+    selectors: { ... }
 })
 ```
 
@@ -104,28 +103,39 @@ export const articlesLogic = kea({
 `kea-router` uses the [url-pattern](https://github.com/snd/url-pattern) library under the hood to match
 paths. Please see [its documentation](https://github.com/snd/url-pattern) for all supported options.
 
-### Search and Hash parameters
+### UrlToAction
+
+#### Search and Hash parameters
 
 `kea-router` has built in support for serializing and deserializing `search` and `hash` URL parameters, such as:
 
 ```javascript
 // "pathname" + "?search" + "#hash"
-url = "http://example.com/path?searchParam=true#hashParam=nah"
+url = 'http://example.com/path?searchParam=true#hashParam=nah'
 ```
 
 The second and third parameters to `urlToAction` are `searchParams` and `hashParams` respectively.
 These are deserialized objects that you can use directly.
+
+#### Full example
 
 ```javascript
 import { kea } from 'kea'
 
 export const articlesLogic = kea({
     urlToAction: ({ actions }) => ({
-        // '/path': (pathParams, searchParams, hashParams) => { ... }
-
-        // ==> "/articles?id=123&comments=true#hashKey=hurray"
+        // Synax:
+        //   urlToAction: ({ actions }) => ({
+        //     '/path': (pathParams, searchParams, hashParams, payload) => {
+        //       // ...
+        //     }
+        //   })
+        //
+        // Example on url: "/articles?id=123&comments=true#hashKey=hurray"
+        // --> pathParams = {}
         // --> searchParams = { id: 123, comments: true }
-        // --> hashParams = { hashKey: 'hurray' }        
+        // --> hashParams = { hashKey: 'hurray' }
+        // --> payload = // payload for router.actions.locationChanged
         '/articles': (_, { id, comments }, { hashKey }) => {
             if (id) {
                 actions.openArticle(id)
@@ -137,14 +147,14 @@ export const articlesLogic = kea({
             } else {
                 actions.openList()
             }
-        }
-    })
+        },
+    }),
 })
 ```
 
 For `actionToUrl`, you may include the `search` and `hash` parts directly in the URL or return
 an array in the format: `[pathname, searchParams, hashParams]`. The `searchParams` and `hashParams`
-can be both strings or objects. 
+can be both strings or objects.
 
 ```javascript
 import { kea } from 'kea'
@@ -164,10 +174,9 @@ export const articlesLogic = kea({
 
         openComments: () => [`/articles`, { id: values.article.id, comments: true }],
         closeComments: () => [`/articles`, { id: values.article.id }, '#hashKey=true'],
-    })
+    }),
 })
 ```
-
 
 ### Control the route directly
 
@@ -183,7 +192,7 @@ export function MyComponent() {
     const {
         location: { pathname, search, hash }, // strings
         searchParams, // object
-        hashParams // object
+        hashParams, // object
     } = useValues(router)
 
     return (
@@ -209,10 +218,10 @@ const logic = kea({
     listeners: {
         buttonPress: () => {
             if (router.values.location.pathname !== '/setup') {
-                router.actions.push("/setup", { search: 'param' }, '#integration')
+                router.actions.push('/setup', { search: 'param' }, '#integration')
             }
-        }
-    }
+        },
+    },
 })
 ```
 
@@ -222,7 +231,7 @@ search and hash parts in the `url`.
 
 ### Link tag
 
-Use the included `<A>` tag to link via the router. This changes the URL via `router.actions.push()` instead of reloading the entire page.   
+Use the included `<A>` tag to link via the router. This changes the URL via `router.actions.push()` instead of reloading the entire page.
 
 ```javascript
 import React from 'react'
@@ -232,8 +241,12 @@ import { A } from 'kea-router'
 export function Page() {
     return (
         <ul>
-            <li><A href='/about'>About me</A></li>
-            <li><A href='/contact'>Contact</A></li>
+            <li>
+                <A href="/about">About me</A>
+            </li>
+            <li>
+                <A href="/contact">Contact</A>
+            </li>
         </ul>
     )
 }
@@ -241,7 +254,7 @@ export function Page() {
 
 ### Listen to location changes
 
-In case `urlToAction` is not sufficient for your needs, listen to the `locationChanged` action to 
+In case `urlToAction` is not sufficient for your needs, listen to the `locationChanged` action to
 react to URL changes manually:
 
 ```javascript
@@ -265,56 +278,62 @@ Here's sample code for a global scene router
 import React, { lazy } from 'react'
 
 export const scenes = {
-    'unmatch': () => <div>404</div>,
-    'dashboard': lazy(() => import(/* webpackChunkName: 'dashboard' */'./dashboard/DashboardScene')),
-    'login': lazy(() => import(/* webpackChunkName: 'login' */'./login/LoginScene')),
-    'projects': lazy(() => import(/* webpackChunkName: 'projects' */'./projects/ProjectsScene')),
+    unmatch: () => <div>404</div>,
+    dashboard: lazy(() => import(/* webpackChunkName: 'dashboard' */ './dashboard/DashboardScene')),
+    login: lazy(() => import(/* webpackChunkName: 'login' */ './login/LoginScene')),
+    projects: lazy(() => import(/* webpackChunkName: 'projects' */ './projects/ProjectsScene')),
 }
 
 export const routes = {
     '/': 'dashboard',
     '/login': 'login',
     '/projects': 'projects',
-    '/projects/:id': 'projects'
+    '/projects/:id': 'projects',
 }
 
 export const sceneLogic = kea({
     actions: {
-        setScene: (scene, params) => ({ scene, params })
+        setScene: (scene, params) => ({ scene, params }),
     },
     reducers: {
-        scene: [null, {
-            setScene: (_, payload) => payload.scene
-        }],
-        params: [{}, {
-            setScene: (_, payload) => payload.params || {}
-        }]
+        scene: [
+            null,
+            {
+                setScene: (_, payload) => payload.scene,
+            },
+        ],
+        params: [
+            {},
+            {
+                setScene: (_, payload) => payload.params || {},
+            },
+        ],
     },
     urlToAction: ({ actions }) => {
         const mapping = {}
         for (const [paths, scene] of Object.entries(routes)) {
             for (const path of paths.split('|')) {
-                mapping[path] = params => actions.setScene(scene, params)
+                mapping[path] = (params) => actions.setScene(scene, params)
             }
         }
         return mapping
-    }
+    },
 })
 
 export function Layout({ children }) {
     return (
-        <div className='layout'>
-            <div className='menu'>...</div>
-            <div className='content'>{children}</div>
+        <div className="layout">
+            <div className="menu">...</div>
+            <div className="content">{children}</div>
         </div>
     )
 }
 
 export function Scenes() {
     const { scene, params } = useValues(sceneLogic)
-    
+
     const Scene = scenes[scene] || scenes.unmatch
-    
+
     return (
         <Layout>
             <Suspense fallback={() => <div>Loading...</div>}>
@@ -334,7 +353,7 @@ import { encodeParams, decodeParams, combineUrl } from 'kea-router'
 
 // Use `encodeParams` to convert an object to part of a path
 // --> encodeParams(object, symbol)
-encodeParams({ key: 'value' }, '?') === '?key=value' 
+encodeParams({ key: 'value' }, '?') === '?key=value'
 
 // Use `decodeParams` to convert a part of a path to an object
 // --> decodeParams(object, symbol)
@@ -346,20 +365,22 @@ decodeParams('key=value', '?') === { key: 'value' }
 // --> combineUrl(url, searchInput, hashInput, encodeParams, decodeParams)
 //   - `searchInput` and `hashInput` can be either a string or an object
 //   - `encodeParams` and `decodeParams` can be overridden if needed
-combineUrl('/path?key=value#hash') === {
-    url: '/path?key=value#hash',
-    pathname: '/path',
-    search: '?key=value',
-    searchParams: { key: 'value' },
-    hash: '#hash',
-    hashParams: { hash: null } 
-}
-combineUrl('/path?key=value#hash', { key: 'otherValue' }, '#addHash=bla') === {
-    url: '/path?key=otherValue#hash&addHash=bla',
-    pathname: '/path',
-    search: '?key=otherValue',
-    searchParams: { key: 'otherValue' },
-    hash: '#hash&addHash=bla',
-    hashParams: { hash: null, addHash: 'bla' } 
-}
+combineUrl('/path?key=value#hash') ===
+    {
+        url: '/path?key=value#hash',
+        pathname: '/path',
+        search: '?key=value',
+        searchParams: { key: 'value' },
+        hash: '#hash',
+        hashParams: { hash: null },
+    }
+combineUrl('/path?key=value#hash', { key: 'otherValue' }, '#addHash=bla') ===
+    {
+        url: '/path?key=otherValue#hash&addHash=bla',
+        pathname: '/path',
+        search: '?key=otherValue',
+        searchParams: { key: 'otherValue' },
+        hash: '#hash&addHash=bla',
+        hashParams: { hash: null, addHash: 'bla' },
+    }
 ```
