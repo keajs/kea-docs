@@ -278,10 +278,10 @@ Here's sample code for a global scene router
 import React, { lazy } from 'react'
 
 export const scenes = {
-    unmatch: () => <div>404</div>,
-    dashboard: lazy(() => import(/* webpackChunkName: 'dashboard' */ './dashboard/DashboardScene')),
-    login: lazy(() => import(/* webpackChunkName: 'login' */ './login/LoginScene')),
-    projects: lazy(() => import(/* webpackChunkName: 'projects' */ './projects/ProjectsScene')),
+    error404: () => <div>404</div>,
+    dashboard: lazy(() => import('./dashboard/DashboardScene')),
+    login: lazy(() => import('./login/LoginScene')),
+    projects: lazy(() => import('./projects/ProjectsScene')),
 }
 
 export const routes = {
@@ -310,13 +310,9 @@ export const sceneLogic = kea({
         ],
     },
     urlToAction: ({ actions }) => {
-        const mapping = {}
-        for (const [paths, scene] of Object.entries(routes)) {
-            for (const path of paths.split('|')) {
-                mapping[path] = (params) => actions.setScene(scene, params)
-            }
-        }
-        return mapping
+        return Object.fromEntries(
+            Object.entries(routes).map(([path, scene]) => [path, (params) => actions.setScene(scene, params)])
+        )
     },
 })
 
@@ -332,7 +328,7 @@ export function Layout({ children }) {
 export function Scenes() {
     const { scene, params } = useValues(sceneLogic)
 
-    const Scene = scenes[scene] || scenes.unmatch
+    const Scene = scenes[scene] || scenes.error404
 
     return (
         <Layout>
