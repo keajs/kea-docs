@@ -311,7 +311,9 @@ export const sceneLogic = kea({
     },
     urlToAction: ({ actions }) => {
         return Object.fromEntries(
-            Object.entries(routes).map(([path, scene]) => [path, (params) => actions.setScene(scene, params)])
+            Object.entries(routes).map(([path, scene]) => {
+                return [path, (params) => actions.setScene(scene, params)]
+            })
         )
     },
 })
