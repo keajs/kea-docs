@@ -10,3 +10,9 @@
   status = 301
   force = true
 
+
+[[redirects]]
+  from = "https://kea.js.org/*"
+  to = "https://keajs.org/:splat"
+  status = 301
+  force = true
