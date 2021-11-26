@@ -607,7 +607,7 @@ const logic = kea({
             const stuff = otherLogic.values.fetchedData
  
             // without `connect: [otherLogic]` above, kea would only mount 
-            // `otherLogic` and start fetching its data right now 
+            // `logic` and start fetching its data right now 
         }
     }
 })
