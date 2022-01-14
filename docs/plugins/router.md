@@ -61,6 +61,13 @@ routerPlugin({
     // It comes with sensible default functions, yet you can override them here
     encodeParams: (obj = { key: 'value' }, symbol = '?') => '?key=value',
     decodeParams: (input = '?key=value', symbol = '?') => ({ key: 'value' }),
+    
+    // Passed directly to url-pattern.   
+    urlPatternOptions: {
+        // What characters to match as ":key" with "/url/:key"
+        // You must set this explicitly if you need to match a "." or a "@"
+        segmentValueCharset: "a-zA-Z0-9-_~ %.@()!'",
+    },
 })
 ```
 
