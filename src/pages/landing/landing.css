@@ -1,21 +1,26 @@
 .landing-page h1 {
-    font-size: 7vw;
-    line-height: 9vw;
+    font-size: 4vw;
+    line-height: 5vw;
     font-weight: 400;
 }
 .landing-page h1 strong {
     font-weight: 800;
 }
 .landing-page h1 strong.huge {
-    font-weight: 800;
-    font-size: 21vw;
+    font-weight: 500;
+    font-size: 8vw;
+}
+.landing-page h2 {
+    font-size: 3vw;
+    line-height: 4vw;
+    font-weight: 400;
 }
 
 .landing-page .block {
     text-align: center;
-    padding: 2.3em 1em;
+    padding: 1.3em 2em;
     font-size: 5vw;
-    line-height: 7.5vw;
+    line-height: 6vw;
 }
 .landing-page .code-block {
     text-align: left;

@@ -3,16 +3,13 @@ import { Provider } from 'react-redux'
 import { getContext } from 'kea'
 import Layout from '@theme/Layout'
 import React from 'react'
+import CodeBlock from '@theme/CodeBlock'
 
 import { KeaReact } from '../../components/img/KeaReact'
 import { WebDev } from '../../components/img/WebDev'
 import { BuildingBlocks } from '../../components/img/BuildingBlocks'
 
 import './landing.css'
-
-export function Code({ code }: { code: string }) {
-    return <div className="block code-block">{code}</div>
-}
 
 export function Huge({ children }) {
     return <strong className="huge">{children}</strong>
@@ -24,14 +21,97 @@ export function Landing() {
             <div className="landing-page">
                 <div className="block hero-bg">
                     <h1>
-                        <Huge>Kea</Huge> is a system for organizing <strong>frontend logic</strong>
+                        <Huge>Kea</Huge> is a <strong>state management</strong> library<br/>
+                        that sits between React and your APIs.
                     </h1>
-                </div>
-                <div className="block">
-                    Modern web development is coplicated. To manage this complexity, we abstract our field into separate
-                    layers:
+                    <h2>It’s the <em>backend of your frontend</em>.</h2>
                 </div>
                 <WebDev />
+                <div className="block">
+                    Communication with React is simple:
+                    <br />
+                    <strong>Values</strong> In, <strong>Actions</strong> Out.
+                </div>
+                <CodeBlock className='typescript'>{`
+function UserComponent () {
+    const { user, userLoading } = useValues(userLogic)
+    const { loadUser } = useActions(userLogic)
+    // ...
+}
+                `}</CodeBlock>
+
+                <div className="block">
+                    Peek inside and you'll find a layer of interconnected managed state:
+                </div>
+
+                <KeaReact />
+
+              <div className="block">Where each logic consists of <strong>actions</strong>, <strong>listeners</strong>,{' '}
+                        <strong>reducers</strong> and <strong>selectors</strong>:</div>
+                <CodeBlock className='typescript'>{`
+const userLogic = kea<userLogicType>({
+    // interface to your logic
+    actions: {
+        loadUser: (id: number) => ({ id }),
+        userLoaded: (user: User) => ({ user }),
+    },
+    // when to run side effects
+    listeners: ({ actions }) => ({
+        loadUser: async ({ id }) => {
+            const user = await api.loadUser(id)
+            actions.userLoaded(user)
+        },
+    }),
+    // store data
+    reducers: {
+        userLoading: [
+            false,
+            {
+                loadUser: () => true,
+                userLoaded: () => false,
+            },
+        ],
+        user: [
+            null as User | null,
+            {
+                userLoaded: (_, { user }) => user,
+            },
+        ],
+    },
+    // computed properties
+    selectors: {
+        hasReviews: [(s) => [s.user], (user) => user?.reviews?.length > 0],
+    },
+})
+        `}</CodeBlock>
+
+                <BuildingBlocks />
+
+
+                <div className="block">
+                    The real magic happens inside the layer:
+                </div>
+                <CodeBlock className='typescript'>{`
+const userLogic = kea<userLogicType>({
+    loaders: {
+        user: [
+            null as User | null,
+            {
+                loadUser: async (id: number) => {
+                    return await api.loadUser(id)
+                },
+            },
+        ],
+    },
+    urlToAction: ({ actions }) => ({
+        '/users/:id': ({ id }) => {
+            if (values.user?.id !== id) {
+                actions.loadUser(parseInt(id))
+            }
+        },
+    }),
+})
+        `}</CodeBlock>
                 <div className="block">
                     <p>
                         <strong>Kea</strong> sits between React and your APIs as a separate{' '}
@@ -41,7 +121,6 @@ export function Landing() {
                         It’s the <em>backend of your frontend</em>.
                     </p>
                 </div>
-                <KeaReact />
                 <div className="block">
                     <p>
                         Kea's unit of organization is <strong>a logic</strong>.
@@ -51,10 +130,8 @@ export function Landing() {
                         <strong>reducers</strong> and <strong>selectors</strong>.
                     </p>
                 </div>
-                <BuildingBlocks />
                 <div className="block">Each described with a strict yet maximally compact structure:</div>
-                <Code
-                    code={`
+                <CodeBlock className='typescript'>{`
 const userLogic = kea<userLogicType>({
     actions: {
         loadUser: (id: number) => ({ id }),
@@ -85,47 +162,8 @@ const userLogic = kea<userLogicType>({
         hasReviews: [(s) => [s.user], (user) => user?.reviews?.length > 0],
     },
 })
-        `}
-                />
-                <div className="block">
-                    Abstract common patterns with plugins, such as <strong>loaders</strong> for loading API data, or a{' '}
-                    <strong>router</strong> for syncing the browser’s URL.
-                </div>
-                <Code
-                    code={`
-const userLogic = kea<userLogicType>({
-    loaders: {
-        user: [
-            null as User | null,
-            {
-                loadUser: async (id: number) => {
-                    return await api.loadUser(id)
-                },
-            },
-        ],
-    },
-    urlToAction: ({ actions }) => ({
-        '/users/:id': ({ id }) => {
-            if (values.user?.id !== id) {
-                actions.loadUser(parseInt(id))
-            }
-        },
-    }),
-})
-        `}
-                />
-                <div className="block">
-                    Communication with React is clean:
-                    <br />
-                    <strong>Values</strong> In, <strong>Actions</strong> Out.
-                </div>
-                <Code
-                    code={`
-// reducers and selectors are exposed via values
-const { user, userLoading } = useValues(userLogic)
-const { loadUser } = useActions(userLogic)
-        `}
-                />
+        `}</CodeBlock>
+
                 <div className="block">
                     <h1>Frontend tests you’ll actually write</h1>
                     <p>
@@ -136,8 +174,7 @@ const { loadUser } = useActions(userLogic)
                         For example, <strong>live-replay logic testing</strong>:
                     </p>
                 </div>
-                <Code
-                    code={`
+                <CodeBlock className='typescript'>{`
 import { expectLogic } from 'kea-test-utils'
 
 it('setting search query loads remote items', async () => {
@@ -162,8 +199,8 @@ it('setting search query loads remote items', async () => {
 
     // also test the mocked api call separately
 })
-        `}
-                />
+        `}</CodeBlock>
+
                 <div className="block">
                     <p>
                         If every operation in your app starts with and action, and only actions change values, you can
