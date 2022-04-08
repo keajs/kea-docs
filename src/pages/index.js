@@ -330,6 +330,7 @@ function Home() {
                             <a target="_blank" rel="noopener noreferrer" href="https://www.navirec.com">
                                 <img className="navirec" src={useBaseUrl('img/trusted/navirec.svg')} />
                             </a>
+                            <a href='https://github.com/keajs/kea/issues/35' style={{ height: 'auto' , color: '#585858' }}>and many more</a>
                         </div>
                     </div>
                 </section>
