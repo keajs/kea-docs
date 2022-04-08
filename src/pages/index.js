@@ -203,7 +203,8 @@ function Home() {
                             <td>Intro:</td>
                             <td>
                                 <a href="#">what is kea?</a>&nbsp;| <a href="#">installation</a>&nbsp;|{' '}
-                                <a href="#">history</a>
+                                <a href="#">typescript</a>&nbsp;| <a href="#">testing</a>&nbsp;|{' '}
+                                <a href="#">debugging</a>
                             </td>
                         </tr>
                         <tr>
@@ -222,10 +223,19 @@ function Home() {
                             </td>
                         </tr>
                         <tr>
+                            <td>Hooks:</td>
+                            <td>
+                                <a href="#">useActions</a>&nbsp;| <a href="#">useValues</a>&nbsp;|{' '}
+                                <a href="#">useMountedLogic</a>
+                                &nbsp;| <a href="#">useAllValues</a>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Plugins:</td>
                             <td>
                                 <a href="#">loaders</a>&nbsp;| <a href="#">router</a>&nbsp;| <a href="#">forms</a>
-                                &nbsp;| <a href="#">sagas</a>&nbsp;| <a href="#">localstorage</a>
+                                &nbsp;| <a href="#">sagas</a>&nbsp;| <a href="#">localstorage</a>&nbsp;|{' '}
+                                <a href="#">window-values</a>
                             </td>
                         </tr>
                     </tbody>
@@ -233,7 +243,7 @@ function Home() {
             </section>
 
             <section className="homepage-video">
-                <h2>Build an app in 15 minutes</h2>
+                <h2>Build a GitHub API client in 15 minutes</h2>
                 <iframe
                     width="560"
                     height="315"
