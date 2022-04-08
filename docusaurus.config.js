@@ -2,7 +2,7 @@ const React = require('react')
 
 module.exports = {
     title: 'Kea 3.0',
-    tagline: 'State management for ambitious apps',
+    tagline: 'Cheekily addi(c)tive state management for React',
     url: 'https://keajs.org',
     baseUrl: '/',
     favicon: 'img/favicon.ico',
