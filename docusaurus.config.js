@@ -3,7 +3,7 @@ const React = require('react')
 module.exports = {
     title: 'Kea 2.5',
     tagline: 'State management for ambitious apps',
-    url: 'https://kea.js.org',
+    url: 'https://keajs.org',
     baseUrl: '/',
     favicon: 'img/favicon.ico',
     organizationName: 'keajs',
