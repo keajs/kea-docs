@@ -6,9 +6,8 @@ import Link from '@docusaurus/Link'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import styles from './styles.module.css'
-import './styles.css'
-import { getContext } from 'kea'
-import { Provider } from 'react-redux'
+import './styles.scss'
+import { Provider } from 'kea'
 
 const features = [
     {
@@ -167,7 +166,6 @@ function Feature({ image, imageUrl, title, description }) {
 
 function Home() {
     const context = useDocusaurusContext()
-    const [showExample, setShowExample] = useState(true)
 
     const { siteConfig = {} } = context
     return (
@@ -175,33 +173,33 @@ function Home() {
             title="Production Ready React State Management"
             description="Kea is a production-grade state management framework built for ambitious React apps."
         >
-            <header className={classnames('hero hero--primary', styles.heroBanner)}>
-                <div className="container">
-                    <h1 className="hero__title" style={{ textAlign: 'center' }}>
-                        {siteConfig.title}
-                    </h1>
-                    <p className="hero__subtitle">{siteConfig.tagline}</p>
-
-                    <div className={styles.buttons}>
-                        <Link
-                            className={classnames(
-                                'button button--outline button--secondary button--lg',
-                                styles.getStarted
-                            )}
-                            to={useBaseUrl('docs/introduction/what-is-kea')}
-                        >
-                            Read the docs to get started
-                        </Link>
+            <div className="homepage-hero">
+                <div className="intro">
+                    <img src={useBaseUrl('img/logo.svg')} alt="" />
+                    <div className="text">
+                        <h1>{siteConfig.title}</h1>
+                        <strong>{siteConfig.tagline}</strong>
+                        <div className="links">
+                            <Link to="/docs/introduction/what-is-kea">Get started</Link>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="https://www.github.com/keajs/kea">Fork on GitHub</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <iframe
+                                src="https://ghbtns.com/github-btn.html?user=keajs&repo=kea&type=star&count=true"
+                                frameBorder="0"
+                                scrolling="0"
+                                width="100px"
+                                height="20px"
+                                style={{ verticalAlign: 'sub' }}
+                            />
+                        </div>
                     </div>
                 </div>
-            </header>
+            </div>
             <section className="homepage-logos">
                 <div className="container">
                     <span className="trusted">Trusted by:</span>
                     <div className="trusted-logos">
-                        <a target="_blank" rel="noopener noreferrer" href="https://www.navirec.com">
-                            <img className="navirec" src={useBaseUrl('img/trusted/navirec.svg')} />
-                        </a>
                         <a target="_blank" rel="noopener noreferrer" href="https://www.posthog.com">
                             <img
                                 className="posthog"
@@ -211,22 +209,8 @@ function Home() {
                         <a target="_blank" rel="noopener noreferrer" href="https://www.elastic.co">
                             <img className="elastic" src={useBaseUrl('img/trusted/elastic.svg')} />
                         </a>
-                        <a target="_blank" rel="noopener noreferrer" href="https://www.gsmtasks.com">
-                            <img className="gsmtasks" src={useBaseUrl('img/trusted/gsmtasks.svg')} />
-                        </a>
-                        <a target="_blank" rel="noopener noreferrer" href="https://giveawayking.ng/">
-                            <svg
-                                className="giveawayking"
-                                height="30"
-                                viewBox="0 0 427.09 239.15"
-                                preserveAspectRatio="xMidYMid meet"
-                            >
-                                <title>Giveaway King</title>
-                                <path d="M39.59 56c12.82 0 20.26 5.06 20.26 11.79 0 5.77-7.44 7.75-7.91 7.2a14.32 14.32 0 00-11.4-5.46c-7.28 0-13 5.53-13 13.92S32.68 97.3 39.8 97.3c5.54 0 9.26-2.54 10.05-6.73h-5.3c-5 0-7.44-1.19-7.44-5.46v-.71c0-4.51 2.45-5.46 7.44-5.46H58.5c4.59.06 5.5 2.16 5.5 6.75v21.44c0 .47-2.45 1.58-5.3 1.58-3.16 0-6.57-1.27-7.83-6-2.77 4-7.76 6.48-14.88 6.48-14.79 0-24.36-11.15-24.36-26.5C11.59 67.17 22.74 56 39.59 56zM71.08 64.09c0-4.91 2.29-7.36 6.65-7.36H80c4.51 0 6.88 2.45 6.88 7.36v37.26c0 4.83-2.37 7.36-6.88 7.36h-2.27c-4.36 0-6.65-2.53-6.65-7.36zM91.57 62.19c-.63-1.5 4.59-5.46 9.81-5.46 4 0 7.36 2.85 8.78 7.36l8 25.47 7.91-25.47c1.51-5.14 5-7.36 8.47-7.36 5.14 0 10.05 4 9.41 5.46l-16.85 40.58c-1.82 4.28-4.43 5.94-9.18 5.94s-7.12-1.51-9-5.94zM148.06 65.91c0-5.7 2.85-8.78 8.07-8.78h27.21c5.07 0 7.36 2.53 7.36 6.64v.4c0 4.35-2.29 6.64-7.36 6.64h-19.46V76h13c5.22 0 7.35 2.21 7.35 6.09v.23c0 4.12-2.21 6.49-7.35 6.49h-13v5.94h19.86c5 0 7.28 2.13 7.28 6.25v.39c0 4.35-2.3 7-7.28 7h-27.61c-5.22 0-8.07-2.92-8.07-8.7zM210.24 61.08c.79-2.53 2.93-4.35 10-4.35s9 1.82 9.81 4.35L247.34 104c.56 1.43-3.71 5.06-8.46 5.06-3.32 0-6.88-1.82-9.1-7.51l-1.42-3.8h-16.54l-1.42 4c-1.9 5.46-5.22 7.35-8.62 7.35-4.36 0-8.71-3.48-8.15-4.9zm15.27 25.24L220 71.45l-5.46 14.87zM244.42 62.27c-.16-.71 3.16-5.38 9.89-5.38 3.16 0 7.43 1.74 8.7 8.46l4.27 22.08 5.38-20c.87-3.95 4.43-5.77 8.7-5.77 4 0 7.6 2.13 8.47 5.77l5.38 20 4.27-22.31c1.11-6.17 4.9-8.23 8.62-8.23 6.33 0 9.5 4.59 9.26 5.38l-11.63 40.43c-1.19 4.5-4.43 6.09-9.34 6.09-4.74 0-7.91-1.43-9.33-6.09l-6-21.13-5.94 21.13c-1.26 4.58-4.67 6.09-9.41 6.09-4.91 0-7.91-1.35-9.18-6.09zM332 61.08c.79-2.53 2.92-4.35 10-4.35s9 1.82 9.81 4.35L369.1 104c.55 1.43-3.72 5.06-8.47 5.06-3.32 0-6.88-1.82-9.09-7.51l-1.43-3.8h-16.53l-1.43 4c-1.9 5.46-5.22 7.35-8.62 7.35-4.35 0-8.7-3.48-8.15-4.9zm15.26 25.24l-5.53-14.87-5.46 14.87zM382.07 88.3l-17.8-25.48c-.47-.79 2.3-5.93 10.37-5.93 2.69 0 5.3 1.58 7.43 5.46l7.84 13.53 8.22-13.53c2.38-4 4.91-5.54 7.52-5.54 7.28 0 10.28 5.3 9.81 6L397.9 88.3v13c0 4.83-2.38 7.36-6.89 7.36h-2.29c-4.35 0-6.65-2.53-6.65-7.36zM13.67 133c0-10.79 5-16.18 14.62-16.18h5.05c9.92 0 15.14 5.39 15.14 16.18v33.41l27.14-37.76c6.09-8.88 12.88-11.83 19.14-11.83 11.83 0 20.88 11 19.84 13L83.1 173l33.07 45.24c1.21 2.09-8.36 12.88-21.06 12.88-6.61 0-13.22-3-19.14-11.66l-27.49-38.12v33.59c0 10.61-5.22 16.18-15.14 16.18h-5.05c-9.57 0-14.62-5.57-14.62-16.18zM128.34 133c0-10.79 5-16.18 14.62-16.18h5c9.92 0 15.14 5.39 15.14 16.18v82c0 10.61-5.22 16.18-15.14 16.18h-5c-9.57 0-14.62-5.57-14.62-16.18zM180.37 133c0-10.79 5.39-16.18 14.27-16.18h3.3c8.18 0 10.79 2.43 15.66 8.17l40.4 52.53V133c0-10.62 5.22-16.18 15.14-16.18h3c9.57 0 14.62 5.56 14.62 16.18v82c0 10.79-5.4 16.18-14.1 16.18h-2.78c-8.36 0-10.79-2.09-15.49-7.66L213.08 170v44.9c0 10.61-5.22 16.18-15.14 16.18h-3c-9.57 0-14.61-5.57-14.61-16.18zM361.33 115.22c28.19 0 44.55 11.14 44.55 25.93 0 12.7-16.36 17-17.41 15.83a31.41 31.41 0 00-25.05-12c-16 0-28.54 12.18-28.54 30.62s11.31 30.45 27 30.45c12.18 0 20.36-5.57 22.1-14.79h-11.69c-11 0-16.36-2.61-16.36-12v-1.57c0-9.92 5.4-12 16.36-12h30.63c10.09 0 12.18 4.7 12 14.79v47.16c0 1-5.39 3.48-11.65 3.48-7 0-14.45-2.78-17.23-13.22-6.09 8.7-17.05 14.26-32.71 14.26-32.54 0-53.6-24.53-53.6-58.29 0-34.11 24.54-58.65 61.6-58.65zM11.6 14.18l5.53 32.29a.56.56 0 00.56.47h40.82a.58.58 0 00.56-.47L65 13.34a.33.33 0 00-.56-.29L50.27 29.72a.32.32 0 01-.52 0L38.53 7.16a.33.33 0 00-.59 0L27.85 29.72c-.09.21-.38.17-.54 0l-14.74-16a.56.56 0 00-.97.46z"></path>
-                            </svg>
-                        </a>
-                        <a target="_blank" rel="noopener noreferrer" href="https://www.apprentus.com">
-                            <img className="apprentus" src={useBaseUrl('img/trusted/apprentus.png')} />
+                        <a target="_blank" rel="noopener noreferrer" href="https://www.navirec.com">
+                            <img className="navirec" src={useBaseUrl('img/trusted/navirec.svg')} />
                         </a>
                     </div>
                 </div>
@@ -283,8 +267,8 @@ function Home() {
                         </div>
                         <div className="row">
                             <div className="col text--center" style={{ fontSize: 16, marginTop: 18 }}>
-                                Looking for docs for <a href="https://v1.keajs.org/">Kea 1.0</a>{' '}
-                                or <a href="https://v0.keajs.org/">0.28</a>?
+                                Looking for docs for Kea <a href="https://v2.keajs.org/">2.0</a>,{' '}
+                                <a href="https://v1.keajs.org/">1.0</a> or <a href="https://v0.keajs.org/">0.28</a>?
                             </div>
                         </div>
                     </div>
@@ -296,7 +280,7 @@ function Home() {
 
 export default function WrappedHome() {
     return (
-        <Provider store={getContext().store}>
+        <Provider>
             <Home />
         </Provider>
     )

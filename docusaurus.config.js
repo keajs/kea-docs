@@ -8,7 +8,7 @@ module.exports = {
     favicon: 'img/favicon.ico',
     organizationName: 'keajs',
     projectName: 'kea',
-    plugins: ['posthog-docusaurus'],
+    plugins: ['docusaurus-plugin-sass', 'posthog-docusaurus'],
     themeConfig: {
         navbar: {
             title: 'Kea 3.0',
