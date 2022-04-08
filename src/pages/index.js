@@ -283,8 +283,8 @@ function Home() {
                         </div>
                         <div className="row">
                             <div className="col text--center" style={{ fontSize: 16, marginTop: 18 }}>
-                                Looking for docs for <a href="https://kea-v1.netlify.app/guide/installation">Kea 1.0</a>{' '}
-                                or <a href="https://5d7a15398fdb1e00073ed27f--kea-v1.netlify.app/">0.28</a>?
+                                Looking for docs for <a href="https://v1.keajs.org/">Kea 1.0</a>{' '}
+                                or <a href="https://v0.keajs.org/">0.28</a>?
                             </div>
                         </div>
                     </div>
