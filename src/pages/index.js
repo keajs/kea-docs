@@ -5,7 +5,6 @@ import Layout from '@theme/Layout'
 import Link from '@docusaurus/Link'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
-import styles from './styles.module.css'
 import './styles.scss'
 import { Provider } from 'kea'
 
@@ -14,7 +13,7 @@ const features = [
         title: 'Strong Foundations',
         image: (
             <svg
-                className={classnames(styles.featureImage, 'feature-foundations')}
+                className={classnames('feature-image', 'feature-foundations')}
                 enableBackground="new 0 0 100 100"
                 viewBox="0 0 100 100"
                 xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +41,7 @@ const features = [
         title: 'Scalable & Composable',
         image: (
             <svg
-                className={classnames(styles.featureImage, 'feature-interconnected')}
+                className={classnames('feature-image', 'feature-interconnected')}
                 enableBackground="new 0 0 100 100"
                 viewBox="0 0 100 100"
                 xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +69,7 @@ const features = [
         image: (
             <svg
                 style={{ cursor: 'pointer' }}
-                className={classnames(styles.featureImage, 'feature-sparks-joy')}
+                className={classnames('feature-image', 'feature-sparks-joy')}
                 enableBackground="new 0 0 100 100"
                 viewBox="0 0 100 100"
                 xmlns="http://www.w3.org/2000/svg"
@@ -148,13 +147,13 @@ const QUOTES = [
 function Feature({ image, imageUrl, title, description }) {
     const imgUrl = useBaseUrl(imageUrl)
     return (
-        <div className={classnames('col col--4 text--center', styles.feature)}>
+        <div className={classnames('col col--4 text--center feature')}>
             {image ? (
                 <div className="text--center">{image}</div>
             ) : (
                 imgUrl && (
                     <div className="text--center">
-                        <img className={styles.featureImage} src={imgUrl} alt={title} />
+                        <img className={'feature-image'} src={imgUrl} alt={title} />
                     </div>
                 )
             )}
@@ -170,7 +169,7 @@ function Home() {
     const { siteConfig = {} } = context
     return (
         <Layout
-            title="Production Ready React State Management"
+            title="Cheekily addi(c)tive state management for React"
             description="Kea is a production-grade state management framework built for ambitious React apps."
         >
             <div className="homepage-hero">
@@ -180,10 +179,10 @@ function Home() {
                         <h1>{siteConfig.title}</h1>
                         <strong>{siteConfig.tagline}</strong>
                         <div className="links">
-                            <Link to="/docs/introduction/what-is-kea">Get started</Link>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="https://www.github.com/keajs/kea">Fork on GitHub</a>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            {/*<Link to="/docs/introduction/what-is-kea">Get started</Link>*/}
+                            {/*&nbsp;&nbsp;&nbsp;&nbsp;*/}
+                            {/*<a href="https://www.github.com/keajs/kea">Fork on GitHub</a>*/}
+                            {/*&nbsp;&nbsp;&nbsp;&nbsp;*/}
                             <iframe
                                 src="https://ghbtns.com/github-btn.html?user=keajs&repo=kea&type=star&count=true"
                                 frameBorder="0"
@@ -196,27 +195,58 @@ function Home() {
                     </div>
                 </div>
             </div>
-            <section className="homepage-logos">
-                <div className="container">
-                    <span className="trusted">Trusted by:</span>
-                    <div className="trusted-logos">
-                        <a target="_blank" rel="noopener noreferrer" href="https://www.posthog.com">
-                            <img
-                                className="posthog"
-                                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjMwIiB2aWV3Qm94PSIwIDAgMTUwIDMwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMCAxOC4yNTg1TDcuMzEzMjIgMjUuNTYxOUgwVjE4LjI1ODVaTTAgMTYuNDMyNkw5LjE0MTUzIDI1LjU2MTlIMTYuNDU0N0wwIDkuMTI5MjVWMTYuNDMyNlpNMCA3LjMwMzRMMTguMjgzIDI1LjU2MTlIMjUuNTk2M0wwIDBWNy4zMDM0Wk05LjE0MTUzIDcuMzAzNEwyNy40MjQ2IDI1LjU2MTlWMTguMjU4NUw5LjE0MTUzIDBWNy4zMDM0Wk0xOC4yODMgMFY3LjMwMzRMMjcuNDI0NiAxNi40MzI2VjkuMTI5MjVMMTguMjgzIDBaIiBmaWxsPSIjRjlCRDJCIi8+CjxwYXRoIGQ9Ik00My44NzkzIDIyLjY0MDZDNDIuMDA1NyAyMi42NDA2IDQwLjIwOTUgMjEuODk3MSAzOC44ODU4IDIwLjU3NTJMMjguNzE3NSAxMC40MjA1VjI1LjU2MTlINDMuODc5M1YyMi42NDA2WiIgZmlsbD0iYmxhY2siLz4KPHBhdGggZD0iTTMzLjEwNTUgMjIuNjQwNUMzMy45MTMzIDIyLjY0MDUgMzQuNTY4MSAyMS45ODY2IDM0LjU2ODEgMjEuMTc5OUMzNC41NjgxIDIwLjM3MzIgMzMuOTEzMyAxOS43MTkyIDMzLjEwNTUgMTkuNzE5MkMzMi4yOTc3IDE5LjcxOTIgMzEuNjQyOSAyMC4zNzMyIDMxLjY0MjkgMjEuMTc5OUMzMS42NDI5IDIxLjk4NjYgMzIuMjk3NyAyMi42NDA1IDMzLjEwNTUgMjIuNjQwNVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0wIDI1LjU2MTlINy4zMTMyMkwwIDE4LjI1ODVWMjUuNTYxOVoiIGZpbGw9IiMxRDRBRkYiLz4KPHBhdGggZD0iTTkuMTQxNTMgOS4xMjkyNUwwIDBWNy4zMDM0TDkuMTQxNTMgMTYuNDMyNlY5LjEyOTI1WiIgZmlsbD0iIzFENEFGRiIvPgo8cGF0aCBkPSJNMCA5LjEyOTI2VjE2LjQzMjdMOS4xNDE1MyAyNS41NjE5VjE4LjI1ODVMMCA5LjEyOTI2WiIgZmlsbD0iIzFENEFGRiIvPgo8cGF0aCBkPSJNMTguMjgzIDkuMTI5MjVMOS4xNDE1MyAwVjcuMzAzNEwxOC4yODMgMTYuNDMyNlY5LjEyOTI1WiIgZmlsbD0iI0Y1NEUwMCIvPgo8cGF0aCBkPSJNOS4xNDE1MyAyNS41NjE5SDE2LjQ1NDdMOS4xNDE1MyAxOC4yNTg1VjI1LjU2MTlaIiBmaWxsPSIjRjU0RTAwIi8+CjxwYXRoIGQ9Ik05LjE0MTUzIDkuMTI5MjZWMTYuNDMyN0wxOC4yODMgMjUuNTYxOVYxOC4yNTg1TDkuMTQxNTMgOS4xMjkyNloiIGZpbGw9IiNGNTRFMDAiLz4KPHBhdGggZD0iTTczLjQ4OTEgMTUuNDUxMUM3My40ODkxIDE4LjcyMyA3Mi4wMjM1IDIwLjkxODQgNjcuMDc1NCAyMC45MTg0SDY0LjM0OVYyNS41NjE5SDYxLjM3MTFWMTAuMDA1N0g2Ny4wNzU0QzcyLjAyMzUgMTAuMDA3MSA3My40ODkxIDEyLjE3OTIgNzMuNDg5MSAxNS40NTExWk03MC41MTExIDE1LjQ1MTFDNzAuNTExMSAxMy41NTIyIDY5LjkxNTggMTIuNzUxNyA2Ny42MDE5IDEyLjc1MTdINjQuMzQ5VjE4LjE3MzhINjcuNjAxOUM2OS45MTU4IDE4LjE3MzggNzAuNTExMSAxNy4yODEzIDcwLjUxMTEgMTUuNDUxMVoiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik03NC45NzggMTkuNjYwOEM3NC45NzggMTYuMDY4OSA3Ni45NzAyIDEzLjU1MjIgODAuNjgyNCAxMy41NTIyQzg0LjM5MzEgMTMuNTUyMiA4Ni4zODY3IDE2LjA2ODkgODYuMzg2NyAxOS42NjA4Qzg2LjM4NjcgMjMuMjUyNiA4NC4zOTMxIDI1Ljc5MTIgODAuNjgyNCAyNS43OTEyQzc2Ljk3MTYgMjUuNzkxMiA3NC45NzggMjMuMjUxMSA3NC45NzggMTkuNjYwOFpNODMuNDA4NyAxOS42NjA4QzgzLjQwODcgMTcuMTQ0IDgyLjY5OTQgMTYuMjk4MyA4MC42ODI0IDE2LjI5ODNDNzguNjY2OCAxNi4yOTgzIDc3Ljk1NiAxNy4xNDQgNzcuOTU2IDE5LjY2MDhDNzcuOTU2IDIyLjE3NzUgNzguNjY1NCAyMy4wNDY2IDgwLjY4MjQgMjMuMDQ2NkM4Mi42OTc5IDIzLjA0NTIgODMuNDA4NyAyMi4xNzYxIDgzLjQwODcgMTkuNjYwOFoiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik04OC4zMzM0IDIxLjMzMDNDOTAuNDE3NyAyMi42MzQ3IDkxLjk1MzUgMjMuMDQ2NiA5My42NDg3IDIzLjA0NjZDOTQuNzQ4NiAyMy4wNDY2IDk1LjIwNjQgMjIuNjExMyA5NS4yMDY0IDIyLjA0MDJDOTUuMjA2NCAyMS4zNzcxIDk0Ljc5MzkgMjEuMDU3MiA5Mi45NjEyIDIwLjc1OTJDODkuMzY0NiAyMC4yMSA4OC4zMzM0IDE4Ljc5MTcgODguMzMzNCAxNi45ODQ4Qzg4LjMzMzQgMTQuNjI4NyA5MC4zMDM2IDEzLjU1MzYgOTIuNzU1IDEzLjU1MzZDOTQuMjg5MyAxMy41NTM2IDk2LjE0NTQgMTMuOTY1NiA5Ny4yNjczIDE0Ljc0MjZWMTcuNDg3M0M5NS41OTU1IDE2LjY2MzQgOTMuNzg2MiAxNi4yOTgzIDkyLjUyNTQgMTYuMjk4M0M5MS43MDA0IDE2LjI5ODMgOTEuMzExNCAxNi41OTYyIDkxLjMxMTQgMTcuMTIyMUM5MS4zMTE0IDE3LjY5NDcgOTEuNjA5NyAxOC4wMTQ2IDkzLjQ0MjQgMTguNDAzMUM5Ni44NzgyIDE5LjExMTUgOTguMTg0NCAxOS44NDQ4IDk4LjE4NDQgMjIuMTA4OUM5OC4xODQ0IDI0LjQ0MTYgOTYuMTAwMSAyNS43OTEyIDkzLjQxOTEgMjUuNzkxMkM5MS42MzE3IDI1Ljc5MTIgOTAuMDA1MiAyNS40NDggODguMzMzNCAyNC4zMjc2VjIxLjMzMDNWMjEuMzMwM1oiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik0xMDQuMTM5IDE2LjUyNjFWMjIuODE3M0gxMDcuMjc2VjI1LjU2MTlIMTAxLjE2MVYxNi41MjYxSDk5LjMyODFWMTMuNzgxNUgxMDEuMTYxVjkuNTQ5OTRIMTA0LjEzOVYxMy43ODE1SDEwNy4yNzZWMTYuNTI2MUgxMDQuMTM5WiIgZmlsbD0iYmxhY2siLz4KPHBhdGggZD0iTTEyMy4wNiAxMC4wMDcxVjI1LjU2MzRIMTIwLjA4MlYxOS4zODYySDExMy4yMzJWMjUuNTYzNEgxMTAuMjU0VjEwLjAwNzFIMTEzLjIzMlYxNi42NDE1SDEyMC4wODJWMTAuMDA3MUgxMjMuMDZWMTAuMDA3MVoiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik0xMjUuMzUyIDE5LjY2MDhDMTI1LjM1MiAxNi4wNjg5IDEyNy4zNDQgMTMuNTUyMiAxMzEuMDU2IDEzLjU1MjJDMTM0Ljc2NyAxMy41NTIyIDEzNi43NiAxNi4wNjg5IDEzNi43NiAxOS42NjA4QzEzNi43NiAyMy4yNTI2IDEzNC43NjcgMjUuNzkxMiAxMzEuMDU2IDI1Ljc5MTJDMTI3LjM0NSAyNS43OTEyIDEyNS4zNTIgMjMuMjUxMSAxMjUuMzUyIDE5LjY2MDhaTTEzMy43ODEgMTkuNjYwOEMxMzMuNzgxIDE3LjE0NCAxMzMuMDcxIDE2LjI5ODMgMTMxLjA1NCAxNi4yOTgzQzEyOS4wMzkgMTYuMjk4MyAxMjguMzI4IDE3LjE0NCAxMjguMzI4IDE5LjY2MDhDMTI4LjMyOCAyMi4xNzc1IDEyOS4wMzcgMjMuMDQ2NiAxMzEuMDU0IDIzLjA0NjZDMTMzLjA3MSAyMy4wNDUyIDEzMy43ODEgMjIuMTc2MSAxMzMuNzgxIDE5LjY2MDhaIiBmaWxsPSJibGFjayIvPgo8cGF0aCBkPSJNMTUwIDEzLjc4MTVWMjkuMjIyNEgxNDAuNjA4VjI2LjQ3NzdIMTQ3LjAyMlYyMy4yNzQ1QzE0Ni4zMzUgMjQuMDI5NiAxNDUuMzI3IDI0LjY0NzUgMTQzLjY3NyAyNC42NDc1QzE0MC4yNDEgMjQuNjQ3NSAxMzguNTkxIDIyLjA2MjEgMTM4LjU5MSAxOS4wODgyQzEzOC41OTEgMTYuMTM3NiAxNDAuMjQxIDEzLjU1MjIgMTQzLjY3NyAxMy41NTIyQzE0NS4zMjcgMTMuNTUyMiAxNDYuMzM1IDE0LjE3MDEgMTQ3LjAyMiAxNS4wMzkyVjEzLjc4MTVIMTUwVjEzLjc4MTVaTTE0Ny4wMjIgMTkuMDg4MkMxNDcuMDIyIDE3LjMyNjYgMTQ2LjMxMyAxNi4yOTY4IDE0NC4yOTYgMTYuMjk2OEMxNDIuMjggMTYuMjk2OCAxNDEuNTY5IDE3LjMyNjYgMTQxLjU2OSAxOS4wODgyQzE0MS41NjkgMjAuODczMSAxNDIuMjggMjEuOTAxNCAxNDQuMjk2IDIxLjkwMTRDMTQ2LjMxMSAyMS45MDE0IDE0Ny4wMjIgMjAuOTg3MSAxNDcuMDIyIDE5LjA4ODJaIiBmaWxsPSJibGFjayIvPgo8L3N2Zz4K"
-                            />
-                        </a>
-                        <a target="_blank" rel="noopener noreferrer" href="https://www.elastic.co">
-                            <img className="elastic" src={useBaseUrl('img/trusted/elastic.svg')} />
-                        </a>
-                        <a target="_blank" rel="noopener noreferrer" href="https://www.navirec.com">
-                            <img className="navirec" src={useBaseUrl('img/trusted/navirec.svg')} />
-                        </a>
-                    </div>
-                </div>
+
+            <section className="sections-table">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Intro:</td>
+                            <td>
+                                <a href="#">what is kea?</a>&nbsp;| <a href="#">installation</a>&nbsp;|{' '}
+                                <a href="#">history</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Core:</td>
+                            <td>
+                                <a href="#">kea</a>&nbsp;| <a href="#">actions</a>&nbsp;| <a href="#">reducers</a>
+                                &nbsp;| <a href="#">selectors</a>&nbsp;| <a href="#">listeners</a>&nbsp;|{' '}
+                                <a href="#">defaults</a>&nbsp;| <a href="#">events</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Meta:</td>
+                            <td>
+                                <a href="#">props</a>&nbsp;| <a href="#">key</a>&nbsp;| <a href="#">path</a>&nbsp;|{' '}
+                                <a href="#">connect</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Plugins:</td>
+                            <td>
+                                <a href="#">loaders</a>&nbsp;| <a href="#">router</a>&nbsp;| <a href="#">forms</a>
+                                &nbsp;| <a href="#">sagas</a>&nbsp;| <a href="#">localstorage</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
+
+            <section className="homepage-video">
+                <h2>Build an app in 15 minutes</h2>
+                <iframe
+                    width="560"
+                    height="315"
+                    src="https://www.youtube.com/embed/R7GenyiYZC0"
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                />
+            </section>
+
             <main>
-                <section className={styles.features}>
+                <section className="homepage-features">
                     <div className="container">
                         <div className="row">
                             {features.map((props, idx) => (
@@ -273,6 +303,26 @@ function Home() {
                         </div>
                     </div>
                 </div>
+
+                <section className="homepage-logos">
+                    <div className="container">
+                        <span className="trusted">Trusted by:</span>
+                        <div className="trusted-logos">
+                            <a target="_blank" rel="noopener noreferrer" href="https://www.posthog.com">
+                                <img
+                                    className="posthog"
+                                    src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjMwIiB2aWV3Qm94PSIwIDAgMTUwIDMwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMCAxOC4yNTg1TDcuMzEzMjIgMjUuNTYxOUgwVjE4LjI1ODVaTTAgMTYuNDMyNkw5LjE0MTUzIDI1LjU2MTlIMTYuNDU0N0wwIDkuMTI5MjVWMTYuNDMyNlpNMCA3LjMwMzRMMTguMjgzIDI1LjU2MTlIMjUuNTk2M0wwIDBWNy4zMDM0Wk05LjE0MTUzIDcuMzAzNEwyNy40MjQ2IDI1LjU2MTlWMTguMjU4NUw5LjE0MTUzIDBWNy4zMDM0Wk0xOC4yODMgMFY3LjMwMzRMMjcuNDI0NiAxNi40MzI2VjkuMTI5MjVMMTguMjgzIDBaIiBmaWxsPSIjRjlCRDJCIi8+CjxwYXRoIGQ9Ik00My44NzkzIDIyLjY0MDZDNDIuMDA1NyAyMi42NDA2IDQwLjIwOTUgMjEuODk3MSAzOC44ODU4IDIwLjU3NTJMMjguNzE3NSAxMC40MjA1VjI1LjU2MTlINDMuODc5M1YyMi42NDA2WiIgZmlsbD0iYmxhY2siLz4KPHBhdGggZD0iTTMzLjEwNTUgMjIuNjQwNUMzMy45MTMzIDIyLjY0MDUgMzQuNTY4MSAyMS45ODY2IDM0LjU2ODEgMjEuMTc5OUMzNC41NjgxIDIwLjM3MzIgMzMuOTEzMyAxOS43MTkyIDMzLjEwNTUgMTkuNzE5MkMzMi4yOTc3IDE5LjcxOTIgMzEuNjQyOSAyMC4zNzMyIDMxLjY0MjkgMjEuMTc5OUMzMS42NDI5IDIxLjk4NjYgMzIuMjk3NyAyMi42NDA1IDMzLjEwNTUgMjIuNjQwNVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0wIDI1LjU2MTlINy4zMTMyMkwwIDE4LjI1ODVWMjUuNTYxOVoiIGZpbGw9IiMxRDRBRkYiLz4KPHBhdGggZD0iTTkuMTQxNTMgOS4xMjkyNUwwIDBWNy4zMDM0TDkuMTQxNTMgMTYuNDMyNlY5LjEyOTI1WiIgZmlsbD0iIzFENEFGRiIvPgo8cGF0aCBkPSJNMCA5LjEyOTI2VjE2LjQzMjdMOS4xNDE1MyAyNS41NjE5VjE4LjI1ODVMMCA5LjEyOTI2WiIgZmlsbD0iIzFENEFGRiIvPgo8cGF0aCBkPSJNMTguMjgzIDkuMTI5MjVMOS4xNDE1MyAwVjcuMzAzNEwxOC4yODMgMTYuNDMyNlY5LjEyOTI1WiIgZmlsbD0iI0Y1NEUwMCIvPgo8cGF0aCBkPSJNOS4xNDE1MyAyNS41NjE5SDE2LjQ1NDdMOS4xNDE1MyAxOC4yNTg1VjI1LjU2MTlaIiBmaWxsPSIjRjU0RTAwIi8+CjxwYXRoIGQ9Ik05LjE0MTUzIDkuMTI5MjZWMTYuNDMyN0wxOC4yODMgMjUuNTYxOVYxOC4yNTg1TDkuMTQxNTMgOS4xMjkyNloiIGZpbGw9IiNGNTRFMDAiLz4KPHBhdGggZD0iTTczLjQ4OTEgMTUuNDUxMUM3My40ODkxIDE4LjcyMyA3Mi4wMjM1IDIwLjkxODQgNjcuMDc1NCAyMC45MTg0SDY0LjM0OVYyNS41NjE5SDYxLjM3MTFWMTAuMDA1N0g2Ny4wNzU0QzcyLjAyMzUgMTAuMDA3MSA3My40ODkxIDEyLjE3OTIgNzMuNDg5MSAxNS40NTExWk03MC41MTExIDE1LjQ1MTFDNzAuNTExMSAxMy41NTIyIDY5LjkxNTggMTIuNzUxNyA2Ny42MDE5IDEyLjc1MTdINjQuMzQ5VjE4LjE3MzhINjcuNjAxOUM2OS45MTU4IDE4LjE3MzggNzAuNTExMSAxNy4yODEzIDcwLjUxMTEgMTUuNDUxMVoiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik03NC45NzggMTkuNjYwOEM3NC45NzggMTYuMDY4OSA3Ni45NzAyIDEzLjU1MjIgODAuNjgyNCAxMy41NTIyQzg0LjM5MzEgMTMuNTUyMiA4Ni4zODY3IDE2LjA2ODkgODYuMzg2NyAxOS42NjA4Qzg2LjM4NjcgMjMuMjUyNiA4NC4zOTMxIDI1Ljc5MTIgODAuNjgyNCAyNS43OTEyQzc2Ljk3MTYgMjUuNzkxMiA3NC45NzggMjMuMjUxMSA3NC45NzggMTkuNjYwOFpNODMuNDA4NyAxOS42NjA4QzgzLjQwODcgMTcuMTQ0IDgyLjY5OTQgMTYuMjk4MyA4MC42ODI0IDE2LjI5ODNDNzguNjY2OCAxNi4yOTgzIDc3Ljk1NiAxNy4xNDQgNzcuOTU2IDE5LjY2MDhDNzcuOTU2IDIyLjE3NzUgNzguNjY1NCAyMy4wNDY2IDgwLjY4MjQgMjMuMDQ2NkM4Mi42OTc5IDIzLjA0NTIgODMuNDA4NyAyMi4xNzYxIDgzLjQwODcgMTkuNjYwOFoiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik04OC4zMzM0IDIxLjMzMDNDOTAuNDE3NyAyMi42MzQ3IDkxLjk1MzUgMjMuMDQ2NiA5My42NDg3IDIzLjA0NjZDOTQuNzQ4NiAyMy4wNDY2IDk1LjIwNjQgMjIuNjExMyA5NS4yMDY0IDIyLjA0MDJDOTUuMjA2NCAyMS4zNzcxIDk0Ljc5MzkgMjEuMDU3MiA5Mi45NjEyIDIwLjc1OTJDODkuMzY0NiAyMC4yMSA4OC4zMzM0IDE4Ljc5MTcgODguMzMzNCAxNi45ODQ4Qzg4LjMzMzQgMTQuNjI4NyA5MC4zMDM2IDEzLjU1MzYgOTIuNzU1IDEzLjU1MzZDOTQuMjg5MyAxMy41NTM2IDk2LjE0NTQgMTMuOTY1NiA5Ny4yNjczIDE0Ljc0MjZWMTcuNDg3M0M5NS41OTU1IDE2LjY2MzQgOTMuNzg2MiAxNi4yOTgzIDkyLjUyNTQgMTYuMjk4M0M5MS43MDA0IDE2LjI5ODMgOTEuMzExNCAxNi41OTYyIDkxLjMxMTQgMTcuMTIyMUM5MS4zMTE0IDE3LjY5NDcgOTEuNjA5NyAxOC4wMTQ2IDkzLjQ0MjQgMTguNDAzMUM5Ni44NzgyIDE5LjExMTUgOTguMTg0NCAxOS44NDQ4IDk4LjE4NDQgMjIuMTA4OUM5OC4xODQ0IDI0LjQ0MTYgOTYuMTAwMSAyNS43OTEyIDkzLjQxOTEgMjUuNzkxMkM5MS42MzE3IDI1Ljc5MTIgOTAuMDA1MiAyNS40NDggODguMzMzNCAyNC4zMjc2VjIxLjMzMDNWMjEuMzMwM1oiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik0xMDQuMTM5IDE2LjUyNjFWMjIuODE3M0gxMDcuMjc2VjI1LjU2MTlIMTAxLjE2MVYxNi41MjYxSDk5LjMyODFWMTMuNzgxNUgxMDEuMTYxVjkuNTQ5OTRIMTA0LjEzOVYxMy43ODE1SDEwNy4yNzZWMTYuNTI2MUgxMDQuMTM5WiIgZmlsbD0iYmxhY2siLz4KPHBhdGggZD0iTTEyMy4wNiAxMC4wMDcxVjI1LjU2MzRIMTIwLjA4MlYxOS4zODYySDExMy4yMzJWMjUuNTYzNEgxMTAuMjU0VjEwLjAwNzFIMTEzLjIzMlYxNi42NDE1SDEyMC4wODJWMTAuMDA3MUgxMjMuMDZWMTAuMDA3MVoiIGZpbGw9ImJsYWNrIi8+CjxwYXRoIGQ9Ik0xMjUuMzUyIDE5LjY2MDhDMTI1LjM1MiAxNi4wNjg5IDEyNy4zNDQgMTMuNTUyMiAxMzEuMDU2IDEzLjU1MjJDMTM0Ljc2NyAxMy41NTIyIDEzNi43NiAxNi4wNjg5IDEzNi43NiAxOS42NjA4QzEzNi43NiAyMy4yNTI2IDEzNC43NjcgMjUuNzkxMiAxMzEuMDU2IDI1Ljc5MTJDMTI3LjM0NSAyNS43OTEyIDEyNS4zNTIgMjMuMjUxMSAxMjUuMzUyIDE5LjY2MDhaTTEzMy43ODEgMTkuNjYwOEMxMzMuNzgxIDE3LjE0NCAxMzMuMDcxIDE2LjI5ODMgMTMxLjA1NCAxNi4yOTgzQzEyOS4wMzkgMTYuMjk4MyAxMjguMzI4IDE3LjE0NCAxMjguMzI4IDE5LjY2MDhDMTI4LjMyOCAyMi4xNzc1IDEyOS4wMzcgMjMuMDQ2NiAxMzEuMDU0IDIzLjA0NjZDMTMzLjA3MSAyMy4wNDUyIDEzMy43ODEgMjIuMTc2MSAxMzMuNzgxIDE5LjY2MDhaIiBmaWxsPSJibGFjayIvPgo8cGF0aCBkPSJNMTUwIDEzLjc4MTVWMjkuMjIyNEgxNDAuNjA4VjI2LjQ3NzdIMTQ3LjAyMlYyMy4yNzQ1QzE0Ni4zMzUgMjQuMDI5NiAxNDUuMzI3IDI0LjY0NzUgMTQzLjY3NyAyNC42NDc1QzE0MC4yNDEgMjQuNjQ3NSAxMzguNTkxIDIyLjA2MjEgMTM4LjU5MSAxOS4wODgyQzEzOC41OTEgMTYuMTM3NiAxNDAuMjQxIDEzLjU1MjIgMTQzLjY3NyAxMy41NTIyQzE0NS4zMjcgMTMuNTUyMiAxNDYuMzM1IDE0LjE3MDEgMTQ3LjAyMiAxNS4wMzkyVjEzLjc4MTVIMTUwVjEzLjc4MTVaTTE0Ny4wMjIgMTkuMDg4MkMxNDcuMDIyIDE3LjMyNjYgMTQ2LjMxMyAxNi4yOTY4IDE0NC4yOTYgMTYuMjk2OEMxNDIuMjggMTYuMjk2OCAxNDEuNTY5IDE3LjMyNjYgMTQxLjU2OSAxOS4wODgyQzE0MS41NjkgMjAuODczMSAxNDIuMjggMjEuOTAxNCAxNDQuMjk2IDIxLjkwMTRDMTQ2LjMxMSAyMS45MDE0IDE0Ny4wMjIgMjAuOTg3MSAxNDcuMDIyIDE5LjA4ODJaIiBmaWxsPSJibGFjayIvPgo8L3N2Zz4K"
+                                />
+                            </a>
+                            <a target="_blank" rel="noopener noreferrer" href="https://www.elastic.co">
+                                <img className="elastic" src={useBaseUrl('img/trusted/elastic.svg')} />
+                            </a>
+                            <a target="_blank" rel="noopener noreferrer" href="https://www.navirec.com">
+                                <img className="navirec" src={useBaseUrl('img/trusted/navirec.svg')} />
+                            </a>
+                        </div>
+                    </div>
+                </section>
             </main>
         </Layout>
     )

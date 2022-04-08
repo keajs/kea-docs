@@ -42,6 +42,12 @@ html[data-theme="dark"]:root  {
   --code-color-black: white;
 }
 
+.footer--dark {
+
+  --ifm-footer-background-color: hsl(123deg, 21%, 21%);
+
+}
+
 .docusaurus-highlight-code-line {
   background-color: rgb(72, 77, 91);
   display: block;

@@ -88,9 +88,6 @@ module.exports = {
             ],
             copyright: `<br/>Copyright © 2015-${new Date().getFullYear()} <a href='https://twitter.com/mariusandra' style='color:var(--ifm-footer-color);text-decoration: underline;'>Marius Andra</a> and other Kea contributors.`,
         },
-        googleAnalytics: {
-            trackingID: 'UA-103436947-1',
-        },
         posthog:
             process.env.NODE_ENV === 'production'
                 ? {

@@ -1,6 +1,7 @@
 import React from 'react'
 import { kea, useActions, useValues } from 'kea'
 import { router } from 'kea-router'
+import './code.scss'
 
 const introCodeLogic = kea({
     actions: {
