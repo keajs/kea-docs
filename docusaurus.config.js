@@ -9,6 +9,7 @@ module.exports = {
     organizationName: 'keajs',
     projectName: 'kea',
     plugins: ['posthog-docusaurus'],
+    noIndex: true,
     themeConfig: {
         navbar: {
             title: 'Kea 2.5',
