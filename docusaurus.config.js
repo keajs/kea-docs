@@ -11,6 +11,11 @@ module.exports = {
     plugins: ['posthog-docusaurus'],
     noIndex: true,
     themeConfig: {
+        announcementBar: {
+            content: 'This documentation is for the old Kea 2.0. To see the latest docs for Kea 3.0+, <a href="https://keajs.org/" style="color:yellow">click here</a>.',
+            backgroundColor: 'rgb(191, 21, 21)',
+            textColor: '#ffffff',
+        },
         navbar: {
             title: 'Kea 2.5',
             logo: {
