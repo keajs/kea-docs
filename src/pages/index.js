@@ -234,7 +234,7 @@ function Home() {
                             <td>Plugins:</td>
                             <td>
                                 <a href="#">loaders</a>&nbsp;| <a href="#">router</a>&nbsp;| <a href="#">forms</a>
-                                &nbsp;| <a href="#">sagas</a>&nbsp;| <a href="#">localstorage</a>&nbsp;|{' '}
+                                &nbsp;| <a href="#">saga</a>&nbsp;| <a href="#">localstorage</a>&nbsp;|{' '}
                                 <a href="#">window-values</a>
                             </td>
                         </tr>
