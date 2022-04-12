@@ -253,6 +253,8 @@ function Home() {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                 />
+                <br/>
+                (TODO: use a shorter and to the point video)
             </section>
 
             <main>
