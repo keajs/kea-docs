@@ -8,23 +8,23 @@ Once you have initialised a logic with `const logic = kea({})`, there are a few 
 
 ## Properties
 
-There are several properties you may access on a logic.  
+There are several properties you may access on a logic.
 
 ```javascript
 const logic = kea({
-    // each function gets `logic` as its argument
-    listeners: (logic) => ({
-        // logic.actions.doSomething() 
-        // logic.values.myValue 
-        // ...
-    }),
+  // each function gets `logic` as its argument
+  listeners: (logic) => ({
+    // logic.actions.doSomething()
+    // logic.values.myValue
+    // ...
+  }),
 
-    // it's common to destructure the logic directly: 
-    listeners: ({ actions, values }) => ({
-        // actions.doSomething() 
-        // values.myValue 
-        // ...
-    })
+  // it's common to destructure the logic directly:
+  listeners: ({ actions, values }) => ({
+    // actions.doSomething()
+    // values.myValue
+    // ...
+  }),
 })
 
 // logic.mount() // and then:
@@ -40,15 +40,16 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    actions: {
-        doSomething: value => ({ value })
-    }
+  actions: {
+    doSomething: (value) => ({ value }),
+  },
 })
 
 logic.mount()
-logic.actionCreators == {
-    doSomething: (value) => ({ type: 'do something (logic)', payload: { value } })
-}
+logic.actionCreators ==
+  {
+    doSomething: (value) => ({ type: 'do something (logic)', payload: { value } }),
+  }
 logic.actionCreators.doSomething.toString() === 'do something (logic)'
 ```
 
@@ -60,34 +61,36 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    actions: {
-        doSomething: value => ({ value })
-    }
+  actions: {
+    doSomething: (value) => ({ value }),
+  },
 })
 
 logic.mount()
-logic.actionKeys == {
-    'do something (logic)': 'doSomething'
-}
+logic.actionKeys ==
+  {
+    'do something (logic)': 'doSomething',
+  }
 ```
 
 ### logic.actions
 
-Action creators that are wrapped with Redux's `dispatch`. 
+Action creators that are wrapped with Redux's `dispatch`.
 
 Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    actions: {
-        doSomething: value => ({ value })
-    }
+  actions: {
+    doSomething: (value) => ({ value }),
+  },
 })
 
 logic.mount()
-logic.actions == {
-    doSomething: (value) => store.dispatch(logic.actionCreators.doSomething(value))
-}
+logic.actions ==
+  {
+    doSomething: (value) => store.dispatch(logic.actionCreators.doSomething(value)),
+  }
 logic.actions.doSomething.toString() === 'do something (logic)'
 ```
 
@@ -107,18 +110,19 @@ Defaults to `{}`
 
 ```javascript
 const otherLogic = kea({
-    path: () => ['scenes', 'other'],
+  path: () => ['scenes', 'other'],
 })
 
 const logic = kea({
-    connect: [otherLogic],
-    path: () => ['scenes', 'myself'],
+  connect: [otherLogic],
+  path: () => ['scenes', 'myself'],
 })
 
-logic.connections == {
-    'scenes.other': otherLogic, 
-    'scenes.myself': logic
-}
+logic.connections ==
+  {
+    'scenes.other': otherLogic,
+    'scenes.myself': logic,
+  }
 ```
 
 ### logic.constants
@@ -129,14 +133,15 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    constants: ['SHOW_ALL', 'SHOW_NONE']
+  constants: ['SHOW_ALL', 'SHOW_NONE'],
 })
 
 logic.mount()
-logic.contants == {
+logic.contants ==
+  {
     SHOW_ALL: 'SHOW_ALL',
     SHOW_NONE: 'SHOW_NONE',
-}
+  }
 ```
 
 ### logic.defaults
@@ -168,41 +173,51 @@ Defaults to `{}`
 
 ```javascript
 const logic = kea({
-    events: {
-        afterMount: () => { console.log('kea is awesome!') }
-    }
+  events: {
+    afterMount: () => {
+      console.log('kea is awesome!')
+    },
+  },
 })
 
 logic.mount()
-logic.events == {
-    afterMount: () => { console.log('kea is awesome!') }
-}
+logic.events ==
+  {
+    afterMount: () => {
+      console.log('kea is awesome!')
+    },
+  }
 ```
 
 ### logic.listeners
 
-Array of functions listening for certain events. You should not access `logic.listeners` directly, 
+Array of functions listening for certain events. You should not access `logic.listeners` directly,
 but dispatch `actions` that the listeners then listen to!
 
 Defaults to `undefined`
 
 ```javascript
 const logic = kea({
-    path: () => ['scenes', 'bird'],
-    actions: {
-        someAction: true
+  path: () => ['scenes', 'bird'],
+  actions: {
+    someAction: true,
+  },
+  listeners: {
+    someAction: () => {
+      console.log('kea is awesome!')
     },
-    listeners: {
-        someAction: () => { console.log('kea is awesome!') }
-    }
+  },
 })
 
 logic.mount()
-logic.listeners == {
+logic.listeners ==
+  {
     'some action (scenes.bird)': [
-        () => { console.log('kea is awesome!') }
-    ]
-}
+      () => {
+        console.log('kea is awesome!')
+      },
+    ],
+  }
 ```
 
 ### logic.propTypes
@@ -324,7 +339,7 @@ const logic = kea({
     selectors: {
         selectedValues: [
             (selectors) => [selectors.reducerKey, selectors.otherReducerKey],
-            (reducerKey, otherReducerKey) => `${reducerKey} + ${otherReducerKey}` 
+            (reducerKey, otherReducerKey) => `${reducerKey} + ${otherReducerKey}`
         ]
     }
 })
@@ -349,27 +364,32 @@ Defaults to `undefined`
 
 ```javascript
 const logic = kea({
-    path: ['scenes', 'bird'],
-    actions: {
-        someAction: true
+  path: ['scenes', 'bird'],
+  actions: {
+    someAction: true,
+  },
+  listeners: ({ sharedListeners }) => ({
+    someAction: sharedListeners.processStuff,
+  }),
+  sharedListeners: {
+    processStuff: () => {
+      console.log('kea is awesome!')
     },
-    listeners: ({ sharedListeners }) => ({
-        someAction: sharedListeners.processStuff
-    }),
-    sharedListeners: {
-        processStuff: () => { console.log('kea is awesome!') }
-    }
+  },
 })
 
 logic.mount()
-logic.sharedListeners == {
-    processStuff: () => { console.log('kea is awesome!') }
-}
+logic.sharedListeners ==
+  {
+    processStuff: () => {
+      console.log('kea is awesome!')
+    },
+  }
 ```
 
 ### logic.values
 
-Convenient shorthand for accessing selectors. Uses 
+Convenient shorthand for accessing selectors. Uses
 [getters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get) under the hood.
 
 Defaults to `{}`
@@ -384,7 +404,7 @@ const logic = kea({
     selectors: {
         selectedValues: [
             (selectors) => [selectors.reducerKey, selectors.otherReducerKey],
-            (reducerKey, otherReducerKey) => `${reducerKey} + ${otherReducerKey}` 
+            (reducerKey, otherReducerKey) => `${reducerKey} + ${otherReducerKey}`
         ]
     }
 })
@@ -423,23 +443,22 @@ const logic = kea({
   },
   reducers: {
     firstOne: ['defaultValue'],
-    secondOne: ['defaultValue']
-  }
+    secondOne: ['defaultValue'],
+  },
 })
 
 // with function components
 
-function MyComponent ({ firstOne, secondOne, actions: { doSomething, doSomethingElse } }) {
+function MyComponent({ firstOne, secondOne, actions: { doSomething, doSomethingElse } }) {
   // ...
 }
 
 const ConnectedComponent = logic(MyComponent)
 
-
 // with class components
 
 class MyClassComponent extends Component {
-  render () {
+  render() {
     const { firstOne, secondOne } = this.props
 
     // NB! this.actions is a shorthand for this.props.actions
@@ -463,7 +482,7 @@ Builds are cached on the context, so calling it a on every render is very fast, 
 ```javascript
 // create a logic
 const logic = kea({
-  key: props => props.id,
+  key: (props) => props.id,
 
   constants: ['SOMETHING'],
 
@@ -472,8 +491,8 @@ const logic = kea({
   },
 
   reducers: {
-    myValue: ['yes']
-  }
+    myValue: ['yes'],
+  },
 })
 
 // get a built copy
@@ -533,13 +552,13 @@ console.log(logic.values.myValue)
 unmount()
 
 // Alternatively, pass a callback to execute its contents and unmount automatically
-logic.mount(builtLogic => {
+logic.mount((builtLogic) => {
   builtLogic.actions.doSomething()
   console.log(builtLogic.values.myValue)
 })
 
 // The callback can also be async
-logic.mount(async builtLogic => {
+logic.mount(async (builtLogic) => {
   const response = await window.fetch('/api/give-me-all-your-data')
   builtLogic.actions.doSomething(await response.json())
   console.log(builtLogic.values.myValue)
@@ -558,8 +577,8 @@ const logic = kea({
   },
 
   reducers: {
-    myValue: ['yes']
-  }
+    myValue: ['yes'],
+  },
 })
 
 logic.extend({
@@ -568,8 +587,8 @@ logic.extend({
   },
 
   reducers: {
-    anotherValue: ['no']
-  }
+    anotherValue: ['no'],
+  },
 })
 
 // Now you can use both:

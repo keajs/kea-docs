@@ -27,9 +27,9 @@ function MyComponent () {
 
 ## useActions
 
-Assure the logic is mounted and fetch actions from the logic. Actions are automatically connected 
+Assure the logic is mounted and fetch actions from the logic. Actions are automatically connected
 to `dispatch`.
-    
+
 ```javascript
 import { kea, useActions } from 'kea'
 
@@ -60,23 +60,23 @@ function MyComponent () {
 
 :::note
 You can only use `useValues` with destructoring
- 
+
 ```javascript
 const { a, b } = useValues(logic)
 ```
 
-This is because internally `useValues` uses [getter functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get) 
-that call react-redux's [`useSelector`](https://react-redux.js.org/next/api/hooks#useselector) 
-hooks when a value is accessed. Because hooks need to always be called in the same order, 
-you _can't_ just store the object returned from `useValues` and then use its properties later in 
-the code. Doing so might call the internal hooks in an unspecified order. Use `useAllValues` if you 
+This is because internally `useValues` uses [getter functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get)
+that call react-redux's [`useSelector`](https://react-redux.js.org/next/api/hooks#useselector)
+hooks when a value is accessed. Because hooks need to always be called in the same order,
+you _can't_ just store the object returned from `useValues` and then use its properties later in
+the code. Doing so might call the internal hooks in an unspecified order. Use `useAllValues` if you
 need to do this.
 :::
 
 ## useAllValues
 
 Similar to `useValues`, but selects all the values in the logic and stores their current state in an object.
-    
+
 ```javascript
 import { kea, useAllValues } from 'kea'
 

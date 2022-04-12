@@ -70,27 +70,27 @@ If you wrap your `Component` inside a `logic`, it'll get all the `values` and `a
 
 ```jsx
 const logic = kea({
-    actions: {
-        doSomething: true,
-        doSomethingElse: true,
-    },
-    reducers: {
-        firstOne: ['default', { doSomething: () => 'did it' }],
-        secondOne: ['default', { doSomething: () => 'did it' }],
-    },
+  actions: {
+    doSomething: true,
+    doSomethingElse: true,
+  },
+  reducers: {
+    firstOne: ['default', { doSomething: () => 'did it' }],
+    secondOne: ['default', { doSomething: () => 'did it' }],
+  },
 })
 
 class MyComponent extends Component {
-    render() {
-        const { firstOne, secondOne } = this.props
+  render() {
+    const { firstOne, secondOne } = this.props
 
-        // The following two lines are equivalent as
-        // `this.actions` is a shorthand for `this.props.actions`
-        const { doSomething, doSomethingElse } = this.actions
-        const { doSomething, doSomethingElse } = this.props.actions
+    // The following two lines are equivalent as
+    // `this.actions` is a shorthand for `this.props.actions`
+    const { doSomething, doSomethingElse } = this.actions
+    const { doSomething, doSomethingElse } = this.props.actions
 
-        return <div />
-    }
+    return <div />
+  }
 }
 
 const MyConnectedComponent = logic(MyComponent)
@@ -143,16 +143,16 @@ and simplify your code down a bit:
 import { connect } from 'kea'
 
 @connect({
-    actions: [menuLogic, ['openMenu', 'closeMenu']],
-    values: [menuLogic, ['isOpen as isMenuOpen'], accountLogic, ['currentUser']],
+  actions: [menuLogic, ['openMenu', 'closeMenu']],
+  values: [menuLogic, ['isOpen as isMenuOpen'], accountLogic, ['currentUser']],
 })
 class MyComponent extends Component {
-    render() {
-        const { currentUser } = this.props
-        const { closeMenu } = this.actions
+  render() {
+    const { currentUser } = this.props
+    const { closeMenu } = this.actions
 
-        return <button onClick={closeMenu}>{currentUser.name}</button>
-    }
+    return <button onClick={closeMenu}>{currentUser.name}</button>
+  }
 }
 ```
 
@@ -162,15 +162,15 @@ When using a **[keyed logic](/docs/guide/additional#keyed-logic)**, such as this
 
 ```js
 const itemLogic = kea({
-    key: (props) => props.id,
-    loaders: ({ props }) => ({
-        item: {
-            loadItem: async () => (await fetch(`/api/items/${props.id}`)).json(),
-        },
-    }),
-    events: ({ actions }) => ({
-        afterMount: [actions.loadItem],
-    }),
+  key: (props) => props.id,
+  loaders: ({ props }) => ({
+    item: {
+      loadItem: async () => (await fetch(`/api/items/${props.id}`)).json(),
+    },
+  }),
+  events: ({ actions }) => ({
+    afterMount: [actions.loadItem],
+  }),
 })
 ```
 
@@ -178,22 +178,22 @@ you might end up in a nested hierarchy such as this:
 
 ```js
 function Item({ id }) {
-    return (
-        <div>
-            <ItemTitle id={id} />
-            <ItemStatus id={id} />
-        </div>
-    )
+  return (
+    <div>
+      <ItemTitle id={id} />
+      <ItemStatus id={id} />
+    </div>
+  )
 }
 
 function ItemTitle({ id }) {
-    const { item } = useValues(itemLogic({ id }))
-    return <div>{item?.title}</div>
+  const { item } = useValues(itemLogic({ id }))
+  return <div>{item?.title}</div>
 }
 
 function ItemStatus({ id }) {
-    const { item } = useValues(itemLogic({ id }))
-    return <div>{item?.status}</div>
+  const { item } = useValues(itemLogic({ id }))
+  return <div>{item?.status}</div>
 }
 ```
 
@@ -210,14 +210,14 @@ Starting with Kea 2.3 you can use the tag `<BindLogic />`:
 
 ```jsx
 function Item({ id }) {
-    return (
-        <BindLogic logic={itemLogic} props={{ id }}>
-            <div>
-                <ItemTitle />
-                <ItemStatus />
-            </div>
-        </BindLogic>
-    )
+  return (
+    <BindLogic logic={itemLogic} props={{ id }}>
+      <div>
+        <ItemTitle />
+        <ItemStatus />
+      </div>
+    </BindLogic>
+  )
 }
 ```
 
@@ -225,23 +225,23 @@ Thus you can just write:
 
 ```jsx
 function ItemTitle() {
-    const { item } = useValues(itemLogic)
-    return <div>{item?.title}</div>
+  const { item } = useValues(itemLogic)
+  return <div>{item?.title}</div>
 }
 
 function ItemStatus() {
-    const { item } = useValues(itemLogic)
-    return <div>{item?.status}</div>
+  const { item } = useValues(itemLogic)
+  return <div>{item?.status}</div>
 }
 ```
 
 Using `<BindLogic />`, Kea stores the built logic `itemLogic({ id })` inside a **React Context**.
-All child components that call `useValues(itemLogic)` will get that specific mounted instance of the logic. 
+All child components that call `useValues(itemLogic)` will get that specific mounted instance of the logic.
 
 <br />
 
 :::note Next steps
 
--   Using [TypeScript](/docs/guide/typescript)? Read how it works with Kea!
--   Read about [Debugging](/docs/guide/debugging) to be even more productive when working with Kea!  
-    :::
+- Using [TypeScript](/docs/guide/typescript)? Read how it works with Kea!
+- Read about [Debugging](/docs/guide/debugging) to be even more productive when working with Kea!  
+  :::
