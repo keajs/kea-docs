@@ -210,9 +210,9 @@ function Home() {
                         <tr>
                             <td>Core:</td>
                             <td>
-                                <a href="#">kea</a>&nbsp;| <a href="#">actions</a>&nbsp;| <a href="#">reducers</a>
-                                &nbsp;| <a href="#">selectors</a>&nbsp;| <a href="#">listeners</a>&nbsp;|{' '}
-                                <a href="#">defaults</a>&nbsp;| <a href="#">events</a>
+                                <a href="#">kea</a>&nbsp;| <a href="#">actions</a>&nbsp;| <a href="#">defaults</a>
+                                &nbsp;| <a href="#">events</a>&nbsp;| <a href="#">listeners</a>&nbsp;|{' '}<a href="#">reducers</a>&nbsp;|{' '}
+                                <a href="#">selectors</a>&nbsp;| <a href="#">subscriptions</a>
                             </td>
                         </tr>
                         <tr>
