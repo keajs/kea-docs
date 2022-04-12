@@ -179,8 +179,8 @@ function Home() {
                         <h1>{siteConfig.title}</h1>
                         <strong>{siteConfig.tagline}</strong>
                         <div className="links">
-                            {/*<Link to="/docs/introduction/what-is-kea">What is Kea?</Link>*/}
-                            {/*&nbsp;&nbsp;&nbsp;&nbsp;*/}
+                            <Link to="/blog/kea-3.0">Read the announcement: Kea v3.0</Link>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
                             {/*<a href="https://www.github.com/keajs/kea">Fork on GitHub</a>*/}
                             {/*&nbsp;&nbsp;&nbsp;&nbsp;*/}
                             <iframe
