@@ -4,23 +4,154 @@ sidebar_position: 0
 
 # kea
 
+## Logic
+
 All Kea code lives inside a `logic`, which is created by calling `kea()`
 
-```javascript
+```ts
 import { kea } from 'kea'
 
-const logic = kea({ ... })
+const logic = kea([ ... ])
 ```
 
-Why do we call it `logic`?
+<details>
+  <summary>Why do we call it `logic`?</summary>
+  <div>
+    Well, we had to call it something and everything else was already taken. 😅
+   
+    More seriously, the name `logic` implies that calling `kea()` return complex objects,
+    which not only contain a piece of your state, but also all the _logic_ that manipulates it.
+   
+    It's a useful convention, and I suggest sticking to it. Feel free to call your logic with
+    names that make sense, such as `accountLogic`, `dashboardLogic`, etc.
+  </div>
+</details>
 
-Well, we had to call it something and everything else was already taken. 😅
+## Logic builders
 
-More seriously, the name `logic` implies that calling `kea()` return complex objects,
-which not only contain a piece of your state, but also all the _logic_ that manipulates it.
+You pass `kea([])` an array of function calls, each of which add certain features to your `logic`. 
 
-It's a useful convention and we suggest sticking to it. Feel free to call your logic with
-names that make sense, such as `accountLogic`, `dashboardLogic`, etc.
+For example `actions` and `reducers`:
+
+```ts
+import { kea, actions, reducers } from 'kea'
+import { loginLogicType } from './loginLogicType'
+
+export const loginLogic = kea<loginLogicType>([
+  actions({
+    setUsername: (username: string) => ({ username }),
+  }),
+  reducers({
+    username: { setUsername: (_, { username }) => username },
+  }),
+])
+```
+
+Each of these just returns a function that modifies the logic, what we call a `LogicBuilder`:
+
+```ts
+// part of `actions` from kea core 
+function actions<L extends Logic = Logic>(input: any): LogicBuilder<L> {
+  return (logic) => {
+    for (const [key, payload] of input) {
+      logic.actionsCreators[key] = createAction(key, payload)
+      logic.actions[key] = (...args: any[]) => dispatch(logic.actionsCreators[key](...args))
+      // etc...
+    }
+  }
+}
+```
+
+Your final `logic` is just a combination of all applied logic builders.
+
+:::note
+To learn more about the available logic builders, check the links in the sidebar.
+:::
+
+## Lifecycles
+
+A `logic` can be in three different states:
+
+```ts
+// 1. Initialized
+const loginLogic = kea([...builders])
+
+// 2. Built
+const builtLoginLogic = loginLogic.build()
+
+// 3. Mounted
+const unmount = builtLoginLogic.mount()
+```
+
+1. **Initialized**. When your JS interpreter encounters a `kea([...builders])` call, it stores the `builders` for later.
+2. **Built**. To build a logic, apply all logic builders. The result is an object with various properties, but
+   which doesn't do much.
+3. **Mounted**. Once a logic is built, it can be mounted. This means attaching its the `reducers` to
+   Redux, making its `selectors` actually point to a `value` in the store, registering all `listeners` handlers, firing all `afterMount` events, and so on.
+
+If you use Kea with React though [hooks](../hooks), logic is mounted automatically.  When all components
+that use a `logic` are removed from React's tree, that `logic` will be unmounted automatically.
+
+## Mounting and Unmounting
+
+When you use [Kea with React](/docs/guide/react), there's a lot that is handled for you behind the scenes.
+For example logic is mounted automatically with your `<Component />` and unmounted when it's no longer needed.
+
+Sometimes however, you wish to manually mount logic. For example to already start loading data in
+your router before transitioning to a component... or in `getInitialProps` in next.js... or when writing
+tests with Jest.
+
+Perhaps you even want to use Kea with a framework other than React.
+
+In any case, just call `mount()` on your logic and get as a reply a function that will `unmount` it:
+
+```javascript
+// create the counter logic from some of the previous examples
+const logic = kea({ ... })
+
+// connect its reducers to redux
+const unmount = logic.mount()
+
+logic.values.counter
+// => 0
+
+logic.actions.increment()
+// => { type: 'increment ...', payload: { amount: 1 } }
+
+logic.values.counter
+// => 1
+
+// remove reducers from redux
+unmount()
+
+logic.values.counter
+// => throw new Error()!
+```
+
+In case you need to pass props to your logic, for example if it is [keyed](/docs/guide/additional#keyed-logic),
+you should [build the logic](/docs/api/logic#logicbuild) explicitly before calling `mount()` on it:
+
+```javascript
+// create the counter logic from the examples above, but with a key!
+const logic = kea({ key: props => props.id, ... })
+
+// build the logic with props (`logic(props)` is short for `logic.build(props)`)
+const logicWithProps = logic({ id: 123, otherProp: true })
+
+const unmount = logicWithProps.mount()
+
+// do what needs to be done
+logicWithProps.actions.increment()
+
+// call `logic()` again with the same key if you want to update the other props
+logic({ id: 123, otherProp: false })
+
+unmount()
+```
+
+There are a few other options you can use. See the [logic API](/docs/api/logic) for more details.
+
+
 
 ## Input objects vs functions
 
@@ -102,85 +233,6 @@ The recommendation is to write the simplest code you can (start with an `reducer
 and when you need to access `actions`, `values` or perform lazy evaluation, convert it into
 a function.
 
-## Lifecycles
-
-Kea's `logic` has three different states:
-
-1. **Initialized**. When your JavaScript interpreter encounters a `const logic = kea(input)` call, not
-   much happens. It just stores the `input` variable on the logic and goes on. No processing takes place.
-2. **Built**. When a logic is needed, it must first be built. This means converting
-   an `input` such as `{ actions: { ... } }` into actual functions on `logic.actions`
-   that can be called. Same for all the `reducers`, `selectors`, etc.
-3. **Mounted**. Once a logic is built, it can be mounted. This means attaching the `reducers` to
-   Redux, registering all the `listeners`, etc.
-
-If you use Kea outside of React, you have to mount and unmount your `logic` manually.
-Read the next section for instructions on how to do so.
-
-If you use Kea [with React](/docs/guide/react), every time you render a component that access a `logic`
-via `useValues`, `useActions` or some other method, the logic is built and mounted automatically. When all components
-that use a `logic` are removed from React's tree, that `logic` will be unmounted automatically.
-
-Only `logic` which is actively in use will be mounted and attached to Redux.
-
-## Mounting and Unmounting
-
-When you use [Kea with React](/docs/guide/react), there's a lot that is handled for you behind the scenes.
-For example logic is mounted automatically with your `<Component />` and unmounted when it's no longer needed.
-
-Sometimes however, you wish to manually mount logic. For example to already start loading data in
-your router before transitioning to a component... or in `getInitialProps` in next.js... or when writing
-tests with Jest.
-
-Perhaps you even want to use Kea with a framework other than React.
-
-In any case, just call `mount()` on your logic and get as a reply a function that will `unmount` it:
-
-```javascript
-// create the counter logic from some of the previous examples
-const logic = kea({ ... })
-
-// connect its reducers to redux
-const unmount = logic.mount()
-
-logic.values.counter
-// => 0
-
-logic.actions.increment()
-// => { type: 'increment ...', payload: { amount: 1 } }
-
-logic.values.counter
-// => 1
-
-// remove reducers from redux
-unmount()
-
-logic.values.counter
-// => throw new Error()!
-```
-
-In case you need to pass props to your logic, for example if it is [keyed](/docs/guide/additional#keyed-logic),
-you should [build the logic](/docs/api/logic#logicbuild) explicitly before calling `mount()` on it:
-
-```javascript
-// create the counter logic from the examples above, but with a key!
-const logic = kea({ key: props => props.id, ... })
-
-// build the logic with props (`logic(props)` is short for `logic.build(props)`)
-const logicWithProps = logic({ id: 123, otherProp: true })
-
-const unmount = logicWithProps.mount()
-
-// do what needs to be done
-logicWithProps.actions.increment()
-
-// call `logic()` again with the same key if you want to update the other props
-logic({ id: 123, otherProp: false })
-
-unmount()
-```
-
-There are a few other options you can use. See the [logic API](/docs/api/logic) for more details.
 
 ## Calling `logic.mount()` inside listeners
 
