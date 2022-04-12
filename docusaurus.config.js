@@ -19,7 +19,7 @@ module.exports = {
             hideOnScroll: true,
             items: [
                 {
-                    to: 'docs/introduction/what-is-kea',
+                    to: 'docs/intro',
                     activeBasePath: 'docs',
                     label: 'Docs',
                     position: 'left',
