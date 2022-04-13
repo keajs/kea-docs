@@ -8,18 +8,18 @@ Enter listeners.
 As the name implies, listeners _listen_ for dispatched actions and then run some code. Here's an example:
 
 ```javascript
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     loadUsers: true,
-  },
+  }),
 
-  listeners: {
+  listeners({
     loadUsers: async (payload) => {
       const users = await api.get('users')
       // do something with the users?
     },
-  },
-})
+  }),
+])
 ```
 
 When the `loadUsers` action is dispatched, we, _ahem,_ load the users.
@@ -30,28 +30,28 @@ Q: What should we do with the `users` once we have them? <br/>
 A: We store them in a `reducer` through an `action` of course!
 
 ```javascript
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     loadUsers: true,
     setUsers: (users) => ({ users }),
-  },
+  }),
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     loadUsers: async () => {
       const users = await api.get('users')
       actions.setUsers(users)
     },
-  }),
+  })),
 
-  reducers: {
+  reducers({
     users: [
       [],
       {
         setUsers: (_, { users }) => users,
       },
     ],
-  },
-})
+  }),
+])
 ```
 
 If you're used to React Hooks or other lightweight state management solution,
@@ -69,14 +69,14 @@ Well, here's one bad and _naïve_ way you could do it:
 
 ```javascript
 // NB! This code follows bad patterns, don't do this.
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     loadUsers: true,
     setUsers: (users) => ({ users }),
     setLoading: (loading) => ({ loading }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     users: [
       [],
       {
@@ -90,17 +90,17 @@ const logic = kea({
         setLoading: (_, { loading }) => loading,
       },
     ],
-  },
+  }),
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     loadUsers: async () => {
       actions.setLoading(true) // DO NOT DO THIS
       const users = await api.get('users')
       actions.setUsers(users)
       actions.setLoading(false) // DO NOT DO THIS
     },
-  }),
-})
+  })),
+])
 ```
 
 If you read the `reducers` section above, you'll remember that it's an anti-pattern to only have
@@ -114,13 +114,13 @@ called.
 Let's build off of that:
 
 ```javascript
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     loadUsers: true,
     setUsers: (users) => ({ users }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     users: [
       [],
       {
@@ -134,15 +134,15 @@ const logic = kea({
         setUsers: () => false,
       },
     ],
-  },
+  }),
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     loadUsers: async () => {
       const users = await api.get('users')
       actions.setUsers(users)
     },
-  }),
-})
+  })),
+])
 ```
 
 That's already pretty sweet... but what if our API is [running off a potato](https://www.google.com/search?q=raspberry+pi+potato)
@@ -158,14 +158,14 @@ The following code demonstrates this well. Please note that for aesthetics, I re
 from before to `usersLoading` and `setUsers` to `loadUsersSuccess`:
 
 ```javascript
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     loadUsers: true,
     loadUsersSuccess: (users) => ({ users }),
     loadUsersFailure: (error) => ({ error }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     users: [
       [],
       {
@@ -187,9 +187,9 @@ const logic = kea({
         loadUsersFailure: (_, { error }) => error,
       },
     ],
-  },
+  }),
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     loadUsers: async () => {
       try {
         const users = await api.get('users')
@@ -198,8 +198,8 @@ const logic = kea({
         actions.loadUsersFailure(error.message)
       }
     },
-  }),
-})
+  })),
+])
 ```
 
 There are a few other cool things you can do with listeners:
@@ -217,15 +217,15 @@ If multiple `listeners` need to run the same code, you can:
 1. Have all of them call a common action, which you then handle with another listener:
 
 ```javascript
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     firstAction: true,
     secondAction: true,
     commonAction: true,
     // ...
-  },
+  }),
 
-  listeners: ({ actions, values }) => ({
+  listeners(({ actions, values }) => ({
     // two listeners with one shared action
     firstAction: actions.commonAction,
     secondAction: () => {
@@ -236,8 +236,8 @@ const logic = kea({
     commonAction: () => {
       // do something common
     },
-  }),
-})
+  })),
+])
 ```
 
 This however dispatches a separate action, which is then listened to.
@@ -245,15 +245,15 @@ This however dispatches a separate action, which is then listened to.
 2. If you want to share code between listeners without dispatching another action, use `sharedListeners`:
 
 ```javascript
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     anotherAction: true,
     debouncedFetchResults: (username) => ({ username }),
     oneActionMultipleListeners: true,
     // ...
-  },
+  }),
 
-  listeners: ({ actions, values, store, sharedListeners }) => ({
+  listeners(({ actions, values, store, sharedListeners }) => ({
     // two listeners with one shared action
     anotherAction: sharedListeners.doSomething,
 
@@ -265,10 +265,10 @@ const logic = kea({
       sharedListeners.doSomething,
       sharedListeners.logAction,
     ],
-  }),
+  })),
 
   // if multiple actions must trigger similar code, use sharedListeners
-  sharedListeners: ({ actions }) => ({
+  sharedListeners(({ actions }) => ({
     // all listeners and sharedListeners also get a third parameter:
     // - action = the full dispatched action
     doSomething: (payload, breakpoint, action) => {
@@ -279,8 +279,8 @@ const logic = kea({
     logAction: (_, __, action) => {
       console.log('action dispatched', action)
     },
-  }),
-})
+  })),
+])
 ```
 
 That function will be called directly, without an action being dispatched in the middle.
@@ -312,13 +312,13 @@ Breakpoints solve both of those scenarios. They are passed as the second argumen
 after the `payload`.
 
 ```javascript
-kea({
-  listeners: ({ actions }) => ({
+kea([
+  listeners(({ actions }) => ({
     setUsername: async ({ username }, breakpoint) => {
       // do something
     },
-  }),
-})
+  })),
+])
 ```
 
 If you call `await breakpoint(delay)`, the code will pause for `delay` milliseconds before
@@ -328,8 +328,8 @@ the listener for the old action will terminate. The new one will keep running.
 In case the logic unmounts during this delay, the listener will just terminate.
 
 ```javascript
-kea({
-  listeners: ({ actions }) => ({
+kea([
+  listeners(({ actions }) => ({
     setUsername: async ({ username }, breakpoint) => {
       // pause for 100ms and break if `setUsername`
       // was called again during this time
@@ -337,8 +337,8 @@ kea({
 
       // do something
     },
-  }),
-})
+  })),
+])
 ```
 
 If you call `breakpoint()` without any arguments (and without `await`), there will be no pause.
@@ -351,10 +351,10 @@ Here's an example that uses both types of breakpoints:
 ```javascript
 const API_URL = 'https://api.github.com'
 
-kea({
+kea([
   // ... actions, reducers omitted
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     setUsername: async ({ username }, breakpoint) => {
       const { setRepositories, setFetchError } = actions
 
@@ -375,8 +375,8 @@ kea({
         setFetchError(json.message)
       }
     },
-  }),
-})
+  })),
+])
 ```
 
 Under the hood breakpoints just `throw` exceptions.
@@ -387,8 +387,8 @@ function to check if the caught exception was from a breakpoint or not:
 ```javascript
 import { kea, isBreakpoint } from 'kea'
 
-kea({
-  listeners: ({ actions }) => ({
+kea([
+  listeners(({ actions }) => ({
     setUsername: async ({ username }, breakpoint) => {
       try {
         const response = await api.getResults(username)
@@ -401,6 +401,6 @@ kea({
         actions.setFetchError(json.message)
       }
     },
-  }),
-})
+  })),
+])
 ```

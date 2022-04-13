@@ -6,12 +6,12 @@ They are powered by [reselect](https://github.com/reduxjs/reselect) under the ho
 Let's take this example:
 
 ```javascript
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setMonth: (month) => ({ month }),
     setRecords: (records) => ({ records }),
-  },
-  reducers: {
+  }),
+  reducers({
     month: [
       '2020-04',
       {
@@ -24,8 +24,8 @@ const logic = kea({
         setRecords: (_, { records }) => records,
       },
     ],
-  },
-})
+  }),
+])
 ```
 
 It's a pretty simple logic that just stores two values, `records` and `month`. Our pointy-haired
@@ -34,11 +34,11 @@ boss now tasked us with showing all records that belong to the selected month. H
 A _naïve_ solution in pure react would look like this:
 
 ```jsx
-fuction RecordsForThisMonth() {
+function RecordsForThisMonth() {
     const { month, records } = useValues(logic)
     const recordsForSelectedMonth = records.filter(r => r.month === month)
 
-    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)</ul>
+    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)}</ul>
 }
 ```
 
@@ -51,7 +51,7 @@ If you've read the React docs, you know that [`useMemo`](https://reactjs.org/doc
 is the answer:
 
 ```jsx
-fuction RecordsForThisMonth() {
+function RecordsForThisMonth() {
     const { month, records } = useValues(logic)
 
     // DO NOT do this!
@@ -59,7 +59,7 @@ fuction RecordsForThisMonth() {
         return records.filter(r => r.month === month)
     }, [records, month])
 
-    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)</ul>
+    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)}</ul>
 }
 ```
 
@@ -73,12 +73,12 @@ This means we have to move this filtering of `records` into the `logic` itself.
 That's where selectors come in:
 
 ```javascript
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setMonth: (month) => ({ month }),
     setRecords: (records) => ({ records }),
-  },
-  reducers: {
+  }),
+  reducers({
     month: [
       '2020-04',
       {
@@ -91,25 +91,25 @@ const logic = kea({
         setRecords: (_, { records }) => records,
       },
     ],
-  },
-  selectors: {
+  }),
+  selectors({
     recordsForSelectedMonth: [
       (selectors) => [selectors.month, selectors.records],
       (month, records) => {
         return records.filter((r) => r.month === month)
       },
     ],
-  },
-})
+  }),
+])
 ```
 
 Then get the value of `recordsForSelectedMonth` directly in your component:
 
 ```jsx
-fuction RecordsForThisMonth() {
+function RecordsForThisMonth() {
     const { recordsForSelectedMonth } = useValues(logic)
 
-    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)</ul>
+    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)}</ul>
 }
 ```
 
@@ -160,15 +160,15 @@ using `props` with them.
 Take the following buggy code:
 
 ```javascript
-const counterLogic = kea({
+const counterLogic = kea([
   // ...
-  selectors: ({ props }) => ({
+  selectors(({ props }) => ({
     diffFromDefault: [
       (selectors) => [selectors.counter],
       (counter) => counter - props.defaultCounter, // DO NOT do this!
     ],
-  }),
-})
+  })),
+])
 ```
 
 The code will work, but only partially.
@@ -193,13 +193,13 @@ To make your new selector update itself when props change, use an inline
 selector that picks the right value from `props`:
 
 ```javascript
-const counterLogic = kea({
+const counterLogic = kea([
   // ...
-  selectors: {
+  selectors({
     diffFromDefault: [
       (selectors) => [selectors.counter, (_, props) => props.defaultCounter],
       (counter, defaultCounter) => counter - defaultCounter,
     ],
-  },
-})
+  }),
+])
 ```

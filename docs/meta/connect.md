@@ -48,7 +48,7 @@ successfully loaded. How do we do that?
 Just use the `loadUsersSuccess` action from `usersLogic` as a key in the `listeners` object:
 
 ```javascript
-const usersLogic = kea({ ... }) // same as above
+const usersLogic = kea([ ... ]) // same as above
 
 const dashboardLogic = kea({
     actions: {
@@ -91,7 +91,7 @@ when we are not on the dashboard scene. That's probably not what we want.
 This `[otherLogic.actionTypes.doSomething]` syntax also works in reducers:
 
 ```javascript
-const usersLogic = kea({ ... })
+const usersLogic = kea([ ... ])
 
 const shadowUsersLogic = kea({
     actions: {
@@ -110,7 +110,7 @@ const shadowUsersLogic = kea({
 and selectors:
 
 ```javascript
-const usersLogic = kea({ ... })
+const usersLogic = kea([ ... ])
 
 const sortedUsersLogic = kea({
     selectors: {

@@ -5,7 +5,7 @@ as `props`:
 
 ```javascript
 const props = { id: 10 }
-const logic = kea({ ... })
+const logic = kea([ ... ])
 logic(props).props === props
 ```
 

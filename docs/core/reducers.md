@@ -6,13 +6,15 @@ They are based on the [reducer](https://redux.js.org/basics/reducers) concept fr
 Here's an example of a basic counter:
 
 ```javascript
-const logic = kea({
-  actions: {
+import { kea, reducers } from 'kea'
+
+const logic = kea([
+  actions({
     increment: (amount) => ({ amount }),
     setCounter: (counter) => ({ counter }),
     reset: true,
-  },
-  reducers: {
+  }),
+  reducers({
     counter: [
       0,
       {
@@ -21,8 +23,8 @@ const logic = kea({
         reset: () => 0,
       },
     ],
-  },
-})
+  }),
+])
 ```
 
 When defining reducers in kea you write [pure functions](https://en.wikipedia.org/wiki/Pure_function)
@@ -54,14 +56,16 @@ Suppose we extend this logic and also store a `name`. We still want the page to 
 button that clears both pieces of data. The code would look like this:
 
 ```javascript
-const logic = kea({
-  actions: {
+import { kea, actions, reducers } from 'kea'
+
+const logic = kea([
+  actions({
     setName: (name) => ({ name }),
     increment: (amount) => ({ amount }),
     setCounter: (counter) => ({ counter }),
     reset: true,
-  },
-  reducers: {
+  }),
+  reducers({
     counter: [
       0,
       {
@@ -77,8 +81,8 @@ const logic = kea({
         reset: () => '',
       },
     ],
-  },
-})
+  }),
+])
 ```
 
 This example is contrived of course, but should illustrate the point about composability.
@@ -105,13 +109,15 @@ array that contains this new element with `[...state, newThing]`.
 For example, here's todo list that stores strings in an array:
 
 ```javascript
-const todosLogic = kea({
-  actions: {
+import { kea, actions, reducers } from 'kea'
+
+const todosLogic = kea([
+  actions({
     addTodo: (todo) => ({ todo }),
     removeTodo: (index) => ({ index }),
     updateTodo: (index, todo) => ({ index, todo }),
-  },
-  reducers: {
+  }),
+  reducers({
     // defaults to [], an empty array
     todos: [
       [],
@@ -130,8 +136,8 @@ const todosLogic = kea({
         },
       },
     ],
-  },
-})
+  }),
+])
 ```
 
 This may seem weird and slow at first, but writing _immutable_ code like this greatly improves

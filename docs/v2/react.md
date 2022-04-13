@@ -22,7 +22,7 @@ Fetch actions from a logic.
 ```jsx
 import { kea, useActions } from 'kea'
 
-const logic = kea({ ... })
+const logic = kea([ ... ])
 
 function MyComponent () {
   const { increment } = useActions(logic)
@@ -38,7 +38,7 @@ Fetch values from a logic.
 ```jsx
 import { kea, useValues } from 'kea'
 
-const logic = kea({ ... })
+const logic = kea([ ... ])
 
 function MyComponent () {
   const { counter, doubleCounter } = useValues(logic)

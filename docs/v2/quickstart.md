@@ -22,7 +22,7 @@ All Kea code lives inside a `logic`, which is created by calling `kea()`
 ```javascript
 import { kea } from 'kea'
 
-const logic = kea({ ... })
+const logic = kea([ ... ])
 ```
 
 ## Actions

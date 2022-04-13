@@ -107,7 +107,7 @@ In any case, just call `mount()` on your logic and get as a reply a function tha
 
 ```javascript
 // create the counter logic from some of the previous examples
-const logic = kea({ ... })
+const logic = kea([ ... ])
 
 // connect its reducers to redux
 const unmount = logic.mount()
@@ -133,7 +133,7 @@ you should [build the logic](/docs/BROKEN) explicitly before calling `mount()` o
 
 ```javascript
 // create the counter logic from the examples above, but with a key!
-const logic = kea({ key: props => props.id, ... })
+const logic = kea([ key(props => props.id), ... ])
 
 // build the logic with props (`logic(props)` is short for `logic.build(props)`)
 const logicWithProps = logic({ id: 123, otherProp: true })
@@ -161,33 +161,33 @@ you have two options.
 You can pass objects to them:
 
 ```javascript
-kea({
-  actions: {
+kea([
+  actions({
     increment: true,
-  },
-  listeners: {
+  }),
+  listeners({
     increment: () => {
       console.log('incrementing!')
     },
-  },
-})
+  }),
+])
 ```
 
 ... or you can pass functions to them:
 
 ```javascript
-kea({
-  actions: () => ({
+kea([
+  actions(() => ({
     // added "() => ("
     increment: true,
-  }), // added ")"
-  listeners: () => ({
+  })), // added ")"
+  listeners(() => ({
     // added "() => ("
     increment: () => {
       console.log('++!')
     },
-  }), // added ")"
-})
+  })), // added ")"
+])
 ```
 
 What's the difference?
@@ -198,8 +198,8 @@ If you're using values that are not guaranteed to be there (e.g. a reducer that 
 `otherLogic.actionTypes.something`), pass a function:
 
 ```javascript
-kea({
-  reducers: () => ({
+kea([
+  reducers(() => ({
     // evaluate later
     counter: [
       0,
@@ -210,23 +210,23 @@ kea({
         [controlLogic.actionTypes.setCounter]: (_, { counter }) => counter,
       },
     ],
-  }),
-})
+  })),
+])
 ```
 
 Second, the function you pass gets one argument, `logic`, which you
 can destructure to get `actions`, `values` and other goodies on the logic that you're building:
 
 ```javascript
-kea({
-  listeners: ({ actions, values }) => ({
+kea([
+  listeners(({ actions, values }) => ({
     increment: () => {
       if (values.iHaveHadEnough) {
         actions.doSomethingElse()
       }
     },
-  }),
-})
+  })),
+])
 ```
 
 The recommendation is to write the simplest code you can (start with an `reducers: {}`)
@@ -243,17 +243,17 @@ it will be automatically built and mounted:
 
 ```javascript
 // Works in Kea 2.1+
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     showCount: true,
-  },
-  listeners: {
+  }),
+  listeners({
     showCount: () => {
       console.log('Increment called!')
       console.log(`Counter: ${counterLogic.values.counter}`)
     },
-  },
-})
+  }),
+])
 ```
 
 It will also remain mounted for as long as `logic` is mounted.
@@ -304,13 +304,13 @@ until the returned `unmount` is called, even if no other logic is connected to i
 Up until a logic has been built and mounted, you can extend it:
 
 ```javascript
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     increment: (amount = 1) => ({ amount }),
     decrement: (amount = 1) => ({ amount }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     counter: [
       0,
       {
@@ -318,8 +318,8 @@ const logic = kea({
         decrement: (state, { amount }) => state - amount,
       },
     ],
-  },
-})
+  }),
+])
 
 logic.extend({
   reducers: {

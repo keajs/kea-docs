@@ -16,7 +16,7 @@ This hook is not needed if you use any of the other hooks.
 ```javascript
 import { kea, useMountedLogic } from 'kea'
 
-const logic = kea({ ... })
+const logic = kea([ ... ])
 
 function MyComponent () {
   useMountedLogic(logic)
@@ -33,7 +33,7 @@ to `dispatch`.
 ```javascript
 import { kea, useActions } from 'kea'
 
-const logic = kea({ ... })
+const logic = kea([ ... ])
 
 function MyComponent () {
   const { increment } = useActions(logic)
@@ -49,7 +49,7 @@ Assure the logic is mounted and fetch values from it.
 ```javascript
 import { kea, useValues } from 'kea'
 
-const logic = kea({ ... })
+const logic = kea([ ... ])
 
 function MyComponent () {
   const { counter, doubleCounter } = useValues(logic)
@@ -80,7 +80,7 @@ Similar to `useValues`, but selects all the values in the logic and stores their
 ```javascript
 import { kea, useAllValues } from 'kea'
 
-const logic = kea({ ... })
+const logic = kea([ ... ])
 
 function MyComponent () {
   const values = useAllValues(logic)

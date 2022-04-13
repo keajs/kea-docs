@@ -3,14 +3,16 @@
 The first thing you do in a logic is to define some actions:
 
 ```javascript
-const logic = kea({
-  actions: {
+import { kea, actions } from 'kea'
+
+const logic = kea([
+  actions({
     addToCounter: (amount) => ({ amount }),
     keyPressed: (keyCode) => ({ keyCode }),
     setName: (name) => ({ name }),
     submitForm: (values, page) => ({ values, page }),
-  },
-})
+  }),
+])
 ```
 
 Actions are the entry points to **all operations** in your logic.
@@ -31,21 +33,23 @@ Actions themselves are simple and [pure functions](https://en.wikipedia.org/wiki
 thing_ they are allowed to do is to convert their arguments into a `payload` object. See here:
 
 ```jsx
-const logic = kea({
-  actions: {
+import { kea, actions } from 'kea'
+
+const logic = kea([
+  actions({
     // take in `amount`, give back `{ amount }`
     addToCounter: (amount) => ({ amount }),
-  },
-})
+  }),
+])
 ```
 
 To call `addToCounter` in a React component you use the `useActions` hook:
 
 ```jsx
 import React from 'react'
-import { kea, useActions } from 'kea'
+import { kea, actions, useActions } from 'kea'
 
-const logic = kea({ ... }) // code from above
+const logic = kea([ ... ]) // code from above
 
 function BigButton () {
     const { addToCounter } = useActions(logic)
@@ -80,14 +84,16 @@ There's one shorthand that can be useful. In case your actions take no arguments
 just pass `true`, or anything else that's not a function, instead of an arguments-to-payload serializer:
 
 ```jsx
-const logic = kea({
-  actions: {
+import { kea, actions } from 'kea'
+
+const logic = kea([
+  actions({
     addToCounter: (amount) => ({ amount }),
     addOneThousand: true,
     loadUsers: true,
     takeOutGarbage: false,
-  },
-})
+  }),
+])
 ```
 
 The `payload` then will be `{ value: true }`... but you'll just ignore it anyway, won't you? 🤔
@@ -96,12 +102,14 @@ One more thing. It's **strongly** recommended to _always_ return an object
 as a payload from your actions:
 
 ```jsx
-const logic = kea({
-  actions: {
+import { kea, actions } from 'kea'
+
+const logic = kea([
+  actions({
     addToCounter: (amount) => ({ amount }), // ❤️ DO this!
     badBadAddToCounter: (amount) => amount, // 💔 DO NOT do this!
-  },
-})
+  }),
+])
 ```
 
 While it may not feel like such a big deal, knowing that the payload is _always_ an object
