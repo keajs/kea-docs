@@ -49,16 +49,12 @@ To call `addToCounter` in a React component you use the `useActions` hook:
 import React from 'react'
 import { kea, actions, useActions } from 'kea'
 
-const logic = kea([ ... ]) // code from above
+const logic = kea([]) // code from above
 
-function BigButton () {
-    const { addToCounter } = useActions(logic)
+function BigButton() {
+  const { addToCounter } = useActions(logic)
 
-    return (
-        <button onClick={() => addToCounter(1000)}>
-            Add one thousand! 🤩
-        </button>
-    )
+  return <button onClick={() => addToCounter(1000)}>Add one thousand! 🤩</button>
 }
 ```
 
