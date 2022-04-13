@@ -8,7 +8,7 @@ When you find yourself writing repetitive code, it's time to extract it into a p
 ## Extending logic
 
 Kea has a powerful system for authoring plugins, yet at their core, most plugins simply
-call [`logic.extend()`](/docs/guide/advanced#extending-logic) and add a few
+call [`logic.extend()`](/docs/BROKEN) and add a few
 actions, reducers or listeners to your logic.
 
 If that's all you want to do, it's often not even needed to write a real plugin. A simple
@@ -92,7 +92,7 @@ const logic = kea({
 ```
 
 For this we will write an actual plugin `myOwnLoadingPlugin` and later activate it via the
-`plugins` array on [`resetContext`](/docs/api/context#resetcontext).
+`plugins` array on [`resetContext`](/docs/BROKEN).
 
 We just need to move around the code from `addLoading` above and place it into the appropriate
 structure.
@@ -292,5 +292,5 @@ breaks that contract and the build step might produce different results. It's be
 - If you want to learn more about writing plugins, it's best to just read the code
   of some of the existing plugins and see how they do things.
 
-- See the [plugins API page](/docs/api/plugins) for a list of everything that a plugin can do.
+- See the [plugins API page](/docs/BROKEN) for a list of everything that a plugin can do.
   :::

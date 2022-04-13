@@ -5,7 +5,7 @@ sidebar_label: Plugins
 ---
 
 :::note Tip
-Read the [writing plugins](/docs/guide/writing-plugins) guide to learn more about plugins.
+Read the [writing plugins](/docs/BROKEN) guide to learn more about plugins.
 :::
 
 Here are all the options you can use within a plugin:

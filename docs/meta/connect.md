@@ -177,7 +177,7 @@ access elements on `otherLogic` inside a listener.
 
 ## Explicit connections
 
-While the [automatic connections](/docs/guide/additional#connecting-logic-together) might seem self-evident, there's actually a lot that's
+While the [automatic connections](/docs/BROKEN) might seem self-evident, there's actually a lot that's
 happening under the hood.
 
 Kea's logic is always _lazy_, meaning it's not built nor mounted before it's needed. In the examples

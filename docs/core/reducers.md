@@ -83,7 +83,7 @@ const logic = kea({
 
 This example is contrived of course, but should illustrate the point about composability.
 You can have any reducer depend on any action, even ones defined in other logic files!
-(See [Connecting Logic Together](/docs/guide/additional#connecting-logic-together) in Additional Concepts)
+(See [Connecting Logic Together](/docs/BROKEN) in Additional Concepts)
 
 Most of the time you want your actions and reducers to mix together freely, like they're attending
 a music festival in a pre-pandemic world.

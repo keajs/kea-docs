@@ -277,5 +277,5 @@ Thank you to the team at Elastic for [inspiring](https://github.com/elastic/kiba
 
 :::note Next steps
 
-- Read about [Debugging](/docs/guide/debugging) to be even more productive when writing Kea code.
+- Read about [Debugging](/docs/BROKEN) to be even more productive when writing Kea code.
   :::

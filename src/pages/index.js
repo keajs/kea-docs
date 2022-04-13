@@ -308,7 +308,7 @@ function Home() {
             <div className="row">
               <div className="col text--center" style={{ fontSize: 24 }}>
                 Read the documentation:{' '}
-                <Link to="/docs/introduction/what-is-kea">What is Kea?</Link>
+                <Link to="/docs/intro/what-is-kea">What is Kea?</Link>
               </div>
             </div>
 

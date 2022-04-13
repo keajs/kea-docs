@@ -12,12 +12,12 @@ Few more things got released all at once:
 
 ## Funny Gists
 
-I added [a playground page](/docs/playground/gists) with three interesting
+I added [a playground page](https://v2.keajs.org/docs/playground/gists) with three interesting
 code snippets for Kea:
 
-- A quick [Kea GraphQL client](/docs/playground/gists#kea-graphql)
-- A plugin to measure the [window's dimensions](/docs/playground/gists#kea-dimensions)
-- A rough sketch of the [Kea DevTools](/docs/playground/gists#kea-devtools)
+- A quick [Kea GraphQL client](https://v2.keajs.org/docs/playground/gists#kea-graphql)
+- A plugin to measure the [window's dimensions](https://v2.keajs.org/docs/playground/gists#kea-dimensions)
+- A rough sketch of the [Kea DevTools](https://v2.keajs.org/docs/playground/gists#kea-devtools)
 
 They are all too rough to be released as official plugins yet, but can already help
 in some situations. 
@@ -26,7 +26,7 @@ If you have the time, feel free to contribute new gists or improve on the existi
 
 ## WaitFor
 
-The [`kea-waitfor`](/docs/plugins/waitfor) plugin lets you `await` for actions.
+The [`kea-waitfor`](https://v2.keajs.org/docs/plugins/waitfor) plugin lets you `await` for actions.
 
 It's great if you're writing tests and want to wait for something to happen
 before leaving the test
@@ -57,7 +57,7 @@ console.log(value)
 // --> 'hamburger'
 ```
 
-There's also a [`waitForCondition`](/docs/plugins/waitfor#waitforcondition) that lets you ask custom questions from the dispatched
+There's also a [`waitForCondition`](https://v2.keajs.org/docs/plugins/waitfor#waitforcondition) that lets you ask custom questions from the dispatched
 actions.
 
 ```javascript
@@ -67,7 +67,7 @@ const { value } = await waitForCondition(action => {
 })
 ```
 
-In addition, the [plugin documentation includes examples](/docs/plugins/waitfor#wait-for-many-events) for waiting for different cominations of actions:
+In addition, the [plugin documentation includes examples](https://v2.keajs.org/docs/plugins/waitfor#wait-for-many-events) for waiting for different cominations of actions:
 - Wait for all to be dispatched
 - Wait for the first one of many (race)
 - Timeout on the waiting
@@ -75,4 +75,4 @@ In addition, the [plugin documentation includes examples](/docs/plugins/waitfor#
 ## Testing docs
 
 Inspired by a [Github Issue](https://github.com/keajs/kea/issues/107), I wrote
-a quick doc about [unit testing kea logic](/docs/guide/testing). Feedback and contributions are very welcome! 
+a quick doc about [unit testing kea logic](https://v2.keajs.org/docs/guide/testing). Feedback and contributions are very welcome! 

@@ -24,7 +24,7 @@ In this step-by-step tutorial we are going to build a component that asks for a 
 and then fetches all the repositories for that user, using the Github API.
 
 To follow along, you must have a good understanding of React and you _should_ have gone through
-[the quickstart](/docs/introduction/quickstart) or [core concepts](/docs/guide/concepts) pages at
+[the quickstart](/docs/BROKEN) or [core concepts](/docs/BROKEN) pages at
 least once.
 
 The final result will look like this:
@@ -74,7 +74,7 @@ function Github() {
 
 That's great, but this isn't a tutorial on React hooks. 😊
 
-Let's refer back to this illustration from the [What is Kea](/docs/introduction/what-is-kea) page:
+Let's refer back to this illustration from the [What is Kea](/docs/intro/what-is-kea) page:
 
 <a href={useBaseUrl('img/introduction/how-does-kea-work.png')}>
   <img
@@ -86,7 +86,7 @@ Let's refer back to this illustration from the [What is Kea](/docs/introduction/
 <br />
 <br />{' '}
 
-In Kea, everything starts with an [**action**](/docs/guide/concepts#actions). Every button press, every change in a textfield,
+In Kea, everything starts with an [**action**](/docs/BROKEN). Every button press, every change in a textfield,
 every network request and every response starts with an action.
 
 In this case we need one action called `setUsername`, which takes one parameter, `username`.
@@ -103,7 +103,7 @@ const logic = kea({
 })
 ```
 
-To store data you use a [**reducer**](/docs/guide/concepts#reducers). Reducers are functions that react to actions and change
+To store data you use a [**reducer**](/docs/BROKEN). Reducers are functions that react to actions and change
 their state if needed.
 
 We need just one reducer, `username`, that reacts to the `setUsername` action and stores
@@ -191,7 +191,7 @@ Luckily it won't stay this way for long!
 
 ## 3. Listen for the `setUsername` action
 
-The next step is to use a [**listener**](/docs/guide/concepts#listeners) to listen for the `setUsername` action and run some code
+The next step is to use a [**listener**](/docs/BROKEN) to listen for the `setUsername` action and run some code
 whenever it has been dispatched.
 
 This is how that's written in Kea:
@@ -393,7 +393,7 @@ There are two issues we must still fix. One of them is rather obvious, the other
 
 ## 7. Fetch the repositories on first load
 
-To load the repositories on page load, we can hook into the `afterMount` [event](/docs/guide/advanced#events)
+To load the repositories on page load, we can hook into the `afterMount` [event](/docs/BROKEN)
 and run the `setUsername` action when the logic is mounted.
 
 We pass the current `value` of `username` to the action as a bit of a cheat (we're setting the username
@@ -443,7 +443,7 @@ What a waste. We only need the last one!
 
 What's more, Github's API has a rate limit. If we do this long enough, we'll just get banned.
 
-Luckily listeners come with one very cool feature: [breakpoints](/docs/guide/additional#breakpoints).
+Luckily listeners come with one very cool feature: [breakpoints](/docs/BROKEN).
 
 You might have noticed the second argument in the listener function is called `breakpoint`:
 
@@ -561,7 +561,7 @@ First, it would be nice to sort the list of repositories by the number of stars.
 
 For this we can either 1) sort the list in the React component before rendering, 2) sort the list
 in the listener before handing it over to `setRepositories`... or 3) use a
-[**selector**](/docs/guide/concepts#selectors) to sort it dynamically and automatically.
+[**selector**](/docs/BROKEN) to sort it dynamically and automatically.
 
 Obviously we'll do the latter. 🤪
 
@@ -649,7 +649,7 @@ const logic = kea({
 We could have wrapped the entire listener in a `try / catch` block, but that would have
 added an extra complication: under the hood breakpoints also just throw an error and we should
 then use the `isBreakpoint` function to figure out wha type of error was just caught.
-I opted to avoid it in the example above. See the [listeners](/docs/guide/additional#breakpoints)
+I opted to avoid it in the example above. See the [listeners](/docs/BROKEN)
 docs for more details.
 :::
 
@@ -794,7 +794,7 @@ outside the scope of this guide.
 This will be the left as an exercise for the _ambitious_ reader. That's you, right? 😉
 
 :::note Next Steps
-Read the [Core Concepts](/docs/guide/concepts) guide to get an in-depth understanding of how Kea works
+Read the [Core Concepts](/docs/BROKEN) guide to get an in-depth understanding of how Kea works
 and why it works the way it does.
 :::
 

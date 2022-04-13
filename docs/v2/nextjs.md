@@ -11,7 +11,7 @@ Here are the steps you must take to get Kea set up with Next.js
 In addition to the `kea`, [`redux`](https://redux.js.org/),
 [`react-redux`](https://react-redux.js.org/) and [`reselect`](https://github.com/reduxjs/reselect)
 packages that Kea normally requires, you must also install the
-[`babel-plugin-kea`](/docs/guide/debugging#automatic-paths-with-babel) and
+[`babel-plugin-kea`](/docs/BROKEN) and
 [`next-redux-wrapper`](https://github.com/kirill-konshin/next-redux-wrapper) packages:
 
 ```shell
@@ -27,7 +27,7 @@ npm install babel-plugin-kea --save-dev
 ## Set up babel-plugin-kea
 
 In order to properly hydrate your store between server and client renders, we must install the
-[`babel-plugin-kea`](/docs/guide/debugging#automatic-paths-with-babel) package. This ensures that
+[`babel-plugin-kea`](/docs/BROKEN) package. This ensures that
 every `kea()` call automatically gets a `path`, which help us link the same logic on the client and
 the server.
 
@@ -148,7 +148,7 @@ export default Github
 
 ## Sample app
 
-Here is the [Github API tutorial app](/docs/tutorials/github), but adapted to work with Next.js
+Here is the [Github API tutorial app](/docs/BROKEN), but adapted to work with Next.js
 server rendering. All the changes are highlighted with a finger. 👈
 
 ```javascript

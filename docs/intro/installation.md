@@ -5,8 +5,8 @@ sidebar_position: 2
 # Installation
 
 :::note
-If you're using a JS framework such as [next.js](/docs/installation/nextjs), check out the
-[detailed instructions](/docs/installation/nextjs) for it.
+If you're using a JS framework such as [next.js](/docs/BROKEN), check out the
+[detailed instructions](/docs/BROKEN) for it.
 The instructions below should work for most setups though.
 :::
 

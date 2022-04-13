@@ -26,8 +26,8 @@ Kea is built on top of Redux and leverages its underlying functional principles.
 - All related actions, reducers, selectors and listeners are grouped into a **logic** (_counterLogic_).
 - React Components **connect** to this logic and pull in all needed actions and values.
 
-Check out the [quickstart](/docs/introduction/quickstart) to see this as code or read the
-[installation instructions](/docs/installation/instructions) to get started.
+Check out the [quickstart](/docs/BROKEN) to see this as code or read the
+[installation instructions](./installation.md) to get started.
 
 ## What is Kea good for?
 
@@ -49,7 +49,7 @@ This makes Kea perfect for large apps with complex relationships between state a
 This also means that [code-splitting](https://webpack.js.org/guides/code-splitting/) works out of the
 box with Kea. No patchwork required.
 
-Second, Kea's `logic` exposes a [very complete interface](/docs/api/logic) that you can use from
+Second, Kea's `logic` exposes a [very complete interface](/docs/BROKEN) that you can use from
 anywhere. Need to have one logic's listeners access another logic's values? Not a problem!
 Everything follows a consistent interface and is designed for interoperability.
 
@@ -58,10 +58,10 @@ living. Kea has been used in [several large projects](/), which consist of hundr
 cover thousands of components. It has scaled really well every time!
 
 Finally, Kea's functionality is not set in stone. Whenever you find yourself writing repetitive code,
-you may [abstract it away](/docs/guide/writing-plugins) into a plugin. In fact, Kea's core
+you may [abstract it away](/docs/BROKEN) into a plugin. In fact, Kea's core
 is actually [implemented](https://github.com/keajs/kea/blob/master/src/core/index.js) as a plugin itself.
-There are plugins for [routing](/docs/plugins/router), [offline storage](/docs/plugins/localstorage),
-[sagas](/docs/plugins/sagas), [websockets](/docs/plugins/websockets) and much more. This opens up
+There are plugins for [routing](/docs/BROKEN), [offline storage](/docs/BROKEN),
+[sagas](/docs/BROKEN), [websockets](/docs/BROKEN) and much more. This opens up
 whole new ways to build applications.
 
 ## What is Kea _not_ good for?
@@ -162,7 +162,7 @@ If you have any feedback, please reach out directly or open an [issue](https://g
 
 :::note Next Steps
 
-- Read [quickstart](/docs/introduction/quickstart) if you're in a hurry, otherwise...
-- Read [core concepts](/docs/guide/concepts) to get a good technical overview of what makes Kea tick and why.
+- Read [quickstart](/docs/BROKEN) if you're in a hurry, otherwise...
+- Read [core concepts](/docs/BROKEN) to get a good technical overview of what makes Kea tick and why.
   It includes everything in the quickstart.
   :::

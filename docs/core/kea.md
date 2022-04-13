@@ -94,7 +94,7 @@ that use a `logic` are removed from React's tree, that `logic` will be unmounted
 
 ## Mounting and Unmounting
 
-When you use [Kea with React](/docs/guide/react), there's a lot that is handled for you behind the scenes.
+When you use [Kea with React](/docs/BROKEN), there's a lot that is handled for you behind the scenes.
 For example logic is mounted automatically with your `<Component />` and unmounted when it's no longer needed.
 
 Sometimes however, you wish to manually mount logic. For example to already start loading data in
@@ -128,8 +128,8 @@ logic.values.counter
 // => throw new Error()!
 ```
 
-In case you need to pass props to your logic, for example if it is [keyed](/docs/guide/additional#keyed-logic),
-you should [build the logic](/docs/api/logic#logicbuild) explicitly before calling `mount()` on it:
+In case you need to pass props to your logic, for example if it is [keyed](/docs/BROKEN),
+you should [build the logic](/docs/BROKEN) explicitly before calling `mount()` on it:
 
 ```javascript
 // create the counter logic from the examples above, but with a key!
@@ -149,7 +149,7 @@ logic({ id: 123, otherProp: false })
 unmount()
 ```
 
-There are a few other options you can use. See the [logic API](/docs/api/logic) for more details.
+There are a few other options you can use. See the [logic API](/docs/BROKEN) for more details.
 
 
 
@@ -337,5 +337,5 @@ logic.extend({
 const { counter, negativeCounter } = useValues(logic)
 ```
 
-Extending logic is especially powerful when [writing plugins](/docs/guide/writing-plugins). For
+Extending logic is especially powerful when [writing plugins](/docs/BROKEN). For
 example to dynamically add actions, reducers or listeners to a logic, based on some key.

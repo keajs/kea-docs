@@ -10,7 +10,7 @@ Kea supports both, `function` and `Class` components.
 
 You use hooks to fetch actions and values from your logic.
 Here are the two most common Hooks.
-See the [Hooks API reference](/docs/api/hooks) for two more!
+See the [Hooks API reference](/docs/BROKEN) for two more!
 
 When you use a Hook, Kea makes sure the logic is mounted as your component renders and gets
 automatically unmounted when your component is removed from React.
@@ -59,7 +59,7 @@ that call react-redux's [`useSelector`](https://react-redux.js.org/next/api/hook
 hooks when a value is accessed. Because hooks need to always be called in the same order,
 you _can't_ just store the object returned from `useValues` and then use its properties later in
 the code. Doing so might call the internal hooks in an unspecified order. Use
-[`useAllValues`](/docs/api/hooks#useallvalues) if you need to do this.
+[`useAllValues`](/docs/BROKEN) if you need to do this.
 :::
 
 ## Class Components
@@ -100,7 +100,7 @@ const MyConnectedComponent = logic(MyComponent)
 
 In case you don't want to hook up everything in a `logic` to your `Component` or if you
 want to mix and match values from multiple logics, use `kea({ connect: { ... } })` as discussed in
-the [explicit connections](/docs/guide/additional#explicit-connections) section under Additional Concepts,
+the [explicit connections](/docs/BROKEN) section under Additional Concepts,
 to create a new logic with only the actions and values you need. Then wrap your `Component` in that.
 
 If you go for this route, you can use a small helper function called `connect`, which is literally just:
@@ -158,7 +158,7 @@ class MyComponent extends Component {
 
 ## BindLogic
 
-When using a **[keyed logic](/docs/guide/additional#keyed-logic)**, such as this `itemLogic`:
+When using a **[keyed logic](/docs/BROKEN)**, such as this `itemLogic`:
 
 ```js
 const itemLogic = kea({
@@ -242,6 +242,6 @@ All child components that call `useValues(itemLogic)` will get that specific mou
 
 :::note Next steps
 
-- Using [TypeScript](/docs/guide/typescript)? Read how it works with Kea!
-- Read about [Debugging](/docs/guide/debugging) to be even more productive when working with Kea!  
+- Using [TypeScript](/docs/BROKEN)? Read how it works with Kea!
+- Read about [Debugging](/docs/BROKEN) to be even more productive when working with Kea!  
   :::

@@ -28,7 +28,7 @@ Any volunteers who want to work on fully-kea devtools? It would be nice to visua
 see how the logics interact with each other, see their state (including selectors) and to
 be able to call actions on them with the push of a button.
 
-Here's a [gist](/docs/playground/gists/#kea-devtools)
+Here's a [gist](/docs/BROKEN)
 of a really raw devtool that just displays all the logics and their values in boxes.
 :::
 
@@ -103,5 +103,5 @@ After these changes, the inline paths from above will look like this:
 
 :::note Next steps
 
-- Read [Advanced Topics](/docs/guide/advanced) to suck up even more knowledge!  
+- Read [Advanced Topics](/docs/BROKEN) to suck up even more knowledge!  
   :::

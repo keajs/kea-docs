@@ -31,8 +31,8 @@ But how?
 Kea is a state management library for [React](https://reactjs.org/). Powered by [Redux](https://redux.js.org/).
 It's like [Redux Toolkit](https://redux-toolkit.js.org/), but different, and older. It's designed to spark joy!
 
--   Read "[What is Kea?](http://localhost:3000/docs/introduction/what-is-kea)" to learn more.
--   Open the "[Quickstart](/docs/introduction/quickstart)" to see code.
+-   Read "[What is Kea?](https://v2.keajs.org/docs/introduction/what-is-kea)" to learn more.
+-   Open the "[Quickstart](https://v2.keajs.org/docs/introduction/quickstart)" to see code.
 
 :::
 
@@ -324,7 +324,7 @@ They all had their issues.
 In the end, it appears that this kind of _loopy_ syntax that
 Kea uses together with selectors that depend on each other just wouldn't work with TypeScript.
 
-That's even before you take into account [plugins](/docs/api/plugins) and `logic.extend(moreInput)`.
+That's even before you take into account [plugins](https://v2.keajs.org/docs/api/plugins) and `logic.extend(moreInput)`.
 
 ### What now?
 
@@ -354,7 +354,7 @@ Take that, random person on the internet!
 
 Install the `typescript` and `kea-typegen` packages, run `kea-typegen watch` and code away!
 
-[Read the TypeScript guide for more details](/docs/guide/typescript).
+[Read the TypeScript guide for more details](https://v2.keajs.org/docs/guide/typescript).
 
 <img alt="Kea-TypeGen" src="/img/blog/typescript/kea-typegen.gif" loading="lazy" />
 
@@ -373,7 +373,7 @@ This is the very first version of `kea-typegen`, so there are still some rough e
 
 <img alt="Send Type to Logic Type" src="/img/blog/typescript/send-type-to-type.gif" loading="lazy" />
 
-3. When [connecting logic together](https://kea.js.org/docs/guide/additional#connecting-logic-together),
+3. When [connecting logic together](https://v2.keajs.org/docs/guide/additional#connecting-logic-together),
    you must use `[otherLogic.actionTypes.doSomething]` instead of `[otherLogic.actions.doSomething]`
 
 <img alt="Use ActionTypes" src="/img/blog/typescript/action-types.gif" loading="lazy" />

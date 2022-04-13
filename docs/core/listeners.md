@@ -207,8 +207,8 @@ There are a few other cool things you can do with listeners:
 1. Listeners have built-in support for debouncing and handling out-of-order network requests through `breakpoints`
 2. You can share listeners between actions with `sharedListeners`
 
-These are covered in the [Additional Concepts](/docs/guide/additional#breakpoints) and
-[Advanced Topics](/docs/guide/advanced#shared-listeners) pages.
+These are covered in the [Additional Concepts](/docs/BROKEN) and
+[Advanced Topics](/docs/BROKEN) pages.
 
 ## Shared listeners
 

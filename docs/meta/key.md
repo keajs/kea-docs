@@ -59,7 +59,7 @@ and do what is needed to load and display the second user.
 
 ### Keys and Paths
 
-Please note, if you [manually specify a path](/docs/guide/debugging#setting-the-path-manually) for your keyed logic,
+Please note, if you [manually specify a path](/docs/BROKEN) for your keyed logic,
 you must specify it as a function that takes one argument, `key`, like so:
 
 ```javascript

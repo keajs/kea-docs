@@ -6,13 +6,13 @@ sidebar_label: Quickstart
 
 :::note
 This document gives a **very brief** overview of how Kea works. Please read
-[Core Concepts](/docs/guide/concepts) to read not only _what_ you can do in Kea, but also _why_.
+[Core Concepts](/docs/BROKEN) to read not only _what_ you can do in Kea, but also _why_.
 It's required reading if you are starting to use Kea in an actual app.
 :::
 
 :::note Another note
 If you prefer to build a working app as you follow along, skim through this page to get a basic
-overview and then follow the [Github API](/docs/tutorials/github) tutorial.
+overview and then follow the [Github API](/docs/BROKEN) tutorial.
 :::
 
 ## Logic
@@ -235,10 +235,3 @@ function Counter() {
 ```
 
 <br />
-
-:::note Next Steps
-
-- Ready to install Kea? Read the [installation instructions](/docs/installation/instructions)!
-- I strongly recommend you read [Core Concepts](/docs/guide/concepts) to get a better
-  understanding of why everything works the way it does.
-  :::

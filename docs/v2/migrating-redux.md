@@ -142,7 +142,7 @@ const logic = kea({
 
 :::note
 See the
-[Kea API docs](/docs/api/kea) for all options for connect.
+[Kea API docs](/docs/BROKEN) for all options for connect.
 :::
 
 ## Using Kea actions and selectors elsewhere
@@ -194,11 +194,11 @@ logic.values.myNumberDouble
 unmount()
 ```
 
-See the [logic API docs](/docs/api/logic) for more details.
+See the [logic API docs](/docs/BROKEN) for more details.
 
 <br />
 
 :::note Next steps
 
-- Check out how to [Write Plugins](/docs/guide/writing-plugins) for Kea.
+- Check out how to [Write Plugins](/docs/BROKEN) for Kea.
   :::

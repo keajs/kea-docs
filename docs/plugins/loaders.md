@@ -2,7 +2,7 @@
 
 The pattern above is so common that there's a way to abstract it even further.
 
-Using the [kea-loaders plugin](/docs/plugins/loaders), the above code can be simplified to this:
+Using the [kea-loaders plugin](/docs/BROKEN), the above code can be simplified to this:
 
 ```javascript
 const logic = kea({
@@ -30,7 +30,7 @@ The code above is identical to the block before it. This `logic` now also contai
 `loadUsersSuccess` and `loadUsersFailure`, and three reducers: `users`, `userLoading` (via kea-loaders),
 and `usersError` (defined manually, not added with kea-loaders).
 
-See the [documentation for kea-loaders](/docs/plugins/loaders) to find out more.
+See the [documentation for kea-loaders](/docs/BROKEN) to find out more.
 
 ---
 

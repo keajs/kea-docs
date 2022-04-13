@@ -4,7 +4,7 @@ title: WaitFor
 sidebar_label: WaitFor
 ---
 
-Sometimes when doing Server Side Rendering (SSR) or [testing](/docs/guide/testing) your logic, you might
+Sometimes when doing Server Side Rendering (SSR) or [testing](/docs/BROKEN) your logic, you might
 want to `await` for an action. This is what the [kea-waitfor](https://github.com/keajs/kea-waitfor)
 plugin does!
 
@@ -12,7 +12,7 @@ plugin does!
 `kea-waitfor` in not (YET!) designed to be used in listeners. Only use it outside your logic,
 like in tests or in a Server Side Rendering context.
 
-However, if you're feeling lucky and use it anyway in a listener, remember to add a [`breakpoint`](/docs/guide/additional#breakpoints) after the wait!
+However, if you're feeling lucky and use it anyway in a listener, remember to add a [`breakpoint`](/docs/BROKEN) after the wait!
 :::
 
 # Installation

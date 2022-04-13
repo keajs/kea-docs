@@ -111,8 +111,8 @@ test('runs before and after mount events', async () => {
 
 ### Mount and unmount your logic
 
-Read the docs on [Lifecycles](/docs/guide/advanced#lifecycles)
-and [Mounting and Unmounting](/docs/guide/advanced#mounting-and-unmounting).
+Read the docs on [Lifecycles](/docs/BROKEN)
+and [Mounting and Unmounting](/docs/BROKEN).
 Then make sure your logic is mounted before the tests run:
 
 ```ts
