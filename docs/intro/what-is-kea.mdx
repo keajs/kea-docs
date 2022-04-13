@@ -11,20 +11,20 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 
 <WebDev />
 
-## Heavy state management for React
+## Heavyweight state management for React
 
 Kea is a complete framework for managing application state in [React](https://reactjs.org/) webapps.
 
-Kea's unit of organisation is a `logic`, which is a pretty _big and opinionated unit of state_, when compared to the atoms and molecules some other systems use.
+Kea organises state in containers called `logic`, which are _pretty big_ and _prerry opinionated_ unit of state, when compared to the atoms and molecules some other systems use.
 
-A `logic` is created by passing an array of logic builders to [`kea([])`](/docs/core/kea). Some core logic builders are: [`actions`](/docs/core/actions), [`reducers`](/docs/core/reducers), [`listeners`](/docs/core/listeners), and [`selectors`](/docs/core/selectors).
+A `logic` is created by passing an array of logic builders to [`kea([])`](/docs/core/kea). Some core builders are: [`actions`](/docs/core/actions), [`reducers`](/docs/core/reducers), [`listeners`](/docs/core/listeners), and [`selectors`](/docs/core/selectors).
 
-To illustrate how this works, we will create a `userLogic` with one action, `setUsername`, and one value, exposed through a `username` reducer:
+To illustrate how this works, we will create a `loginLogic` with one action, `setUsername`, and one value, exposed through a `username` reducer:
 
 ```ts
 import { kea, actions, reducers } from 'kea'
 
-const userLogic = kea([
+const loginLogic = kea([
   actions({
     setUsername: (username: string) => ({ username }),
   }),
@@ -34,22 +34,22 @@ const userLogic = kea([
 ])
 ```
 
-We can use the logic directly:
+The resulting `loginLogic` can be used directly:
 
 ```ts
-userLogic.mount()
-userLogic.actions.setUsername('posthog')
-userLogic.values.username === 'posthog'
+loginLogic.mount()
+loginLogic.actions.setUsername('posthog')
+loginLogic.values.username === 'posthog'
 ```
 
-or use it in a React component:
+or with [hooks](/docs/hooks/) in a React component, to tie its `mount`/`unmount` lifecycle to the component.
 
 ```tsx
 import { useValues, useActions } from 'kea'
 
 function Login() {
-  const { setUsername } = useActions(userLogic)
-  const { username } = useValues(userLogic)
+  const { setUsername } = useActions(loginLogic)
+  const { username } = useValues(loginLogic)
   // ...
 }
 ```
@@ -60,7 +60,9 @@ From [Redux](https://redux.js.org/), Kea inherits [`actions`](/docs/core/actions
 
 You can run code on actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values through [`subscriptions`](/docs/core/subscriptions).
 
-There's no magic behind logic builders. They just return a function that adds things onto a `logic`. For example:
+It's all pretty standard stuff, but with a few twists in a nice package.
+
+There's no magic behind logic builders themselves either. They just return a function that adds things onto a `logic`. For example:
 
 ```ts
 function actions(input: Record<string, any>) {
@@ -74,12 +76,14 @@ function actions(input: Record<string, any>) {
 }
 ```
 
-You can combine logic builders to abstract common patterns.
+You can combine logic builders to abstract common patterns
 
-Let's abstract away that pesky `username` reducer + `setUsername` action pattern into a simple `setters` logic builder:
+Here's a `setters({ username: 'keajs' })` logic builder that combines the `setUsername` action and `username` reducer from above into one call:
 
 ```ts
 import { kea, actions, reducers } from 'kea'
+
+const capitalize = (s: string) => `${s.charAt(0).toUpperCase()}${s.slice(1)}`
 
 function setters(input: Record<string, any>) {
   return (logic) => {
@@ -91,36 +95,37 @@ function setters(input: Record<string, any>) {
 }
 
 // same as before
-const userLogic = kea([
-  setters({ username: 'posthog' }), // much shorter
+const loginLogic = kea([
+  setters({ username: 'keajs' }), // much shorter
 ])
-userLogic.mount()
-userLogic.actions.setUsername('posthog')
-userLogic.values.username === 'posthog'
+loginLogic.mount()
+loginLogic.actions.setUsername('posthog')
+loginLogic.values.username === 'posthog'
 ```
 
-We have already built higher level abstractions for [`routing`](/docs/core/router), [`forms`](/docs/core/forms) and [`loaders`](/docs/core/loaders), to name a few.
+Officially supported are higher level abstractions for [`routing`](/docs/plugins/router), [`forms`](/docs/plugins/forms) and [`loaders`](/docs/plugins/loaders), and [many more](/docs/plugins/).
+
+You can build a complete webapp in Kea's data layer, leaving React to handle the views.
 
 ## Data layer
 
 When fully deployed, Kea acts as a separate [data layer](/blog/data-first-frontend-revolution), which communicates with
-React via `actions` and `values`.
+React through a strict boundary of `actions` and `values`. You should aim to keep as much of your data, and its manipulations
+within Kea's _data layer_, leaving React to do an amazing job as a _view layer_.
 
-Kea discourages the use of `useState` and `useEffect`. We believe that it's hard enough to get your data layer right,
-so why burden yourself even more, by hosting it in a DOM-like tree of React nodes?
+That's right, MVC is back, but it's just D&V this time!
+
+Kea discourages the use of `useState` and `useEffect` for local scene data, because local state inevitably becomes global.
+
+Kea discourages the use of `Context` because you shouldn't re-render everything.
+
+Kea believes that it's hard enough to get your data layer right, so why burden yourself even more, by storing it in a DOM-like tree of React nodes?
+
+Kea thinks layers shield complexity.
 
 <KeaReact />
 
-Instead, keep all your data in their own layer, where its free to communicate with itself.
-
----
-
-
-Kea is the missing piece of the frontend puzzle. It's the backend of the frontend.
-
-Kea is a production-grade state management framework built for _ambitious_ React apps.
-
-It _scales really well_ as your application grows and helps keep your state neat and clean.
+## How it works
 
 <a href={useBaseUrl('img/introduction/how-does-kea-work.png')}>
   <img
@@ -132,19 +137,21 @@ It _scales really well_ as your application grows and helps keep your state neat
 <br />
 <br />
 
-Kea is built on top of Redux and leverages its underlying functional principles.
+Kea is built on top of Redux and leverages its underlying functional principles. Here's the typical flow:
 
-- Every operation in your app starts with an **action** (_increment counter_).
-- These actions update **reducers** (_counter_) that hold the actual data.
+- Every operation in your app starts with an **[action](/docs/core/actions)** (_increment counter_).
+- These actions update **[reducers](/docs/core/reducers)** (_counter_) that hold the actual data.
 - This data is stored in a global **state**, which is managed by Redux.
-- You fetch **values** (_counter is 1_) through **selectors** (_find the counter in the state_) from this state.
-- Actions may also trigger **listeners**, which are plain async functions that talk with externals APIs,
+- You fetch **values** (_counter is 1_) through **[selectors](/docs/core/selectors)** (_find the counter in the state_) from this state.
+- Actions may also trigger **[listeners](/docs/core/listeners)**, which are plain async functions that talk with externals APIs,
   read values or dispatch other actions.
 - All related actions, reducers, selectors and listeners are grouped into a **logic** (_counterLogic_).
-- React Components **connect** to this logic and pull in all needed actions and values.
+- React Components pull in values from a logic, and send back actions.
 
-Check out the [quickstart](/docs/BROKEN) to see this as code or read the
-[installation instructions](./installation.md) to get started.
+
+# -- OLD DOCS BELOW --
+# -- OLD DOCS BELOW --
+# -- OLD DOCS BELOW --
 
 ## What is Kea good for?
 
