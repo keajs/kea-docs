@@ -217,8 +217,7 @@ function Home() {
                 <Link to="/docs/core/listeners">listeners</Link>&nbsp;|{' '}
                 <Link to="/docs/core/reducers">reducers</Link>&nbsp;|{' '}
                 <Link to="/docs/core/selectors">selectors</Link>&nbsp;|{' '}
-                <Link to="/docs/core/subscriptions">subscriptions</Link>&nbsp;|{' '}
-                <Link to="/docs/core/values">values</Link>
+                <Link to="/docs/core/subscriptions">subscriptions</Link>
               </td>
             </tr>
             <tr>
