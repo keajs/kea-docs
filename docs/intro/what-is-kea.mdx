@@ -2,18 +2,135 @@
 sidebar_position: 1
 ---
 
+import { WebDev } from '../../src/components/img/WebDev'
+import { KeaReact } from '../../src/components/img/KeaReact'
+
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
 # What is Kea?
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
+<WebDev />
 
-## Introduction
+## Heavy state management for React
+
+Kea is a complete framework for managing application state in [React](https://reactjs.org/) webapps.
+
+Kea's unit of organisation is a `logic`, which is a pretty _big and opinionated unit of state_, when compared to the atoms and molecules some other systems use.
+
+A `logic` is created by passing an array of logic builders to [`kea([])`](/docs/core/kea). Some core logic builders are: [`actions`](/docs/core/actions), [`reducers`](/docs/core/reducers), [`listeners`](/docs/core/listeners), and [`selectors`](/docs/core/selectors).
+
+To illustrate how this works, we will create a `userLogic` with one action, `setUsername`, and one value, exposed through a `username` reducer:
+
+```ts
+import { kea, actions, reducers } from 'kea'
+
+const userLogic = kea([
+  actions({
+    setUsername: (username: string) => ({ username }),
+  }),
+  reducers({
+    username: ['keajs', { setUsername: (_, { username }) => username }],
+  }),
+])
+```
+
+We can use the logic directly:
+
+```ts
+userLogic.mount()
+userLogic.actions.setUsername('posthog')
+userLogic.values.username === 'posthog'
+```
+
+or use it in a React component:
+
+```tsx
+import { useValues, useActions } from 'kea'
+
+function Login() {
+  const { setUsername } = useActions(userLogic)
+  const { username } = useValues(userLogic)
+  // ...
+}
+```
+
+## Logic builders
+
+From [Redux](https://redux.js.org/), Kea inherits [`actions`](/docs/core/actions), [`reducers`](/docs/core/reducers), and [`selectors`](/docs/core/selectors) as its core building blocks.
+
+You can run code on actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values through [`subscriptions`](/docs/core/subscriptions).
+
+There's no magic behind logic builders. They just return a function that adds things onto a `logic`. For example:
+
+```ts
+function actions(input: Record<string, any>) {
+  return (logic) => {
+    for (const [key, payloadBuilder] of Object.entries(input)) {
+      logic.actionTypes[key] = createActionType(logic.path, key)
+      logic.actions[key] = createAction(logic.actionTypes[key], payloadBuilder)
+      // etc
+    }
+  }
+}
+```
+
+You can combine logic builders to abstract common patterns.
+
+Let's abstract away that pesky `username` reducer + `setUsername` action pattern into a simple `setters` logic builder:
+
+```ts
+import { kea, actions, reducers } from 'kea'
+
+function setters(input: Record<string, any>) {
+  return (logic) => {
+    for (const [key, value] of Object.entries(input)) {
+      actions({ [`set${capitalize(key)}`]: (value) => ({ [key]: value }) })(logic)
+      reducers({ [key]: [value, { [`set${capitalize(key)}`]: (_, p) => p[key] }] })(logic)
+    }
+  }
+}
+
+// same as before
+const userLogic = kea([
+  setters({ username: 'posthog' }), // much shorter
+])
+userLogic.mount()
+userLogic.actions.setUsername('posthog')
+userLogic.values.username === 'posthog'
+```
+
+We have already built higher level abstractions for [`routing`](/docs/core/router), [`forms`](/docs/core/forms) and [`loaders`](/docs/core/loaders), to name a few.
+
+## Data layer
+
+When fully deployed, Kea acts as a separate [data layer](/blog/data-first-frontend-revolution), which communicates with
+React via `actions` and `values`.
+
+Kea discourages the use of `useState` and `useEffect`. We believe that it's hard enough to get your data layer right,
+so why burden yourself even more, by hosting it in a DOM-like tree of React nodes?
+
+<KeaReact />
+
+Instead, keep all your data in their own layer, where its free to communicate with itself.
+
+---
+
+
+Kea is the missing piece of the frontend puzzle. It's the backend of the frontend.
 
 Kea is a production-grade state management framework built for _ambitious_ React apps.
 
 It _scales really well_ as your application grows and helps keep your state neat and clean.
 
-<a href={useBaseUrl('img/introduction/how-does-kea-work.png')}><img alt="Redux Devtools with Inline Paths" src={useBaseUrl('img/introduction/how-does-kea-work.png')} style={{ maxWidth: 715, width: '100%' }} /></a>
-<br /><br />
+<a href={useBaseUrl('img/introduction/how-does-kea-work.png')}>
+  <img
+    alt="Redux Devtools with Inline Paths"
+    src={useBaseUrl('img/introduction/how-does-kea-work.png')}
+    style={{ maxWidth: 715, width: '100%' }}
+  />
+</a>
+<br />
+<br />
 
 Kea is built on top of Redux and leverages its underlying functional principles.
 
