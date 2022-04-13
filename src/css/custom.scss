@@ -21,6 +21,11 @@
     --code-color-green: green;
     --code-color-gray: gray;
     --code-color-black: black;
+
+    --ifm-normal-monospace-font-family: "Andale Mono", monospace;
+    --ifm-strong-monospace-font-family: "Monaco", monospace;
+
+    --ifm-heading-font-family: var(--ifm-normal-monospace-font-family);
 }
 
 html[data-theme='dark']:root {
@@ -79,6 +84,10 @@ html[data-theme='dark']:root {
         background: hsla(220, 18%, 35%, 1);
         box-shadow: none;
     }
+}
+
+.theme-doc-sidebar-menu, .navbar, .breadcrumbs {
+    font-family: var(--ifm-strong-monospace-font-family);
 }
 
 /* corner ribbons */
