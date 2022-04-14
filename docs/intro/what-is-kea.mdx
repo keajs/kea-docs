@@ -62,6 +62,8 @@ From [Redux](https://redux.js.org/), Kea inherits [`actions`](/docs/core/actions
 
 You can run code on actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values through [`subscriptions`](/docs/core/subscriptions).
 
+Officially supported are higher level abstractions for data [`loading`](/docs/plugins/loaders), web [`forms`](/docs/plugins/forms), URL [`routing`](/docs/plugins/router), and [other common tasks](/docs/plugins/).
+
 It's all pretty standard stuff, but with a few twists in a nice package.
 
 There's no magic behind logic builders themselves either. They're just functions that takes a `logic`, and do things to it. For example:
@@ -118,9 +120,6 @@ loginLogic.values.username === 'posthog'
 ```
 
 ... though you really should stick to actions and reducers when possible. They make sense, and help organise data flow in large apps.
-
-Officially supported are higher level abstractions for [`routing`](/docs/plugins/router), [`forms`](/docs/plugins/forms) and [`loaders`](/docs/plugins/loaders), and [many more](/docs/plugins/).
-You can build a complete webapp in Kea's data layer, leaving React to handle template rendering.
 
 ## Data layer
 
