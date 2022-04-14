@@ -62,9 +62,20 @@ You can run code on actions with [`listeners`](/docs/core/listeners), or subscri
 
 It's all pretty standard stuff, but with a few twists in a nice package.
 
-There's no magic behind logic builders themselves either. They just return a function that adds things onto a `logic`. For example:
+There's no magic behind logic builders themselves either. They're just functions that takes a `logic`, and do things to it. For example:
 
 ```ts
+const logic = kea([
+  (logic: BuiltLogic) => {
+    logic.foobar = true
+  },
+  (logic: BuiltLogic) => {
+    doSomethingElseTo(logic)
+  },
+  actions({ setUsername: (username) => ({ username }) }),
+  // more to follow
+])
+
 function actions(input: Record<string, any>) {
   return (logic) => {
     for (const [key, payloadBuilder] of Object.entries(input)) {
@@ -148,9 +159,10 @@ Kea is built on top of Redux and leverages its underlying functional principles.
 - All related actions, reducers, selectors and listeners are grouped into a **logic** (_counterLogic_).
 - React Components pull in values from a logic, and send back actions.
 
+# -- OLD DOCS BELOW --
 
 # -- OLD DOCS BELOW --
-# -- OLD DOCS BELOW --
+
 # -- OLD DOCS BELOW --
 
 ## What is Kea good for?
