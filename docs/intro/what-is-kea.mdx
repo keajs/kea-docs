@@ -19,7 +19,7 @@ Kea organises state in containers called `logic`, which are _pretty big_ and _pr
 
 A `logic` is created by passing an array of logic builders to [`kea([])`](/docs/core/kea). Some core builders are: [`actions`](/docs/core/actions), [`reducers`](/docs/core/reducers), [`listeners`](/docs/core/listeners), and [`selectors`](/docs/core/selectors).
 
-To illustrate how this works, we will create a `loginLogic` with one action, `setUsername`, and one value, exposed through a `username` reducer:
+Enough talk, show me code!
 
 ```ts
 import { kea, actions, reducers } from 'kea'
@@ -34,6 +34,8 @@ const loginLogic = kea([
 ])
 ```
 
+Here we created `loginLogic` with one action, `setUsername`, and one value, exposed through a `username` reducer.
+
 The resulting `loginLogic` can be used directly:
 
 ```ts
@@ -42,7 +44,7 @@ loginLogic.actions.setUsername('posthog')
 loginLogic.values.username === 'posthog'
 ```
 
-or with [hooks](/docs/hooks/) in a React component, to tie its `mount`/`unmount` lifecycle to the component.
+... or with [hooks](/docs/hooks/) in a React component, to tie its `mount`/`unmount` lifecycle to the component's.
 
 ```tsx
 import { useValues, useActions } from 'kea'
@@ -66,14 +68,15 @@ There's no magic behind logic builders themselves either. They're just functions
 
 ```ts
 const logic = kea([
+  actions({
+    setUsername: (username) => ({ username }),
+  }),
   (logic: BuiltLogic) => {
     logic.foobar = true
   },
   (logic: BuiltLogic) => {
     doSomethingElseTo(logic)
   },
-  actions({ setUsername: (username) => ({ username }) }),
-  // more to follow
 ])
 
 function actions(input: Record<string, any>) {
@@ -87,9 +90,9 @@ function actions(input: Record<string, any>) {
 }
 ```
 
-You can combine logic builders to abstract common patterns
+You combine logic builders to abstract common patterns.
 
-Here's a `setters({ username: 'keajs' })` logic builder that combines the `setUsername` action and `username` reducer from above into one call:
+Here's a `setters({ username: 'keajs' })` function that creates both the `setUsername` action and the `username` reducer from above in one call:
 
 ```ts
 import { kea, actions, reducers } from 'kea'
@@ -114,25 +117,26 @@ loginLogic.actions.setUsername('posthog')
 loginLogic.values.username === 'posthog'
 ```
 
-Officially supported are higher level abstractions for [`routing`](/docs/plugins/router), [`forms`](/docs/plugins/forms) and [`loaders`](/docs/plugins/loaders), and [many more](/docs/plugins/).
+... though you really should stick to actions and reducers when possible. They make sense, and help organise data flow in large apps.
 
-You can build a complete webapp in Kea's data layer, leaving React to handle the views.
+Officially supported are higher level abstractions for [`routing`](/docs/plugins/router), [`forms`](/docs/plugins/forms) and [`loaders`](/docs/plugins/loaders), and [many more](/docs/plugins/).
+You can build a complete webapp in Kea's data layer, leaving React to handle template rendering.
 
 ## Data layer
 
 When fully deployed, Kea acts as a separate [data layer](/blog/data-first-frontend-revolution), which communicates with
 React through a strict boundary of `actions` and `values`. You should aim to keep as much of your data, and its manipulations
-within Kea's _data layer_, leaving React to do an amazing job as a _view layer_.
+within Kea's _data layer_, leaving React to do an amazing job as the _view layer_.
 
 That's right, MVC is back, but it's just D&V this time!
 
 Kea discourages the use of `useState` and `useEffect` for local scene data, because local state inevitably becomes global.
 
-Kea discourages the use of `Context` because you shouldn't re-render everything.
+Kea discourages the use of `Context` because you shouldn't re-render everything, everytime, always, everytime.
 
 Kea believes that it's hard enough to get your data layer right, so why burden yourself even more, by storing it in a DOM-like tree of React nodes?
 
-Kea thinks layers shield complexity.
+Kea thinks layers shield complexity, and promote simplicity.
 
 <KeaReact />
 
