@@ -1,7 +1,5 @@
 # defaults
 
-## Defaults
-
 There are two ways to pass defaults to reducers. We've been using this style until now:
 
 ```javascript

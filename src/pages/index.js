@@ -210,14 +210,13 @@ function Home() {
             <tr>
               <td>Core:</td>
               <td>
-                <Link to="/docs/core/kea">kea</Link>&nbsp;|{' '}
-                <Link to="/docs/core/actions">actions</Link>&nbsp;|{' '}
-                <Link to="/docs/core/defaults">defaults</Link>
-                &nbsp;| <Link to="/docs/core/events">events</Link>&nbsp;|{' '}
+                <Link to="/docs/core/kea">kea</Link>&nbsp;| <Link to="/docs/core/logic">logic</Link>
+                &nbsp;| <Link to="/docs/core/actions">actions</Link>&nbsp;|{' '}
+                <Link to="/docs/core/defaults">defaults</Link>&nbsp;|{' '}
+                <Link to="/docs/core/events">events</Link>&nbsp;|{' '}
                 <Link to="/docs/core/listeners">listeners</Link>&nbsp;|{' '}
                 <Link to="/docs/core/reducers">reducers</Link>&nbsp;|{' '}
-                <Link to="/docs/core/selectors">selectors</Link>&nbsp;|{' '}
-                <Link to="/docs/core/subscriptions">subscriptions</Link>
+                <Link to="/docs/core/selectors">selectors</Link>
               </td>
             </tr>
             <tr>
@@ -244,6 +243,7 @@ function Home() {
                 <Link to="/docs/plugins/router">router</Link>&nbsp;|{' '}
                 <Link to="/docs/plugins/forms">forms</Link>
                 &nbsp;| <Link to="/docs/plugins/saga">saga</Link>&nbsp;|{' '}
+                <Link to="/docs/core/subscriptions">subscriptions</Link>&nbsp;|{' '}
                 <Link to="/docs/plugins/localstorage">localstorage</Link>
                 &nbsp;| <Link to="/docs/plugins/window-values">window-values</Link>
               </td>
@@ -306,8 +306,7 @@ function Home() {
           <div className="container">
             <div className="row">
               <div className="col text--center" style={{ fontSize: 24 }}>
-                Read the documentation:{' '}
-                <Link to="/docs/intro/what-is-kea">What is Kea?</Link>
+                Read the documentation: <Link to="/docs/intro/what-is-kea">What is Kea?</Link>
               </div>
             </div>
 

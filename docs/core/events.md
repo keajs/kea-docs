@@ -1,7 +1,5 @@
 # events
 
-## Events
-
 You can hook into the mount and unmount lifecycle of a logic with `events`:
 
 ```javascript
