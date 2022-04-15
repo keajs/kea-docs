@@ -15,11 +15,11 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 
 Kea is a complete framework for managing application state in [React](https://reactjs.org/) webapps.
 
-Kea organises state in containers called `logic`, which are _pretty big_ and _prerry opinionated_ unit of state, when compared to the atoms and molecules some other systems use.
+Kea organises state in containers called [`logic`](/docs/core/logic), which are _pretty big_ and _pretty opinionated_ units of state.
 
-A `logic` is created by passing an array of logic builders to [`kea([])`](/docs/core/kea). Some core builders are: [`actions`](/docs/core/actions), [`reducers`](/docs/core/reducers), [`listeners`](/docs/core/listeners), and [`selectors`](/docs/core/selectors).
+A `logic` is created by passing an array of logic builders to [`kea()`](/docs/core/kea).
 
-Enough talk, show me code!
+Here's a simple example:
 
 ```ts
 import { kea, actions, reducers } from 'kea'
@@ -34,7 +34,7 @@ const loginLogic = kea([
 ])
 ```
 
-Here we created `loginLogic` with one action, `setUsername`, and one value, exposed through a `username` reducer.
+Here we created `loginLogic` with one [actions](/docs/core/actions), `setUsername`, and one value, exposed through a `username` [reducer](/docs/core/reducers).
 
 The resulting `loginLogic` can be used directly:
 
@@ -56,45 +56,55 @@ function Login() {
 }
 ```
 
-## Logic builders
+## Core building blocks
 
 From [Redux](https://redux.js.org/), Kea inherits [`actions`](/docs/core/actions), [`reducers`](/docs/core/reducers), and [`selectors`](/docs/core/selectors) as its core building blocks.
 
-You can run code on actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values through [`subscriptions`](/docs/plugins/subscriptions).
+These provide a stable foundation that all other features rely on.
 
-Officially supported are higher level abstractions for data [`loading`](/docs/plugins/loaders), web [`forms`](/docs/plugins/forms), URL [`routing`](/docs/plugins/router), and [other common tasks](/docs/plugins/).
+- Think of [`actions`](/docs/core/actions) as a unified messaging bus that every logic uses to communicate.
+- Think of [`reducers`](/docs/core/reducers) as the only "write" operation in the entire system.
+- Think of [`selectors`](/docs/core/selectors) as the only "read" operation in the entire system, and act as a computed caching layer.
+
+You can run code on actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values with [`subscriptions`](/docs/plugins/subscriptions).
+
+There are plugins that simplify data [`loaders`](/docs/plugins/loaders), [`forms`](/docs/plugins/forms), [`routing`](/docs/plugins/router), and [other common tasks](/docs/plugins/).
 
 It's all pretty standard stuff, but with a few twists in a nice package.
 
-There's no magic behind logic builders themselves either. They're just functions that takes a `logic`, and do things to it. For example:
+
+## Logic builders
+
+To build a logic, you pass `kea` an array of logic builders. When a logic is built, these are all run in succession:
 
 ```ts
+import { kea, actions } from 'kea'
+
 const logic = kea([
+  // add `setUsername` to logic
   actions({
     setUsername: (username) => ({ username }),
   }),
+
+  // do something custom
   (logic: BuiltLogic) => {
-    logic.foobar = true
+    logic.cache.foobar = logic.actions.setUsername
   },
+
+  // a logic builder that calls another logic builder inside it
   (logic: BuiltLogic) => {
-    doSomethingElseTo(logic)
+    actions({
+      setPassword: (password) => ({ password }),
+    })(logic)
   },
 ])
-
-function actions(input: Record<string, any>) {
-  return (logic) => {
-    for (const [key, payloadBuilder] of Object.entries(input)) {
-      logic.actionTypes[key] = createActionType(logic.path, key)
-      logic.actions[key] = createAction(logic.actionTypes[key], payloadBuilder)
-      // etc
-    }
-  }
-}
 ```
 
-You combine logic builders to abstract common patterns.
+Normally you don't write logic builders directly, but use abstractions like `actions` and `listeners` directly.
 
-Here's a `setters({ username: 'keajs' })` function that creates both the `setUsername` action and the `username` reducer from above in one call:
+It's relatively easy to combine logic builders and make your own abstractions.
+
+Here's a `setters` builder that creates two actions and two reducers through one tiny call:
 
 ```ts
 import { kea, actions, reducers } from 'kea'
@@ -112,14 +122,13 @@ function setters(input: Record<string, any>) {
 
 // same as before
 const loginLogic = kea([
-  setters({ username: 'keajs' }), // much shorter
+  setters({ username: 'keajs', password: '' }), // much shorter
 ])
 loginLogic.mount()
 loginLogic.actions.setUsername('posthog')
 loginLogic.values.username === 'posthog'
+loginLogic.values.password === ''
 ```
-
-... though you really should stick to actions and reducers when possible. They make sense, and help organise data flow in large apps.
 
 ## Data layer
 
