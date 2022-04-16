@@ -1,6 +1,6 @@
 # Context
 
-Kea stores all of its runtime data on a context. This context must be reset before you can use your app.
+Kea stores all of its runtime data on a context. When you import `kea`, it comes with a default empty context.
 
 ## resetContext
 
@@ -13,7 +13,7 @@ import { resetContext } from 'kea'
 
 export default resetContext({
   // Plugins
-  plugins: [sagaPlugin, listenersPlugin, routerPlugin],
+  plugins: [sagaPlugin, loadersPlugin, routerPlugin],
 
   // Create a redux store when resetting the context (no options).
   createStore: true,
@@ -51,9 +51,6 @@ export default resetContext({
 
   // make a lot of noise
   debug: false,
-
-  // automatically build and mount logic when kea({}) is called. useful for legacy apps
-  autoMount: false,
 
   // after calling const builtLogic = logic.build(); builtLogic.mount(),
   // make fields like builtLogic.actions available on logic
@@ -122,7 +119,6 @@ getContext() ==
 
     options: {
       debug: false,
-      autoMount: false,
       proxyFields: true,
       flatDefaults: false,
       attachStrategy: 'dispatch',

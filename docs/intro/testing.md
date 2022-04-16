@@ -6,44 +6,15 @@ sidebar_position: 4
 
 import useBaseUrl from '@docusaurus/useBaseUrl'
 
-:::note Caution
-This is the only frontend testing framework that sparks joy.
-:::
+## Kea-Test-Utils
 
-## Why test your logics in the first place?
+### Test the boundary
 
-While adding a new feature into a logic, such as **"make it possible to duplicate dashboards"** into
-a fictional `dashboardsLogic.ts`, you write a clear set of actions, listeners, reducers and so forth.
+A logic communicates with the rest of the world through `actions` and `values`. Thus to assure that a logic does what
+it's supposed to do, it's usually enough to dispatch some actions, and make sure they in turn change the right values
+and/or dispatch other actions.
 
-However, when you read `dashboardsLogic.ts`, its code is grouped by functionality: first all actions, then all reducers.
-The original intent behind each line of code is lost:
-
-<p>
-    <img alt="Redux Devtools" src={useBaseUrl('img/guide/testing-why-1.png')} style={{ maxWidth: 866 / 2 }} />
-</p>
-
-There is a lot of value in having a logic grouped by functionality. It ultimately makes it easy to add new features,
-as you have a clear overview of what's already there.
-
-Yet if you're not careful, it's also easy to make mistakes. You could change an action without understanding its place
-in an existing feature, and break things.
-
-That is why we write logic tests.
-
-<p>
-    <img alt="Redux Devtools" src={useBaseUrl('img/guide/testing-why-2.png')} style={{ maxWidth: 856 / 2 }} />
-</p>
-
-When building a feature, write the same story twice. Once in a test, grouping all new code together,
-and once more in the logic, code split up by functionality.
-
-One side checking the other. Two factor authentication for your code.
-
-## Live-Replay testing
-
-To test a logic, you dispatch some actions, and make sure they in turn change the right values and/or dispatch other actions.
-
-You literally just write down what should happen in a chain of dispatched actions and matched values:
+You literally write down what should happen in a chain of dispatched actions and matched values:
 
 ```ts
 import { expectLogic, partial } from 'kea-test-utils'
@@ -70,17 +41,13 @@ it('setting search query loads remote items', async () => {
       }),
       remoteItemsLoading: false,
     })
-
-  // also test the mocked api call separately
 })
 ```
 
 It doesn't matter if the actions you're matching have already been dispatched or if we need to wait for them.
-`.toDispatchActions` can both query a recorded history of actions, and wait for new ones to arrive.
+Kea-Test-Utils' `.toDispatchActions` can both query a recorded history of actions, and wait for new ones to arrive.
 
 In turn, `.toMatchValues` matches values as they were after the matched action, no matter what they are now.
-
-## Kea-Test-Utils
 
 ### Installing
 
@@ -91,7 +58,8 @@ In turn, `.toMatchValues` matches values as they were after the matched action, 
 
 ### Reset the context before each test
 
-Kea stores everything in a context. Call resetContext() before each test to reset Kea's brain.
+Kea stores everything in a context. Call `resetContext()` before each test to reset Kea's brain. Pass it the `testUtilsPlugin`
+to enable the action and state recording necessary for `expectLogic` to work.
 
 ```ts
 /* global test, expect, beforeEach */
@@ -109,24 +77,23 @@ test('runs before and after mount events', async () => {
 })
 ```
 
-### Mount and unmount your logic
+### Mount your logic
 
-Read the docs on [Lifecycles](/docs/BROKEN)
-and [Mounting and Unmounting](/docs/BROKEN).
-Then make sure your logic is mounted before the tests run:
+Then make sure your logic is [mounted](/docs/core/logic#mount) before the tests run:
 
 ```ts
-let unmount: () => void
-let logic: ReturnType<typeof dashboardLogic.build>
+describe('dashboardLogic', () => {
+  let unmount: () => void
+  let logic: ReturnType<typeof dashboardLogic.build>
 
-beforeEach(() => {
-  logic = dashboardLogic({ id: 123 })
-  unmount = logic.mount()
-})
-afterEach(() => {
-  unmount()
+  beforeEach(() => {
+    logic = dashboardLogic({ id: 123 })
+    logic.mount()
+  })
 })
 ```
+
+If you run `resetContext` between tests, and use enough [breakpoints in your listeners](/docs/core/listeners#breakpoint), you shouldn't need to worry about unmounting logic.
 
 ### `expectLogic()`
 
@@ -340,13 +307,3 @@ beforeEach(() => {
   })
 })
 ```
-
-### How to test Kea and React together
-
-If you keep all your state in Kea, and only test your logics, you're mostly done with your frontend testing.
-
-What's missing is making sure the right values are rendered in the right places, and the right actions get clicked
-when the right button is pressed.
-
-I'm not yet ready to recommend a best practice here. However a year ago
-[this approach](https://github.com/keajs/kea/blob/master/test/jest/hooks.js) got the job done.
