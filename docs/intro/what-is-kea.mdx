@@ -65,7 +65,7 @@ These provide a stable foundation that all other features rely on.
 
 - Think of [`actions`](/docs/core/actions) as a unified messaging bus that every part of your app uses to communicate.
 - Think of [`reducers`](/docs/core/reducers) as the only "write" operation in the entire system.
-- Think of [`selectors`](/docs/core/selectors) as the only "read" operation in the entire system. They're also the a computed caching layer.
+- Think of [`selectors`](/docs/core/selectors) as the only "read" operation in the entire system. They're also the computed caching layer.
 
 You can run side-effects in response to actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values with [`subscriptions`](/docs/plugins/subscriptions).
 
@@ -75,10 +75,10 @@ It's all pretty standard stuff you've probably seen elsewhere, but with a few tw
 
 ## Logic builders
 
-To build a logic, you give `kea` an array of logic builders. When a logic is built, these are all run in succession:
+To build a logic, you give `kea` an array of logic builders. Before a logic is mounted, it is built, and all logic builders are run in succession:
 
 ```ts
-import { kea, actions } from 'kea'
+import { kea, actions, BuiltLogic } from 'kea'
 
 const logic = kea([
   // add `setUsername` to logic
@@ -100,10 +100,12 @@ const logic = kea([
 ])
 ```
 
-Normally you don't mutate your logic directly, but use abstractions like `actions` and `listeners` instead.
+A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to update any of [the fields on a `logic`](/docs/core/logic).
 
-As you can see, logic builders can in turn call other logic builders. Using the core building blocks, you can create all sorts of nifty abstractions.
-For example, here's a `setters` function, that creates an action and a reducer for every key it finds:
+Normally you don't manipulate properties of your logic directly, but use _logic-builder-builders_ like `actions` and `listeners` instead.
+
+You can build powerful abstractions when you nest logic builders. For example, here's a `setters` _logic-builder-builder_,
+which for every key you pass it, creates a `key` reducer, with a corresponding `setKey` action:
 
 ```ts
 import { kea, actions, reducers } from 'kea'
@@ -146,9 +148,35 @@ Kea thinks layers shield complexity, and promote simplicity.
 
 Bring back the layers!
 
-For the best mental model, think of Kea as a self-sufficient **data layer** between your APIs and React, shielding both from each other's complexity.
+For the best mental model, think of Kea as a self-sufficient data layer between your APIs and React, shielding both from each other:
 
 <KeaReact />
+
+## History
+
+The Kea project began in 2015 when I took on a job to build an app with [React](https://reactjs.org/) and [Redux](https://redux.js.org/).
+
+Redux of 2015 was fine, but I kept writing very similar code over and over again. It literally was "too much boilerplate",
+thus everyone invented their own abstractions. My loose collection of helper functions grew into the first public release of Kea,
+version 0.1 at the start of 2016. By 2019, this had gradualy evolved into a unified _high level abstraction over Redux_ with Kea [0.28](https://v0.keajs.org/).
+
+I had developed several large webapps with Kea and the [kea-saga](/docs/plugins/saga) plugin by then. It felt like the bleeding
+edge of React + Redux development.
+
+Then, in 2019, something happened. [React v16.8](https://reactjs.org/blog/2019/02/06/react-v16.8.0.html) introduced [Hooks](https://reactjs.org/docs/hooks-intro.html),
+and to keep up, Kea went through a long [1.0](https://v1.keajs.org/) rewrite (5+ months of hard work over 300+ commits), introduced [listeners](/docs/core/listeners)
+to replace sagas, and soon made things even simpler with [Kea 2.0](/blog/kea-2.0/). Years 2020-2021 saw innovation in [type generation](/docs/intro/typescript),
+the maturation of the [loaders](/docs/plugins/loaders) and [router](/docs/plugins/router) plugins, a new [testing](/docs/intro/testing) framework, and
+a solidification of a [data-first mindset](/blog/data-first-frontend-revolution) to guide development.
+
+Now in early 2022, it's time for yet another shift. [Kea 3.0](/blog/kea-3.0/) finally introduces logic builders, a concept that
+makes it possible for anyone to build abstractions on top of Kea. I'm excited to see what the community will come up with.
+
+## Strengths and weaknesses
+
+
+## How to learn Kea?
+
 
 # -- OLD DOCS BELOW --
 
@@ -266,53 +294,3 @@ to the complicated problem of state management.
 Plus, when I started to learn React, I was on a plane back to Belgium from a holiday in New Zealand,
 having just [seen the bird](https://photos.app.goo.gl/5DNXZWCKtYveeu8c9) a week before. Thus I find
 the name strangely fitting.
-
-## History
-
-Hi everyone! 👋
-
-The Kea project began when I first started to use [Redux](https://redux.js.org/) in a
-[React](https://reactjs.org/) app in 2015\.
-
-Redux was fine, but I kept writing very similar code over and over again. Eventually I looked for ways
-to simplify things. I wrote several helper functions that automatised most of these repetitive tasks.
-
-That loose collection of functions grew into the first public release of Kea, version 0.1 at the start
-of 2016\.
-
-Those in turn evolved into a unified _high level abstraction over Redux_. The small helper functions
-morphed into a standardised way to describe your app's state and all the logic that manipulates it,
-including side effects. (versions 0.1 to 0.28 over 3 years).
-
-That worked well. There were plenty of users and businesses who depended on Kea to power their apps.
-Several of them said very nice things about it.
-
-Then things got complicated.
-
-Changes in React and React-Redux (mostly hooks) combined with community feedback through unsolvable
-feature requests forced me to take a step back and have a fresh look at what was "Kea" and where was
-it heading. It was time for a refactor... Which turned into a rewrite... Which took on a life of
-its own... and kept [expanding and expanding and expanding](https://github.com/keajs/kea/blob/master/docs/CHANGES-1.0.md).
-
-All of this while retaining the same bundle size as before (16kb minified -\> 17kb minified).
-
-After 5+ months of hard work over 300+ commits Kea 1.0 was born.
-
-It's a complete rewrite of what came before, taking Kea from being just an abstraction over Redux into
-proper framework territory.
-
-8 months later, Kea reached version 2.0. This new major version ties up [a lot of loose ends](/blog/kea-2.0)
-and adds several new convenience features.
-
-I hope you'll have as much fun using it as I had writing it! 🤩
-
-If you have any feedback, please reach out directly or open an [issue](https://github.com/keajs/kea/issues) on Github!
-
--- [Marius Andra](https://twitter.com/mariusandra)
-
-:::note Next Steps
-
-- Read [quickstart](/docs/BROKEN) if you're in a hurry, otherwise...
-- Read [core concepts](/docs/BROKEN) to get a good technical overview of what makes Kea tick and why.
-  It includes everything in the quickstart.
-  :::
