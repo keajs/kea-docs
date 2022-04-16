@@ -158,14 +158,16 @@ const logic = kea<logicType<LocalType>>([
 Files generated with kea-typegen will automatically import any types they can, and add the rest as type arguments
 for `kea<logicType<LocalType, LocalUser>>`
 
-### Create a type builder for each custom logic-builder-builder
+### Create logic-builder-type-builders
 
 To make your custom _logic-builder-builders_ work with typegen, you must write a _logic-builder-type-builder_ :sweat_smile:.
 
-This involves creating a `setters.typegen.ts` file next to your `setters.ts` _logic-builders-builder_. It's a bit of work, but ultimately worth the effort.
+This involves creating a `setters.typegen.ts` file next to your `setters.ts` _logic-builder-builder_.
 Check out the sample [typedFormDemoLogic](https://github.com/keajs/kea-typegen/tree/kea-3.0/samples/typed-builder), or [typegen.ts from kea-forms](https://github.com/keajs/kea-forms/blob/kea-3.0/src/typegen.ts), for examples of such a type builders.
 
-These type builders is a new area of development for kea, and we're working on making this simpler for all.
+These type builders area a new area of development for kea, starting with 3.0, and we're working on making this simpler for all.
+For now, you'll need to know how the TypeScript Compiler API works, and write code to manipulate TypeScript `Node`s and `TypeNode`s.
+ProTip: Get a useful debugger, and use the [TypeScript AST Viewer](https://ts-ast-viewer.com/).
 
 ### Caveats / Known issues
 
