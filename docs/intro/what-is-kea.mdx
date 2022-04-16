@@ -5,8 +5,6 @@ sidebar_position: 1
 import { WebDev } from '../../src/components/img/WebDev'
 import { KeaReact } from '../../src/components/img/KeaReact'
 
-import useBaseUrl from '@docusaurus/useBaseUrl'
-
 # What is Kea?
 
 <WebDev />
@@ -64,14 +62,16 @@ From [Redux](https://redux.js.org/), Kea inherits [`actions`](/docs/core/actions
 These provide a stable foundation that all other features rely on.
 
 - Think of [`actions`](/docs/core/actions) as a unified messaging bus that every part of your app uses to communicate.
-- Think of [`reducers`](/docs/core/reducers) as the only "write" operation in the entire system.
+- Think of [`reducers`](/docs/core/reducers) as the only "write" operation in the entire system, and only in response to actions.
 - Think of [`selectors`](/docs/core/selectors) as the only "read" operation in the entire system. They're also the computed caching layer.
 
 You can run side-effects in response to actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values with [`subscriptions`](/docs/plugins/subscriptions).
 
 There are plugins that simplify data [`loading`](/docs/plugins/loaders), [`forms`](/docs/plugins/forms), [`routing`](/docs/plugins/router), and [other common tasks](/docs/plugins/).
 
-It's all pretty standard stuff you've probably seen elsewhere, but with a few twists in a nice package.
+It's all pretty standard stuff you've surely seen elsewhere, but with a few twists (look for _breakpoints_), and in a nice package.
+
+Click on any of the links above, or just read through the [core](/docs/core/), [meta](/docs/meta/) and [plugins](/docs/plugins/) sections in the docs to learn more.
 
 ## Logic builders
 
@@ -100,12 +100,12 @@ const logic = kea([
 ])
 ```
 
-A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to update any of [the fields on a `logic`](/docs/core/logic).
+A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to modify [any of the fields](/docs/core/logic) on a `logic`.
 
-Normally you don't manipulate properties of your logic directly, but use _logic-builder-builders_ like `actions` and `listeners` instead.
+Normally you don't manipulate properties of your logic directly, but you use, uhm, _logic-builder-builders?_, like `actions` and `listeners` instead.
 
 You can build powerful abstractions when you nest logic builders. For example, here's a `setters` _logic-builder-builder_,
-which for every key you pass it, creates a `key` reducer, with a corresponding `setKey` action:
+which creates a `thing` reducer, and a corresponding `setThing` action, for every key it finds in its `input`:
 
 ```ts
 import { kea, actions, reducers } from 'kea'
@@ -130,6 +130,8 @@ loginLogic.values.username === 'posthog'
 loginLogic.values.password === ''
 ```
 
+
+
 ## Data layer
 
 When fully deployed, Kea acts as a separate [data layer](/blog/data-first-frontend-revolution), which communicates with
@@ -146,9 +148,9 @@ Kea believes that it's hard enough to get your data layer right, so why burden y
 
 Kea thinks layers shield complexity, and promote simplicity.
 
-Bring back the layers!
+[Bring back the layers!](/blog/data-first-frontend-revolution)
 
-For the best mental model, think of Kea as a self-sufficient data layer between your APIs and React, shielding both from each other:
+To take full advantage of Kea, think of it as a self-sufficient data layer between your APIs and React, shielding both from each other:
 
 <KeaReact />
 
@@ -156,11 +158,13 @@ For the best mental model, think of Kea as a self-sufficient data layer between 
 
 The Kea project began in 2015 when I took on a job to build an app with [React](https://reactjs.org/) and [Redux](https://redux.js.org/).
 
-Redux of 2015 was fine, but I kept writing very similar code over and over again. It literally was "too much boilerplate",
-thus everyone invented their own abstractions. My loose collection of helper functions grew into the first public release of Kea,
-version 0.1 at the start of 2016. By 2019, this had gradualy evolved into a unified _high level abstraction over Redux_ with Kea [0.28](https://v0.keajs.org/).
+Redux of 2015 was fine, but I kept writing very similar code over and over again. Its main criticism at the time was "too much boilerplate",
+thus *back then* everyone invented their own abstractions. This includes the Redux maintainers themselves, but only later in 2018 with [Redux Toolkit](https://redux-toolkit.js.org/).
 
-I had developed several large webapps with Kea and the [kea-saga](/docs/plugins/saga) plugin by then. It felt like the bleeding
+We're still in 2015. My loose collection of helper functions grew into the first public release of Kea,
+version 0.1 at the start of 2016. By 2019, over three years, this had gradualy evolved into a unified _high level abstraction over Redux_ with Kea [0.28](https://v0.keajs.org/).
+
+I had developed several large webapps with Kea and the [kea-saga](/docs/plugins/saga) plugin by then. It felt like coding at the bleeding
 edge of React + Redux development.
 
 Then, in 2019, something happened. [React v16.8](https://reactjs.org/blog/2019/02/06/react-v16.8.0.html) introduced [Hooks](https://reactjs.org/docs/hooks-intro.html),
@@ -169,109 +173,10 @@ to replace sagas, and soon made things even simpler with [Kea 2.0](/blog/kea-2.0
 the maturation of the [loaders](/docs/plugins/loaders) and [router](/docs/plugins/router) plugins, a new [testing](/docs/intro/testing) framework, and
 a solidification of a [data-first mindset](/blog/data-first-frontend-revolution) to guide development.
 
-Now in early 2022, it's time for yet another shift. [Kea 3.0](/blog/kea-3.0/) finally introduces logic builders, a concept that
-makes it possible for anyone to build abstractions on top of Kea. I'm excited to see what the community will come up with.
+Now in early 2022, it's time for yet another shift. [Kea 3.0](/blog/kea-3.0/) finally introduces [logic builders](/docs/intro/what-is-kea#logic-builders), a concept that
+makes it possible for anyone to build abstractions on top of Kea. The new [`kea-forms`](/docs/plugins/forms) plugin is an example of one such abstraction.
 
-## Strengths and weaknesses
-
-
-## How to learn Kea?
-
-
-# -- OLD DOCS BELOW --
-
-# -- OLD DOCS BELOW --
-
-# -- OLD DOCS BELOW --
-
-## How it works
-
-<a href={useBaseUrl('img/introduction/how-does-kea-work.png')}>
-  <img
-    alt="Redux Devtools with Inline Paths"
-    src={useBaseUrl('img/introduction/how-does-kea-work.png')}
-    style={{ maxWidth: 715, width: '100%' }}
-  />
-</a>
-<br />
-<br />
-
-Kea is built on top of Redux and leverages its underlying functional principles. Here's the typical flow:
-
-- Every operation in your app starts with an **[action](/docs/core/actions)** (_increment counter_).
-- These actions update **[reducers](/docs/core/reducers)** (_counter_) that hold the actual data.
-- This data is stored in a global **state**, which is managed by Redux.
-- You fetch **values** (_counter is 1_) through **[selectors](/docs/core/selectors)** (_find the counter in the state_) from this state.
-- Actions may also trigger **[listeners](/docs/core/listeners)**, which are plain async functions that talk with externals APIs,
-  read values or dispatch other actions.
-- All related actions, reducers, selectors and listeners are grouped into a **logic** (_counterLogic_).
-- React Components pull in values from a logic, and send back actions.
-
-## What is Kea good for?
-
-First, Kea is not just a place to put your app's data. It's actually a framework for managing
-the _complete lifecycle_ of this data. This includes only mounting logic that is actively in use by React
-and keeping the rest in standby, freeing up precious resources.
-
-Unlike some other state management libraries, where you statically connect all your reducers to the
-store (`const store = configureStore({ reducer: combinedReducers })`) or
-read state through hardcoded global variables (`const todos = useStoreState(state => state.todos.items)`),
-you don't need to worry about this in Kea. The framework does it for you.
-
-Logic in Kea is always connected to your React components (and to other `logic`) via regular
-`import` statements (`import { logic } from './logic'`) and mounted only when requested
-by a component (`const { increment } = useActions(logic)`).
-Logic that is no longer in use is automatically unmounted, freeing up memory.
-
-This makes Kea perfect for large apps with complex relationships between state and components.
-This also means that [code-splitting](https://webpack.js.org/guides/code-splitting/) works out of the
-box with Kea. No patchwork required.
-
-Second, Kea's `logic` exposes a [very complete interface](/docs/BROKEN) that you can use from
-anywhere. Need to have one logic's listeners access another logic's values? Not a problem!
-Everything follows a consistent interface and is designed for interoperability.
-
-Third, Kea is not a theoretical project. It's built by people who build complex applications for a
-living. Kea has been used in [several large projects](/), which consist of hundreds of logics that
-cover thousands of components. It has scaled really well every time!
-
-Finally, Kea's functionality is not set in stone. Whenever you find yourself writing repetitive code,
-you may [abstract it away](/docs/BROKEN) into a plugin. In fact, Kea's core
-is actually [implemented](https://github.com/keajs/kea/blob/master/src/core/index.js) as a plugin itself.
-There are plugins for [routing](/docs/BROKEN), [offline storage](/docs/BROKEN),
-[sagas](/docs/BROKEN), [websockets](/docs/BROKEN) and much more. This opens up
-whole new ways to build applications.
-
-## What is Kea _not_ good for?
-
-All that said, there are few cases when you should not consider using Kea.
-
-First, if you have a large app with an existing state management solution that works reasonably well,
-switching to Kea might cost more than it's worth. This might especially be the case if your entire app
-is built around [GraphQL/Apollo](https://www.apollographql.com/) or another complete ecosystem.
-Very tiny apps might also do fine with just React's `useState`, but as soon as you need
-to share logic between components, it's wise to evaluate real state management solutions.
-
-Second, Kea is rather opinionated and wants you to follow some functional programming principles. Mainly
-this means that you should never modify existing state (`state.push(newElement)`), but must always create
-new state (`state = [...state, newElement]`). Instead of abstracting away these details from the end-user,
-like some libraries do with [immer](https://immerjs.github.io/immer), Kea embraces
-this style of writing code. I believe the time spent learning a bit of functional programming
-is absolutely [worth it](http://www.paulgraham.com/avg.html) and will make you into a better programmer
-overall. That said, this style is not for everyone.
-
-Third, did I mention Kea is opinionated? Sometimes it may be too explicit for your taste (_having
-to explicitly define actions_ for example), sometimes it might be too implicit or too magical. There
-is thought put into each decision that went into Kea, taking into account developer happiness (neat and
-clean code that just works) and developer productivity (limiting bugs). It's a tight rope to walk,
-yet I believe Kea strikes a beautiful balance. You might disagree. If so,
-[open an issue](https://github.com/keajs/kea/issues) and let's debate!
-
-## How does Kea compare to other frameworks?
-
-That's a good question! [Join the discussion here!](https://github.com/keajs/kea/issues/106)
-
-## Why "kea"?
+## What's a "kea"?
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/Kea):
 
@@ -292,5 +197,5 @@ Kea the framework follows a similar approach. It offers a simple and straightfor
 to the complicated problem of state management.
 
 Plus, when I started to learn React, I was on a plane back to Belgium from a holiday in New Zealand,
-having just [seen the bird](https://photos.app.goo.gl/5DNXZWCKtYveeu8c9) a week before. Thus I find
-the name strangely fitting.
+having just [seen the bird](https://photos.app.goo.gl/5DNXZWCKtYveeu8c9) a week before. Plus it was
+available on `npm`.
