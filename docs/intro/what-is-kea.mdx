@@ -15,11 +15,12 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 
 Kea is a complete framework for managing application state in [React](https://reactjs.org/) webapps.
 
-Kea organises state in containers called [`logic`](/docs/core/logic), which are _pretty big_ and _pretty opinionated_ units of state.
+Kea organises state in containers called [`logic`](/docs/core/logic), which are _pretty big_ and _pretty opinionated_ units of state,
+especially when compared to other solutions that are built around atoms and molecules.
 
-A `logic` is created by passing an array of logic builders to [`kea()`](/docs/core/kea).
+A [`logic`](/docs/core/logic) is created by passing an array of logic builders to [`kea([])`](/docs/core/kea), such as [`actions()`](/docs/core/actions) and [`reducers()`](/docs/core/reducers):
 
-Here's a simple example:
+For example:
 
 ```ts
 import { kea, actions, reducers } from 'kea'
@@ -34,7 +35,7 @@ const loginLogic = kea([
 ])
 ```
 
-Here we created `loginLogic` with one [actions](/docs/core/actions), `setUsername`, and one value, exposed through a `username` [reducer](/docs/core/reducers).
+Here we created a logic with one action, `setUsername`, and one value, exposed through a `username` reducer.
 
 The resulting `loginLogic` can be used directly:
 
@@ -62,20 +63,19 @@ From [Redux](https://redux.js.org/), Kea inherits [`actions`](/docs/core/actions
 
 These provide a stable foundation that all other features rely on.
 
-- Think of [`actions`](/docs/core/actions) as a unified messaging bus that every logic uses to communicate.
+- Think of [`actions`](/docs/core/actions) as a unified messaging bus that every part of your app uses to communicate.
 - Think of [`reducers`](/docs/core/reducers) as the only "write" operation in the entire system.
-- Think of [`selectors`](/docs/core/selectors) as the only "read" operation in the entire system, and act as a computed caching layer.
+- Think of [`selectors`](/docs/core/selectors) as the only "read" operation in the entire system. They're also the a computed caching layer.
 
-You can run code on actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values with [`subscriptions`](/docs/plugins/subscriptions).
+You can run side-effects in response to actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values with [`subscriptions`](/docs/plugins/subscriptions).
 
-There are plugins that simplify data [`loaders`](/docs/plugins/loaders), [`forms`](/docs/plugins/forms), [`routing`](/docs/plugins/router), and [other common tasks](/docs/plugins/).
+There are plugins that simplify data [`loading`](/docs/plugins/loaders), [`forms`](/docs/plugins/forms), [`routing`](/docs/plugins/router), and [other common tasks](/docs/plugins/).
 
-It's all pretty standard stuff, but with a few twists in a nice package.
-
+It's all pretty standard stuff you've probably seen elsewhere, but with a few twists in a nice package.
 
 ## Logic builders
 
-To build a logic, you pass `kea` an array of logic builders. When a logic is built, these are all run in succession:
+To build a logic, you give `kea` an array of logic builders. When a logic is built, these are all run in succession:
 
 ```ts
 import { kea, actions } from 'kea'
@@ -100,11 +100,10 @@ const logic = kea([
 ])
 ```
 
-Normally you don't write logic builders directly, but use abstractions like `actions` and `listeners` directly.
+Normally you don't mutate your logic directly, but use abstractions like `actions` and `listeners` instead.
 
-It's relatively easy to combine logic builders and make your own abstractions.
-
-Here's a `setters` builder that creates two actions and two reducers through one tiny call:
+As you can see, logic builders can in turn call other logic builders. Using the core building blocks, you can create all sorts of nifty abstractions.
+For example, here's a `setters` function, that creates an action and a reducer for every key it finds:
 
 ```ts
 import { kea, actions, reducers } from 'kea'
@@ -120,7 +119,6 @@ function setters(input: Record<string, any>) {
   }
 }
 
-// same as before
 const loginLogic = kea([
   setters({ username: 'keajs', password: '' }), // much shorter
 ])
@@ -142,11 +140,21 @@ Kea discourages the use of `useState` and `useEffect` for local scene data, beca
 
 Kea discourages the use of `Context` because you shouldn't re-render everything, everytime, always, everytime. Always.
 
-Kea believes that it's hard enough to get your data layer right, so why burden yourself even more, by storing it in a DOM-like tree of React nodes?
+Kea believes that it's hard enough to get your data layer right, so why burden yourself even more, by cramming it in a DOM-like tree of React nodes?
 
 Kea thinks layers shield complexity, and promote simplicity.
 
+Bring back the layers!
+
+For the best mental model, think of Kea as a self-sufficient **data layer** between your APIs and React, shielding both from each other's complexity.
+
 <KeaReact />
+
+# -- OLD DOCS BELOW --
+
+# -- OLD DOCS BELOW --
+
+# -- OLD DOCS BELOW --
 
 ## How it works
 
@@ -170,12 +178,6 @@ Kea is built on top of Redux and leverages its underlying functional principles.
   read values or dispatch other actions.
 - All related actions, reducers, selectors and listeners are grouped into a **logic** (_counterLogic_).
 - React Components pull in values from a logic, and send back actions.
-
-# -- OLD DOCS BELOW --
-
-# -- OLD DOCS BELOW --
-
-# -- OLD DOCS BELOW --
 
 ## What is Kea good for?
 
