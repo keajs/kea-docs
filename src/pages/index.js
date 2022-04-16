@@ -197,7 +197,7 @@ function Home() {
         <table>
           <tbody>
             <tr>
-              <td>Intro:</td>
+              <td><Link to="/docs/intro/">Intro</Link>:</td>
               <td>
                 <Link to="/docs/intro/what-is-kea">what is kea?</Link>&nbsp;|{' '}
                 <Link to="/docs/intro/installation">installation</Link>&nbsp;|{' '}
@@ -208,7 +208,7 @@ function Home() {
               </td>
             </tr>
             <tr>
-              <td>Core:</td>
+              <td><Link to="/docs/core/">Core</Link>:</td>
               <td>
                 <Link to="/docs/core/kea">kea</Link>&nbsp;| <Link to="/docs/core/logic">logic</Link>
                 &nbsp;| <Link to="/docs/core/actions">actions</Link>&nbsp;|{' '}
@@ -220,7 +220,7 @@ function Home() {
               </td>
             </tr>
             <tr>
-              <td>Meta:</td>
+              <td><Link to="/docs/meta/">Meta</Link>:</td>
               <td>
                 <Link to="/docs/meta/props">props</Link>&nbsp;| <Link to="/docs/meta/key">key</Link>
                 &nbsp;| <Link to="/docs/meta/path">path</Link>&nbsp;|{' '}
@@ -228,16 +228,17 @@ function Home() {
               </td>
             </tr>
             <tr>
-              <td>Hooks:</td>
+              <td><Link to="/docs/react/">React</Link>:</td>
               <td>
-                <Link to="/docs/hooks/useActions">useActions</Link>&nbsp;|{' '}
-                <Link to="/docs/hooks/useValues">useValues</Link>&nbsp;|{' '}
-                <Link to="/docs/hooks/useMountedLogic">useMountedLogic</Link>
-                &nbsp;| <Link to="/docs/hooks/useAllValues">useAllValues</Link>
+                <Link to="/docs/react/useActions">useActions</Link>&nbsp;|{' '}
+                <Link to="/docs/react/useValues">useValues</Link>&nbsp;|{' '}
+                <Link to="/docs/react/useMountedLogic">useMountedLogic</Link>
+                &nbsp;| <Link to="/docs/react/useAllValues">useAllValues</Link>
+                &nbsp;| <Link to="/docs/react/BindLogic">BindLogic</Link>
               </td>
             </tr>
             <tr>
-              <td>Plugins:</td>
+              <td><Link to="/docs/plugins/">Plugins</Link>:</td>
               <td>
                 <Link to="/docs/plugins/loaders">loaders</Link>&nbsp;|{' '}
                 <Link to="/docs/plugins/router">router</Link>&nbsp;|{' '}
