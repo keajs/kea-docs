@@ -243,7 +243,7 @@ function Home() {
                 <Link to="/docs/plugins/router">router</Link>&nbsp;|{' '}
                 <Link to="/docs/plugins/forms">forms</Link>
                 &nbsp;| <Link to="/docs/plugins/saga">saga</Link>&nbsp;|{' '}
-                <Link to="/docs/core/subscriptions">subscriptions</Link>&nbsp;|{' '}
+                <Link to="/docs/plugins/subscriptions">subscriptions</Link>&nbsp;|{' '}
                 <Link to="/docs/plugins/localstorage">localstorage</Link>
                 &nbsp;| <Link to="/docs/plugins/window-values">window-values</Link>
               </td>
