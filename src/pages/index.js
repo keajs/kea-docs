@@ -9,10 +9,16 @@ import './styles.scss'
 import { Provider } from 'kea'
 
 const tutorials = [
-  { name: '15min intro to the basic concepts', url: "https://www.youtube.com/embed/R7GenyiYZC0" },
-  { name: 'Build a GitHub API client in 16 minutes', url: "https://www.youtube.com/embed/R7GenyiYZC0" },
-  { name: 'Some other video in 17 minutes this time', url: "https://www.youtube.com/embed/R7GenyiYZC0" },
-  ]
+  { name: '15min intro to the basic concepts', url: 'https://www.youtube.com/embed/R7GenyiYZC0' },
+  {
+    name: 'Build a GitHub API client in 16 minutes',
+    url: 'https://www.youtube.com/embed/R7GenyiYZC0',
+  },
+  {
+    name: 'Some other video in 17 minutes this time',
+    url: 'https://www.youtube.com/embed/R7GenyiYZC0',
+  },
+]
 
 const QUOTES = [
   {
@@ -170,10 +176,10 @@ function Home() {
             <h2>{name}</h2>
           </div>
         ))}
-        <div className='subscribe'>
-          Subscribe to the <a href='https://keajs.ck.page/80aecebec7'>Kea Newsletter</a> to learn of new tutorials when they come out
+        <div className="subscribe">
+          Subscribe to the <a href="https://keajs.ck.page/80aecebec7">Kea Newsletter</a> to learn of
+          new tutorials when they come out
         </div>
-
       </section>
 
       <main>
