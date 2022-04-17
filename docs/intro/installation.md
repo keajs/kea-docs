@@ -39,13 +39,14 @@ yarn add kea redux react-redux reselect
 npm install kea redux react-redux reselect --save
 ```
 
-### 2. Set up Kea's context
+### 2. Optional: Reset Kea's context
 
-Kea stores all of its data on a **context**, which must be set up before any `logic` can be used. This
+Kea stores all of its data on a [context](context), which must be set up before any `logic` can be used. This
 context stores a reference to the redux store, initializes all plugins, caches all built logic and keeps
 track of what is mounted and what is not.
 
-To set it up, just call `resetContext(options)` before rendering your app.
+Kea comes with a default context already set, but to initialize custom plugins and pass advanced options, call 
+`resetContext(options)` before rendering your app.
 
 ### 3. Wrap with `<Provider />`
 
@@ -83,7 +84,8 @@ That's it! Feel free to use `kea()` calls anywhere in your code!
 
 ### 4. TypeScript support
 
-If you're using TypeScript (and everybody should), you'll need to [set up kea-typegen](./typescript#option-1-kea-typegen) as well.
+If you're using [TypeScript](typescript) (and everybody should), and want automatic type generation,
+you'll need to [set up kea-typegen](typescript#option-2-kea-typegen) as well.
 
 First, run the following:
 
@@ -91,14 +93,7 @@ First, run the following:
 yarn add kea-typegen concurrently --dev
 ```
 
-Then add the following to your `.gitignore`:
-
-```gitignore
-# kea
-*Type.ts
-```
-
-Finally, change your start script in `package.json`
+Then, change your start script in `package.json`
 
 ```json
 {
