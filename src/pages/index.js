@@ -8,7 +8,11 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 import './styles.scss'
 import { Provider } from 'kea'
 
-const tutorials = [0, 1, 2, 3]
+const tutorials = [
+  { name: '15min intro to the basic concepts', url: "https://www.youtube.com/embed/R7GenyiYZC0" },
+  { name: 'Build a GitHub API client in 16 minutes', url: "https://www.youtube.com/embed/R7GenyiYZC0" },
+  { name: 'Some other video in 17 minutes this time', url: "https://www.youtube.com/embed/R7GenyiYZC0" },
+  ]
 
 const QUOTES = [
   {
@@ -154,18 +158,22 @@ function Home() {
 
       <section className="homepage-videos">
         <h1>Tutorials</h1>
-        {tutorials.map((_, index) => (
-          <div className='homepage-video'>
+        {tutorials.map(({ name, url }) => (
+          <div className="homepage-video">
             <iframe
-              src="https://www.youtube.com/embed/R7GenyiYZC0"
+              src={url}
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
-            <h2>Build a GitHub API client in 15 minutes</h2>
+            <h2>{name}</h2>
           </div>
         ))}
+        <div className='subscribe'>
+          Subscribe to the <a href='https://keajs.ck.page/80aecebec7'>Kea Newsletter</a> to learn of new tutorials when they come out
+        </div>
+
       </section>
 
       <main>
