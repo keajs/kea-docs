@@ -247,59 +247,18 @@ section.sections-table {
   text-align: center;
   padding: 60px 20px;
 
-  h2 {
+  h1 {
     margin-bottom: 50px;
   }
 
   .homepage-video {
     display: inline-block;
+    text-align: center;
     max-width: 360px;
     iframe {
       max-width: 100vw;
       max-height: 56.25vw; /* height/width ratio = 315/560 = .5625 */
     }
-  }
-}
-
-.homepage-features {
-  display: none;
-  //display: flex;
-  align-items: center;
-  padding: 2rem 0;
-  width: 100%;
-  background: hsla(120, 24%, 99%, 1);
-
-  html[data-theme='dark'] & {
-    background: hsla(210, 9%, 19%, 1);
-  }
-
-  .feature-image {
-    height: 150px;
-    width: 150px;
-  }
-
-  svg.feature-foundations path,
-  svg.feature-interconnected path,
-  svg.feature-sparks-joy path:nth-child(1),
-  svg.feature-sparks-joy path:nth-child(3),
-  svg.feature-sparks-joy path:nth-child(4) {
-    fill: hsla(123, 12%, 8%, 1);
-  }
-
-  svg.feature-sparks-joy path:nth-child(2) {
-    stroke: hsla(123, 12%, 8%, 1);
-  }
-
-  html[data-theme='dark'] svg.feature-foundations path,
-  html[data-theme='dark'] svg.feature-interconnected path,
-  html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(1),
-  html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(3),
-  html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(4) {
-    fill: hsla(219, 14%, 90%, 1);
-  }
-
-  html[data-theme='dark'] svg.feature-sparks-joy path:nth-child(2) {
-    stroke: hsla(219, 14%, 90%, 1);
   }
 }
 
