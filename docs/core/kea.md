@@ -4,7 +4,7 @@ sidebar_position: 0
 
 # kea
 
-## Logic builders
+## Array of logic builders
 
 You pass `kea([])` an array of function calls, each of which add certain features to your [`logic`](/docs/meta/logic).
 
@@ -40,10 +40,6 @@ function actions<L extends Logic = Logic>(input: any): LogicBuilder<L> {
 ```
 
 Your final `logic` is just a combination of all applied logic builders.
-
-:::note
-To learn more about the available logic builders, check the links in the sidebar.
-:::
 
 ## Input objects vs functions
 
@@ -86,10 +82,13 @@ What's the difference?
 
 First, if you pass a function, it gets evaluated lazily when the logic is built.
 
-If you're using values that are not guaranteed to be there (e.g. a reducer that uses
-`otherLogic.actionTypes.something`), pass a function:
+If you're using values that are not guaranteed to be there, or not guaranteed to be available when your logic is evaluated,
+wrap the input in a function. 
+
+An example I've run into is an imported `otherLogic` being `undefined` due to the order in which your browser loads modules. 
 
 ```javascript
+import { kea, reducers } from 'kea'
 kea([
   reducers(() => ({
     // evaluate later
@@ -97,9 +96,9 @@ kea([
       0,
       {
         increment: (state) => state + 1,
-        // controlLogic.actions is undefined when loading this code
+        // otherLogic is undefined when loading this code
         // so we must wrap a function around it
-        [controlLogic.actionTypes.setCounter]: (_, { counter }) => counter,
+        [otherLogic.actionTypes.setCounter]: (_, { counter }) => counter,
       },
     ],
   })),
@@ -121,9 +120,9 @@ kea([
 ])
 ```
 
-The recommendation is to write the simplest code you can (start with an `reducers: {}`)
+The recommendation is to write the simplest code you can (start with `reducers({})`)
 and when you need to access `actions`, `values` or perform lazy evaluation, convert it into
-a function.
+a function that destructures the logic.
 
 ## Extending logic
 
@@ -162,3 +161,29 @@ logic.extend([
 // later in React
 const { counter, negativeCounter } = useValues(logic)
 ```
+
+## Kea 2.0 syntax
+
+Up until Kea 2.0, we used this syntax:
+
+```javascript
+const logic = kea({
+  actions: {
+    increment: (amount = 1) => ({ amount }),
+    decrement: (amount = 1) => ({ amount }),
+  },
+  reducers: {
+    counter: [
+      0,
+      {
+        increment: (state, { amount }) => state + amount,
+        decrement: (state, { amount }) => state - amount,
+      },
+    ],
+  },
+})
+```
+
+An object was passed to `kea({})`, instead of the array of logic builders. 
+
+That syntax still works, and all your old code should function as is, but it is discouraged going further.
