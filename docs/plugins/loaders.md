@@ -1,45 +1,5 @@
 # loaders
 
-The pattern above is so common that there's a way to abstract it even further.
-
-Using the [kea-loaders plugin](/docs/BROKEN), the above code can be simplified to this:
-
-```javascript
-const logic = kea({
-  loaders: {
-    users: [
-      [],
-      {
-        loadUsers: async () => await api.get('users'),
-      },
-    ],
-  },
-  reducers: {
-    usersError: [
-      null,
-      {
-        loadUsers: () => null,
-        loadUsersFailure: (_, { error }) => error,
-      },
-    ],
-  },
-})
-```
-
-The code above is identical to the block before it. This `logic` now also contains three actions: `loadUsers`,
-`loadUsersSuccess` and `loadUsersFailure`, and three reducers: `users`, `userLoading` (via kea-loaders),
-and `usersError` (defined manually, not added with kea-loaders).
-
-See the [documentation for kea-loaders](/docs/BROKEN) to find out more.
-
----
-
-id: loaders
-title: Loaders
-sidebar_label: Loaders
-
----
-
 When making network requests that fetch data, you end up writing the same thing over and over again:
 
 1. an action to make the request
@@ -51,7 +11,7 @@ When making network requests that fetch data, you end up writing the same thing 
 
 The `kea-loaders` plugin abstracts this pattern into a system of loaders.
 
-# Installation
+## Installation
 
 First install the [`kea-loaders`](https://github.com/keajs/kea-loaders) package:
 
@@ -63,56 +23,47 @@ yarn add kea-loaders
 npm install --save kea-loaders
 ```
 
-Then install the plugin:
+If you want to configure a global error handler for loaders (e.g. notification alert), pass the following
+plugin to your resetContext call:
 
 ```javascript
-import { loadersPlugin } from 'kea-loaders'
-import { resetContext } from 'kea'
-
 resetContext({
   plugins: [
     loadersPlugin({
-      /* options */
+      // Called when any loader is started
+      onStart({ logic, reducerKey, actionKey }) {
+        // start a global spinner
+      },
+
+      // Called when any loader was successful
+      onSuccess({ response, logic, reducerKey, actionKey }) {
+        // stop that global spinner
+      },
+
+      // Called when the listener throws an error
+      // Feel free to alert the user in a nicer way,
+      // for example by displaying a notification.
+      // Also connect this to your bug tracking software.
+      onFailure({ error, logic, reducerKey, actionKey }) {
+        console.error(`Error in ${actionKey} for ${reducerKey}:`, error)
+      },
     }),
   ],
 })
 ```
 
-## Configuration options
-
-The plugin takes the following options:
-
-```javascript
-loadersPlugin({
-  // Called when any loader is started
-  onStart({ logic, reducerKey, actionKey }) {
-    // start a global spinner
-  },
-
-  // Called when any loader was successful
-  onSuccess({ response, logic, reducerKey, actionKey }) {
-    // stop that global spinner
-  },
-
-  // Called when the listener throws an error
-  // Feel free to alert the user in a nicer way,
-  // for example by displaying a notification.
-  // Also connect this to your bug tracking software.
-  onFailure({ error, logic, reducerKey, actionKey }) {
-    console.error(`Error in ${actionKey} for ${reducerKey}:`, error)
-  },
-})
-```
+Otherwise, feel free to just use the builder method.
 
 ## Sample usage
 
 ```javascript
 import { kea } from 'kea'
+import { loaders } from 'kea-loaders'
 
-export const projectLogic = kea({
-  key: (props) => props.id,
+export const projectLogic = kea([
+  key((props) => props.id),
 
-  loaders: ({ values, props }) => ({
+  loaders(({ values, props }) => ({
     project: {
       loadProject: (id = props.id) => projectsService.get(id),
     },
@@ -149,13 +100,14 @@ export const projectLogic = kea({
     // ... and these reducers:
     // - apiKeys (whatever the loadProject loader returns)
     // - apiKeysLoading (true or false)
-  }),
+  })),
 
   // start the loaders after mounting the logic
-  events: ({ actions }) => ({
-    afterMount: [actions.loadProject, actions.loadApiKeys],
+  afterMount(({ actions }) => {
+    actions.loadProject()
+    actions.loadApiKeys()
   }),
-})
+])
 
 export function Project({ id }) {
   const { project, projectLoading } = useValues(projectLogic({ id }))
@@ -188,20 +140,20 @@ export function Project({ id }) {
 In case you need to override `project` or `projectLoading`, just override the reducers:
 
 ```javascript
-export const projectLogic = kea({
-  key: (props) => props.id,
+export const projectLogic = kea([
+  key((props) => props.id),
 
-  actions: {
+  actions({
     setAsFinished: true,
-  },
+  }),
 
-  loaders: ({ values, props }) => ({
+  loaders(({ values, props }) => ({
     project: {
       loadProject: (id = props.id) => projectsService.get(id),
     },
-  }),
+  })),
 
-  reducers: {
+  reducers({
     project: {
       setAsFinished: (state) => (state ? { ...state, finished: true } : state),
     },
@@ -212,8 +164,8 @@ export const projectLogic = kea({
       loadProjectSuccess: () => null,
       // loadProjectFailure is unmodified
     },
-  },
-})
+  }),
+])
 ```
 
 In case you want to override the default after the fact, it's not possible to do so by passing
@@ -222,9 +174,9 @@ a new default to `reducers`. You must instead pass the new default to `defaults`
 For example:
 
 ```javascript
-kea({
-  defaults: {
+kea([
+  defaults({
     projectLoading: 'not yet',
-  },
-})
+  }),
+])
 ```

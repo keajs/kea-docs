@@ -29,7 +29,6 @@ import sagaPlugin from 'kea-saga'
 import { resetContext } from 'kea'
 
 resetContext({
-  createStore: true,
   plugins: [sagaPlugin],
 })
 ```

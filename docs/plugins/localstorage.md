@@ -54,15 +54,17 @@ automatically generate paths for every logic.
 Just add `{ persist: true }` as an option to your reducers, and it will be stored:
 
 ```javascript
-const logic = kea({
+import { kea, reducers } from 'kea'
+import { persistReducer } from 'kea-localstorage'
+const logic = kea([
   // path must be defined!
-  path: () => ['scenes', 'homepage', 'name'],
+  path(['scenes', 'homepage', 'name']),
 
-  actions: {
+  actions({
     updateName: (name) => ({ name }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     // just add { persist: true }
     name: [
       'chirpy',
@@ -72,15 +74,20 @@ const logic = kea({
       },
     ],
     // you may override the prefix and separator keys
-    name: [
+    complexName: [
       'chirpy',
       { persist: true, prefix: 'example', separator: '_' },
       {
         updateName: (state, payload) => payload.name,
       },
     ],
-  },
-})
+    // this is not persisted here, but below
+    notAlreadyPersisted: ['name', {}]
+  }),
+  
+  // logic builder to persist existing reducers
+  persistReducer('notAlreadyPersisted')
+])
 ```
 
 :::note

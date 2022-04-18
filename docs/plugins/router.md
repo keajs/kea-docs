@@ -73,32 +73,33 @@ Use `actionToUrl` to change the URL in response to actions and `urlToAction` to 
 
 ```javascript
 import { kea } from 'kea'
+import { actionToUrl } from 'kea-router'
 
-export const articlesLogic = kea({
-    actionToUrl: ({ values }) => ({
-        openList: ({ id }) => `/articles`,
-        openArticle: ({ id }) => `/articles/${id}`,
-        openComments: () => `/articles/${values.article.id}/comments`,
-        closeComments: () => `/articles/${values.article.id}`
-    }),
+export const articlesLogic = kea([
+  actionToUrl(({ values }) => ({
+    openList: ({ id }) => `/articles`,
+    openArticle: ({ id }) => `/articles/${id}`,
+    openComments: () => `/articles/${values.article.id}/comments`,
+    closeComments: () => `/articles/${values.article.id}`,
+  })),
 
-    urlToAction: ({ actions }) => ({
-        '/articles': () => actions.openList(),
-        '/articles/:id(/:extra)': ({ id, extra }) => {
-            actions.openArticle(id)
-            if (extra === 'comments') {
-                actions.openComments()
-            } else {
-                actions.closeComments()
-            }
-        },
-    }),
+  urlToAction(({ actions }) => ({
+    '/articles': () => actions.openList(),
+    '/articles/:id(/:extra)': ({ id, extra }) => {
+      actions.openArticle(id)
+      if (extra === 'comments') {
+        actions.openComments()
+      } else {
+        actions.closeComments()
+      }
+    },
+  })),
 
-    // Skipped in the examples: the actions, reducers, etc for the above
-    actions: { ... },
-    reducers: { ... },
-    selectors: { ... }
-})
+  // Skipped in the examples
+  actions({}),
+  reducers({}),
+  selectors({}),
+])
 ```
 
 ### Url Pattern
@@ -125,8 +126,8 @@ These are deserialized objects that you can use directly.
 ```javascript
 import { kea } from 'kea'
 
-export const articlesLogic = kea({
-  urlToAction: ({ actions }) => ({
+export const articlesLogic = kea([
+  urlToAction(({ actions }) => ({
     // Synax:
     //   urlToAction: ({ actions }) => ({
     //     '/path': (pathParams, searchParams, hashParams, payload) => {
@@ -151,8 +152,8 @@ export const articlesLogic = kea({
         actions.openList()
       }
     },
-  }),
-})
+  })),
+])
 ```
 
 For `actionToUrl`, you may include the `search` and `hash` parts directly in the URL or return
@@ -162,8 +163,8 @@ can be both strings or objects.
 ```javascript
 import { kea } from 'kea'
 
-export const articlesLogic = kea({
-  actionToUrl: ({ values }) => ({
+export const articlesLogic = kea([
+  actionToUrl(({ values }) => ({
     // Use one of:
     // - action: () => url,
     // - action: () => [url, searchParams, hashParams],
@@ -177,8 +178,8 @@ export const articlesLogic = kea({
 
     openComments: () => [`/articles`, { id: values.article.id, comments: true }],
     closeComments: () => [`/articles`, { id: values.article.id }, '#hashKey=true'],
-  }),
-})
+  })),
+])
 ```
 
 ### Control the route directly
@@ -213,19 +214,18 @@ Or in a logic:
 import { kea } from 'kea'
 import { router } from 'kea-router'
 
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     buttonPress: true,
-  },
-
-  listeners: {
+  }),
+  listeners({
     buttonPress: () => {
       if (router.values.location.pathname !== '/setup') {
         router.actions.push('/setup', { search: 'param' }, '#integration')
       }
     },
-  },
-})
+  }),
+])
 ```
 
 Both the `push` and `replace` actions accept `searchParams` and `hashParams` as their second and
@@ -264,13 +264,13 @@ react to URL changes manually:
 import { kea } from 'kea'
 import { router } from 'kea-router'
 
-const otherLogic = kea({
-  listeners: {
+const otherLogic = kea([
+  listeners({
     [router.actions.locationChanged]: ({ pathname, search, hash, method }) => {
       console.log({ pathname, search })
     },
-  },
-})
+  }),
+])
 ```
 
 ### Global scene router
@@ -294,11 +294,11 @@ export const routes = {
   '/projects/:id': 'projects',
 }
 
-export const sceneLogic = kea({
-  actions: {
+export const sceneLogic = kea([
+  actions({
     setScene: (scene, params) => ({ scene, params }),
-  },
-  reducers: {
+  }),
+  reducers({
     scene: [
       null,
       {
@@ -311,15 +311,15 @@ export const sceneLogic = kea({
         setScene: (_, payload) => payload.params || {},
       },
     ],
-  },
-  urlToAction: ({ actions }) => {
+  }),
+  urlToAction(({ actions }) => {
     return Object.fromEntries(
       Object.entries(routes).map(([path, scene]) => {
         return [path, (params) => actions.setScene(scene, params)]
       })
     )
-  },
-})
+  }),
+])
 
 export function Layout({ children }) {
   return (

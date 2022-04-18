@@ -18,13 +18,16 @@ resetContext({
 ## Usage
 
 ```javascript
-const logic = kea({
-  windowValues: {
+import { kea } from 'kea'
+import { windowValues } from 'kea-window-values'
+
+const logic = kea([
+  windowValues({
     isSmallScreen: (window) => window.innerWidth < 640,
     isRetina: (window) => window.devicePixelRatio > 2,
     scrollBarWidth: (window) => window.innerWidth - window.body.clientWidth,
-  },
-})
+  }),
+])
 
 // later in your app
 if (logic.values.isSmallScreen) {
