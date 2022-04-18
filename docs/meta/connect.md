@@ -1,237 +1,199 @@
-## Connecting logic together
+## Making sure the other logic is mounted
 
-Kea is said to be a _really scalable_ state management library. This power comes partially from its
-ability to link together actions and values from different `logic`.
+In Kea, you need to be explicit about when your logic is mounted. If you try accessing values on a logic that isn't
+mounted, it'll throw an error.
 
-:::note
-Automatic connections are implemented in Kea versions 2.0 and later. Explicit connections (described
-below) work in all versions of Kea.
-:::
+### Automatically with React hooks
 
-Wiring logic together is easier than you think. Suppose we have these two logics:
+When you use the React hooks `useValues`, `useActions` or `useMountedLogic`, logic is automatically mounted for
+as long as the component is rendered:
 
-```javascript
-// stores a list of users, referenced everywhere in the app
-const usersLogic = kea({
-  actions: {
-    loadUsers: true,
-    loadUsersSuccess: (users) => ({ users }),
-  },
-  reducers: {
-    users: [
-      [],
-      {
-        loadUsersSuccess: (_, { users }) => users,
-      },
-    ],
-  },
-  // ... listeners, etc
-})
+```tsx
+import { useActions, useMountedLogic } from 'kea'
+import { userLogic } from './userLogic'
 
-// handles data shown on our dashboard scene
-const dashboardLogic = kea({
-  actions: {
-    refreshDashboard: true,
-  },
+function User() {
+  // automatically mounts `userLogic`
+  const { reloadUser } = useActions(userLogic)
+  // also automatically mounts `userLogic`
+  const { user } = useValues(userLogic)
+  // and also this automatically mounts `userLogic`, but without pulling actions/value
+  useMountedLogic(userLogic)
 
-  listeners: {
-    refreshDashboard: async () => {
-      // pull data from the API, update values shown on the dashboard
-    },
-  },
-})
+  return <div />
+}
 ```
 
-Our pointy-haired-boss now tasked us with reloading the dashboard every time the users are
-successfully loaded. How do we do that?
+Sometimes you want to use `useMountedLogic` in your root component with a few key logics you want to always have running.
 
-Just use the `loadUsersSuccess` action from `usersLogic` as a key in the `listeners` object:
+### Manually with `connect([])`
 
-```javascript
-const usersLogic = kea([ ... ]) // same as above
+To specify a list of dependent logics that must be mounted with this logic, use `connect()`
 
-const dashboardLogic = kea({
-    actions: {
-        refreshDashboard: true
-    },
+```ts
+import { kea, connect } from 'kea'
 
-    listeners: ({ actions }) => ({
-        refreshDashboard: async () => {
-            // pull data from the API, update values shown on the dashboard
-        },
-        [usersLogic.actionTypes.loadUsersSuccess]: ({ users }) => {
-            actions.refreshDashboard()
-            // we also get `users` in the payload,
-            // but we socially distance ourselves from them
-        }
-    })
-})
+const userLogic = kea([])
+const otherLogic = kea([
+  // make sure userLogic is mounted
+  connect([userLogic]),
+])
+
+otherLogic.mount() // also mounts userLogic
 ```
 
-:::note
-In the example above we had two options:
+### Manually with `connect({ logic: [] })`
 
-1. The `dashboardLogic` could listen to the `usersLogic.actionTypes.loadUsersSuccess` action and then call
-   its own `refreshDashboard()` action.
-2. The `usersLogic` could listen to its own `loadUsersSuccess` action and then call
-   `dashboard.actions.refreshDashboard()`.
+```ts
+import { kea, connect } from 'kea'
 
-We went for the first option. Why?
+const userLogic = kea([])
+const otherLogic = kea([
+  // make sure userLogic is mounted
+  connect({ logic: [userLogic] }),
+])
 
-It really depends on the use case. Here I'm assuming that `usersLogic` is some global logic that
-stores info on all available users and is accessed by many lower level logics throughout your app,
-including `dashboardLogic`.
-
-In this scenario, `usersLogic` can exist independently, yet `dashboardLogic` can only exist together
-with `usersLogic`. Linking them the other way (having `usersLogic` call `dashboardLogic`'s action)
-would mean that the `usersLogic` is _always_ mounted together with `dashboardLogic`, even for instance
-when we are not on the dashboard scene. That's probably not what we want.
-:::
-
-This `[otherLogic.actionTypes.doSomething]` syntax also works in reducers:
-
-```javascript
-const usersLogic = kea([ ... ])
-
-const shadowUsersLogic = kea({
-    actions: {
-        reset: true
-    },
-    reducers: ({ actions }) => ({
-        users: [[], {
-            reset: () => [], // action that's defined in this logic
-            [actions.reset]: () => [], // another way to call a local action
-            [usersLogic.actionTypes.loadUsersSuccess]: (_, { users }) => users
-        }]
-    })
-})
+otherLogic.mount() // also mounts userLogic
 ```
 
-and selectors:
+### Manual actions with `connect({ actions: [] })`
 
-```javascript
-const usersLogic = kea([ ... ])
+```ts
+import { kea, connect, actions } from 'kea'
 
-const sortedUsersLogic = kea({
-    selectors: {
-        sortedUsers: [
-            () => [usersLogic.selectors.users],
-            (users) => [...users].sort((a, b) => a.name.localeCompare(b.name))
-        ]
-    }
-})
+const userLogic = kea([actions({ reloadUser: true, resetUser: true })])
+
+const otherLogic = kea([
+  // pull in reloadUser from userLogic
+  connect({ actions: [userLogic, ['reloadUser', 'resetUser']] }),
+])
+
+otherLogic.mount() // also mounts userLogic
+otherLogic.actions.reloadUser() // actually triggers userLogic.actions.reloadUser
 ```
 
-... and everywhere else you might expect.
+### Manual values with `connect({ values: [] })`
 
-What if when refreshing the dashboard we need to do something with the list of users?
+```ts
+import { kea, connect, reducers } from 'kea'
 
-Just get the value directly from `usersLogic.values`:
+const userLogic = kea([reducers({ user: [[]], userLoading: [false] })])
+const otherLogic = kea([
+  // make sure userLogic is mounted
+  connect({ values: [userLogic, ['user', 'userLoading']] }),
+])
+
+otherLogic.mount() // also mounts userLogic
+otherLogic.values.user == userLogic.values.user
+```
+
+## Requires manual connection
+
+### Using values from another logic in a listener
+
+When you need to access another logic's values in a listener, make sure that logic is mounted with the methods
+below. Then access `usersLogic.values` directly:
 
 ```javascript
-const dashboardLogic = kea({
-  // ...
-  listeners: {
+const dashboardLogic = kea([
+  connect([usersLogic]),
+  listeners({
     refreshDashboard: async () => {
       if (!usersLogic.values.users) {
         usersLogic.actions.loadUsers()
       }
       // pull data from the API, update values shown on the dashboard
     },
-  },
-})
+  }),
+])
 ```
 
-In all of these cases, `usersLogic` will be automatically connected to the logic that called it
+### Explicitly with `.findMounted()`
+
+If you don't want to explicitly connect a logic, but just to see if it's available, use `logic.findMounted(props): BuiltLogic`:
+
+```ts
+import { reportingLogic } from './reportingLogic'
+
+const logic = kea([
+  listeners({
+    something: () => {
+      // only run if reportingLogic is mounted
+      reportingLogic.findMounted()?.actions.reportEvent({
+        event: 'something',
+        foobar: 'heck yeah',
+      })
+    },
+  }),
+])
+```
+
+## Automatically when building
+
+When used in a key in a logic builder - like all the cases below - `usersLogic` will be automatically connected to the logic that called it
 and mounted/unmounted as needed.
 
-### Mounting another logic together with your logic
+### Listening to an action from another logic
 
-There's one caveat here. If the first time you access a value on `usersLogic` is inside a listener,
-the logic will be mounted only then. If `usersLogic` has a `afterMount` event that loads and fetches data,
-it'll probably not have done its work by then.
-
-If you want to hook two logics together, so that they are mounted at the same time, use `connect`:
+Use the `loadUsersSuccess` action from `usersLogic` as a key in the `listeners` object:
 
 ```javascript
-import { otherLogic } from './somewhere'
+const usersLogic = kea([]) // same as above
 
-const logic = kea({
-  // mounts `otherLogic` when `logic` is mounted, starts fetching data
-  connect: [otherLogic],
-
-  listeners: {
-    something: () => {
-      // fetched data is already there
-      const stuff = otherLogic.values.fetchedData
-
-      // without `connect: [otherLogic]` above, kea would only mount
-      // `logic` and start fetching its data right now
+const dashboardLogic = kea([
+  actions({
+    refreshDashboard: true,
+  }),
+  listeners(({ actions }) => ({
+    refreshDashboard: async () => {
+      // pull data from the API, update values shown on the dashboard
     },
-  },
-})
+    [usersLogic.actionTypes.loadUsersSuccess]: ({ users }) => {
+      actions.refreshDashboard()
+      // we also get `users` in the payload,
+      // but we socially distance ourselves from them
+    },
+  })),
+])
 ```
 
-This is not needed if you use `otherLogic` as a key in reducers or listeners. It's only needed if you
-access elements on `otherLogic` inside a listener.
+### Using an action from another logic in a reducer
 
-## Explicit connections
-
-While the [automatic connections](/docs/BROKEN) might seem self-evident, there's actually a lot that's
-happening under the hood.
-
-Kea's logic is always _lazy_, meaning it's not built nor mounted before it's needed. In the examples
-above, if the first time `usersLogic` is referenced is when its `actions` are used as keys in
-`dashboardLogic`'s `reducers`, it will get built and mounted then and there.
-
-This wasn't always the case. Before version 2.0 there was no guarantee that `usersLogic` was already
-mounted and that `usersLogic.actions` would be available for use. You had to track this manually.
-
-You could either explicitly mount `usersLogic` in your component or you could use `connect` to
-pull in actions and values from other logic. You can still do this in Kea 2.0 and it has its uses.
-
-The syntax is as follows:
+This `[otherLogic.actionTypes.doSomething]` syntax also works in reducers:
 
 ```javascript
-const counterLogic = kea({
-  actions: {
-    increment: (amount) => ({ amount }),
-    decrement: (amount) => ({ amount }),
-  },
+const usersLogic = kea([])
 
-  reducers: {
-    counter: [
-      0,
+const shadowUsersLogic = kea([
+  actions({
+    reset: true,
+  }),
+  reducers(({ actionTypes }) => ({
+    users: [
+      [],
       {
-        increment: (state, { amount }) => state + amount,
-        decrement: (state, { amount }) => state - amount,
+        reset: () => [], // action that's defined in this logic
+        [actionTypes.reset]: () => [], // another way to call a local action
+        [usersLogic.actionTypes.loadUsersSuccess]: (_, { users }) => users,
       },
     ],
-  },
-})
+  })),
+])
+```
 
-const logic = kea({
-  connect: {
-    // pulling in actions from `counterLogic`
-    actions: [counterLogic, ['increment', 'decrement']],
-    // pull in values from `counterLogic`
-    values: [counterLogic, ['counter']],
-  },
+### Using a selector from another logic in a selector
 
-  // using the actions in a reducer like they're our own
-  reducers: {
-    doubleCounter: [
-      0,
-      {
-        increment: (state, { amount }) => state + amount * 2,
-        decrement: (state, { amount }) => state - amount * 2,
-      },
+... and selectors:
+
+```javascript
+const usersLogic = kea([])
+
+const sortedUsersLogic = kea([
+  selectors({
+    sortedUsers: [
+      () => [usersLogic.selectors.users],
+      (users) => [...users].sort((a, b) => a.name.localeCompare(b.name)),
     ],
-  },
-
-  // pretend that we own the selector as well
-  selectors: {
-    tripleCounter: [(selectors) => [selectors.counter], (counter) => counter * 3],
-  },
-})
+  }),
+])
 ```

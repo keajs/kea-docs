@@ -77,7 +77,11 @@ const tutorials = [
     url: 'https://www.youtube.com/embed/R7GenyiYZC0',
   },
   {
-    name: 'Build an infinite list in 17 minutes',
+    name: 'Using keys with your logic in 17 minutes',
+    url: 'https://www.youtube.com/embed/R7GenyiYZC0',
+  },
+  {
+    name: 'Build an infinite list in 18 minutes',
     url: 'https://www.youtube.com/embed/R7GenyiYZC0',
   },
 ]
