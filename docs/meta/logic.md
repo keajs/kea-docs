@@ -4,15 +4,18 @@ sidebar_position: 1
 
 # logic
 
-All Kea code lives inside a `logic`, which is created by calling [`kea([])`](/docs/core/kea)
+All Kea code lives inside a `logic`, which is created by passing logic builders to [`kea([])`](/docs/core/kea)
 
 ```ts
 import { kea } from 'kea'
 
-const logic = kea([])
+const logic = kea([
+  // various logic builders here
+])
 ```
 
 ## Why do we call it `logic`?
+
 
 Well, we had to call it something and everything else was already taken. 😅
 
@@ -24,29 +27,12 @@ names that make sense, such as `accountLogic`, `dashboardLogic`, etc.
 
 ## Properties
 
+Read the docs on [`kea([])`](/docs/core/kea) and the [core logic builders](/docs/core/) to learn how to
+build a logic. The 
+
 There are several properties you may access on a logic.
 
-```javascript
-const logic = kea([
-  // each function gets `logic` as its argument
-  listeners((logic) => ({
-    // logic.actions.doSomething()
-    // logic.values.myValue
-    // ...
-  })),
 
-  // it's common to destructure the logic directly:
-  listeners(({ actions, values }) => ({
-    // actions.doSomething()
-    // values.myValue
-    // ...
-  })),
-])
-
-// logic.mount() // and then:
-// logic.actions.doSomething()
-// logic.values.myValue
-```
 
 ### logic.actionCreators
 

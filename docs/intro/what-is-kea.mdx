@@ -13,10 +13,10 @@ import { KeaReact } from '../../src/components/img/KeaReact'
 
 Kea is a complete framework for managing application state in [React](https://reactjs.org/) webapps.
 
-Kea organises state in containers called [`logic`](/docs/core/logic), which are _pretty big_ and _pretty opinionated_ units of state,
+Kea organises state in containers called [`logic`](/docs/meta/logic), which are _pretty big_ and _pretty opinionated_ units of state,
 especially when compared to other solutions that are built around atoms and molecules.
 
-A [`logic`](/docs/core/logic) is created by passing an array of logic builders to [`kea([])`](/docs/core/kea), such as [`actions()`](/docs/core/actions) and [`reducers()`](/docs/core/reducers):
+A [`logic`](/docs/meta/logic) is created by passing an array of logic builders to [`kea([])`](/docs/core/kea), such as [`actions()`](/docs/core/actions) and [`reducers()`](/docs/core/reducers):
 
 For example:
 
@@ -100,7 +100,7 @@ const logic = kea([
 ])
 ```
 
-A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to modify [any of the fields](/docs/core/logic) on a `logic`.
+A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to modify [any of the fields](/docs/meta/logic) on a `logic`.
 
 Normally you don't manipulate properties of your logic directly, but you use, uhm, _logic-builder-builders?_, like `actions` and `listeners` instead.
 

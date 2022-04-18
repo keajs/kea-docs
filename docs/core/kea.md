@@ -6,7 +6,7 @@ sidebar_position: 0
 
 ## Logic builders
 
-You pass `kea([])` an array of function calls, each of which add certain features to your [`logic`](/docs/core/logic).
+You pass `kea([])` an array of function calls, each of which add certain features to your [`logic`](/docs/meta/logic).
 
 For example `actions` and `reducers`:
 

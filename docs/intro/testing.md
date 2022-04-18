@@ -79,7 +79,7 @@ test('runs before and after mount events', async () => {
 
 ### Mount your logic
 
-Then make sure your logic is [mounted](/docs/core/logic#mount) before the tests run:
+Then make sure your logic is [mounted](/docs/meta/logic#mount) before the tests run:
 
 ```ts
 describe('dashboardLogic', () => {
