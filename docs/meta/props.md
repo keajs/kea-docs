@@ -5,7 +5,7 @@ as `props`:
 
 ```javascript
 const props = { id: 10 }
-const logic = kea([ ... ])
+const logic = kea([])
 logic(props).props === props
 ```
 
@@ -30,13 +30,12 @@ function FancyPantsCounter() {
 Then just use `props` wherever you need to. For example:
 
 ```javascript
-const counterLogic = kea({
-  actions: {
+const counterLogic = kea([
+  actions({
     increment: (amount) => ({ amount }),
     decrement: (amount) => ({ amount }),
-  },
-
-  reducers: ({ props }) => ({
+  }),
+  reducers(({ props }) => ({
     counter: [
       props.defaultCounter || 0,
       {
@@ -44,13 +43,12 @@ const counterLogic = kea({
         decrement: (state, { amount }) => state - amount,
       },
     ],
-  }),
-
-  listeners: ({ props }) => ({
+  })),
+  listeners(({ props }) => ({
     increment: ({ amount }) => {
       console.log(`incrementing by ${amount}`)
       console.log(`default ${props.defaultCounter || 0}`)
     },
-  }),
-})
+  })),
+])
 ```

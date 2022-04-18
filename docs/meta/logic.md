@@ -46,12 +46,12 @@ const unmount = builtLoginLogic.mount()
 3. **Mounted**. Once a logic is built, it can be mounted. This means attaching its the `reducers` to
    Redux, making its `selectors` actually point to a `value` in the store, registering all `listeners` handlers, firing all `afterMount` events, and so on.
 
-If you use Kea with React though [hooks](../react), logic is mounted automatically. When all components
+If you use Kea with React though [hooks](/docs/react/), logic is mounted automatically. When all components
 that use a `logic` are removed from React's tree, that `logic` will be unmounted automatically.
 
 ## Mounting and Unmounting
 
-When you use [Kea with React](/docs/BROKEN), there's a lot that is handled for you behind the scenes.
+When you use [Kea with React](/docs/meta/key), there's a lot that is handled for you behind the scenes.
 For example logic is mounted automatically with your `<Component />` and unmounted when it's no longer needed.
 
 Sometimes however, you wish to manually mount logic. For example to already start loading data in

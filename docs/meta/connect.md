@@ -87,6 +87,29 @@ otherLogic.mount() // also mounts userLogic
 otherLogic.values.user == userLogic.values.user
 ```
 
+## Connecting logics with a `key`
+
+If the logics you're connecting all share a [`key`](/docs/meta/key), you may convert the input to `conenct` to a function, which receives
+`props` as its argument:
+
+```ts
+import { kea, key, connect } from 'kea'
+
+const userLogic = kea([
+  // use a key from 'id'
+  key((props) => props.id),
+])
+
+const profileLogic = kea([
+  // also use a key from 'id'
+  key((props) => props.id),
+  // make sure userLogic is mounted
+  connect(({ id }) => ({ values: [userLogic({ id }), ['user']] })),
+])
+
+profileLogic({ id: 12 }).mount() // also mounts userLogic({ id: 12 })
+```
+
 ## Requires manual connection
 
 ### Using values from another logic in a listener

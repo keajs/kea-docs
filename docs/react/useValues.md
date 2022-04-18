@@ -9,12 +9,16 @@ Assure the logic is mounted and fetch values from it.
 ```javascript
 import { kea, useValues } from 'kea'
 
-const logic = kea([ ... ])
+const logic = kea([])
 
-function MyComponent () {
+function MyComponent() {
   const { counter, doubleCounter } = useValues(logic)
 
-  return <div>{counter} * 2 = {doubleCounter}</div>
+  return (
+    <div>
+      {counter} * 2 = {doubleCounter}
+    </div>
+  )
 }
 ```
 

@@ -53,6 +53,7 @@ const sections = [
       { url: '/docs/react/useMountedLogic', title: 'useMountedLogic' },
       { url: '/docs/react/useAllValues', title: 'useAllValues' },
       { url: '/docs/react/BindLogic', title: 'BindLogic' },
+      { url: '/docs/react/wrap', title: 'wrap' },
     ],
   },
   {
