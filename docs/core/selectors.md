@@ -76,26 +76,12 @@ That's it.
 
 ## Keep in mind
 
-A few things to keep in mind with selectors:
-
-- All reducers automatically get a selector with the same name. Thus you can directly
-  use the values of reducers as the input in new selectors, like we did above with
-  `selectors.month` and `selectors.records`.
 - Selectors are recalculated only if the value of their inputs changes. In the example above,
   no matter how often your components ask for `recordsForSelectedMonth`, they will get
   a cached response as long as `month` and `records` haven't changed since last time.
 - The order of selectors doesn't matter. If you add another selector called
   `sortedRecordsForSelectedMonth`, it can be defined either before or after `recordsForSelectedMonth`.
   As long as you don't have circular dependencies, the order doesn't matter.
-- At the end of the day, `selectors` themselves are simple functions, which just take as input
-  the redux store's current state, traverse it and return the value you're looking for:
-
-```javascript
-logic.selector = (state) => state.path.to.logic
-logic.selectors.month = (state) => logic.selector(state).month
-
-logic.selectors.month(store.getState()) === '2020-04'
-```
 
 ## Good practices
 
