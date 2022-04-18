@@ -109,7 +109,7 @@ const logic = kea([
 ])
 ```
 
-A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to modify [any of the fields](/docs/meta/logic) on a `logic`.
+A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to modify [any of the fields](/docs/meta/logic#properties) on a `logic`.
 
 Normally you don't manipulate properties of your logic directly, but you use, uhm, _logic-builder-builders?_, like `actions` and `listeners` instead.
 

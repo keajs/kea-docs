@@ -1,5 +1,7 @@
 # actions
 
+## Everything starts with an action
+
 The first thing you do in a logic is to define some actions:
 
 ```javascript
@@ -16,8 +18,7 @@ const logic = kea([
 ```
 
 Actions are the entry points to **all operations** in your logic.
-Every state manipulation, every side effect, every drunk dial at four in the morning starts
-with an action.
+Every state manipulation, every side effect, every network request and every response starts with an action.
 
 Yet despite all this power, actions themselves do practically nothing. They just _signal intent_.
 Everything else happens as a _reaction_ to an action.
@@ -28,6 +29,8 @@ of [events](<https://en.wikipedia.org/wiki/Event_(computing)>) in computer progr
 For example, every key press on your keyboard dispatches a `keyPress` event with a `keyCode`. It's then up to
 your operating system to listen to them and convert them to the 1970's steampunk sci-fi
 novel you hope to finish one day.
+
+## Payload converters
 
 Actions themselves are simple and [pure functions](https://en.wikipedia.org/wiki/Pure_function). The _only
 thing_ they are allowed to do is to convert their arguments into a `payload` object. See here:
@@ -42,6 +45,8 @@ const logic = kea([
   }),
 ])
 ```
+
+## Using in React
 
 To call `addToCounter` in a React component you use the `useActions` hook:
 
@@ -63,6 +68,8 @@ In the code above, clicking the button calls `addToCounter` with one argument, `
 The action then converts it to a `payload` of `{ amount: 1000 }`, which will later be used in
 reducers, listeners and other friendly plugins.
 
+## Action Creators
+
 Since kea actions are [compatible with Redux](https://redux.js.org/basics/actions), calling
 `addCounter(1000)` actually creates and dispatchs an object that also has a `type` key and looks
 something like this:
@@ -75,6 +82,8 @@ addToCounter(1000) === { type: 'add to counter', payload: { amount: 1000 } }
 Calling `logic.actions.addToCounter(1000)` dispatches the action directly. If you only want to _create_
 the action object without dispatching it, use `logic.actionCreators.addToCounter(1000)`
 :::
+
+## Shorthand when no parameters
 
 There's one shorthand that can be useful. In case your actions take no arguments (e.g. `loadUsers`),
 just pass `true`, or anything else that's not a function, instead of an arguments-to-payload serializer:
@@ -93,6 +102,8 @@ const logic = kea([
 ```
 
 The `payload` then will be `{ value: true }`... but you'll just ignore it anyway, won't you? 🤔
+
+## Always return a payload object
 
 One more thing. It's **strongly** recommended to _always_ return an object
 as a payload from your actions:

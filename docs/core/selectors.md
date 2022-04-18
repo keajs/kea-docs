@@ -1,9 +1,29 @@
 # selectors
 
-Selectors combine multiple reducers into one combined value.
-They are powered by [reselect](https://github.com/reduxjs/reselect) under the hood.
+## Selects from the store
 
-Let's take this example:
+Selectors are used to locate specific values in the state object.
+
+A selector is a function in the format:
+
+```ts
+const someValueSelector = (state: Record<string, any>) => state.some.value
+```
+
+## Automatically created for reducers
+
+Each reducer automatically gets a corresponding selector:
+
+```ts
+const rootLogic = kea([path(['rootLogic']), reducers({ pieceOfData: ['default value', {}] })])
+
+rootLogic.reducers.pieceOfData = () => 'default value'
+rootLogic.selectors.pieceOfData = (state) => state.rootLogic.pieceOfData
+```
+
+## Computed values
+
+Use the `selectors` _logic-builder-builder_ to create selectors which cache and merge other selectors:
 
 ```javascript
 const logic = kea([
@@ -12,106 +32,49 @@ const logic = kea([
     setRecords: (records) => ({ records }),
   }),
   reducers({
-    month: [
-      '2020-04',
-      {
-        setMonth: (_, { month }) => month,
-      },
-    ],
-    records: [
-      [],
-      {
-        setRecords: (_, { records }) => records,
-      },
-    ],
-  }),
-])
-```
-
-It's a pretty simple logic that just stores two values, `records` and `month`. Our pointy-haired
-boss now tasked us with showing all records that belong to the selected month. How do we do this?
-
-A _naïve_ solution in pure react would look like this:
-
-```jsx
-function RecordsForThisMonth() {
-    const { month, records } = useValues(logic)
-    const recordsForSelectedMonth = records.filter(r => r.month === month)
-
-    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)}</ul>
-}
-```
-
-At the end of the day this gets the job done, but there's an obvious problem here: performance.
-Every time we render this component, we have to do all the work of filtering the records.
-
-What if we could pre-calculate this list?
-
-If you've read the React docs, you know that [`useMemo`](https://reactjs.org/docs/hooks-reference.html#usememo)
-is the answer:
-
-```jsx
-function RecordsForThisMonth() {
-    const { month, records } = useValues(logic)
-
-    // DO NOT do this!
-    const recordsForSelectedMonth = useMemo(() => {
-        return records.filter(r => r.month === month)
-    }, [records, month])
-
-    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)}</ul>
-}
-```
-
-This works, but it introduces another, more subtle problem: it breaks
-the [separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns) principle.
-
-With Kea, your React components should be pretty dumb. They should not know the internal structure
-of your `records` array. Instead they should just fetch the values they need directly from `logic`.
-
-This means we have to move this filtering of `records` into the `logic` itself.
-That's where selectors come in:
-
-```javascript
-const logic = kea([
-  actions({
-    setMonth: (month) => ({ month }),
-    setRecords: (records) => ({ records }),
-  }),
-  reducers({
-    month: [
-      '2020-04',
-      {
-        setMonth: (_, { month }) => month,
-      },
-    ],
-    records: [
-      [],
-      {
-        setRecords: (_, { records }) => records,
-      },
-    ],
+    month: ['2020-04', { setMonth: (_, { month }) => month }],
+    records: [[], { setRecords: (_, { records }) => records }],
   }),
   selectors({
     recordsForSelectedMonth: [
-      (selectors) => [selectors.month, selectors.records],
-      (month, records) => {
-        return records.filter((r) => r.month === month)
-      },
+      (s) => [s.month, s.records],
+      (month, records) => records.filter((r) => r.month === month),
     ],
   }),
 ])
 ```
 
-Then get the value of `recordsForSelectedMonth` directly in your component:
+The `s` is a shorthand for `selectors`, which just equals `logic.selectors`.
+
+Now you can use `recordsForSelectedMonth` directly in your component:
 
 ```jsx
 function RecordsForThisMonth() {
-    const { recordsForSelectedMonth } = useValues(logic)
+  const { recordsForSelectedMonth } = useValues(logic)
 
-    return <ul>{recordsForSelectedMonth.map(r => <li>{r.name}</li>)}</ul>
+  return (
+    <ul>
+      {recordsForSelectedMonth.map((r) => (
+        <li>{r.name}</li>
+      ))}
+    </ul>
+  )
 }
 ```
+
+## Values
+
+`values` are just a shorthand for accessing selectors with the store's latest state already applied.
+
+Basically:
+
+```javascript
+logic.values.month === logic.selectors.month(store.getState())
+```
+
+That's it.
+
+## Keep in mind
 
 A few things to keep in mind with selectors:
 
@@ -124,9 +87,8 @@ A few things to keep in mind with selectors:
 - The order of selectors doesn't matter. If you add another selector called
   `sortedRecordsForSelectedMonth`, it can be defined either before or after `recordsForSelectedMonth`.
   As long as you don't have circular dependencies, the order doesn't matter.
-
-At the end of the day, `selectors` themselves are simple functions, which just take as input
-the redux store's current state, traverse it and return the value you're looking for:
+- At the end of the day, `selectors` themselves are simple functions, which just take as input
+  the redux store's current state, traverse it and return the value you're looking for:
 
 ```javascript
 logic.selector = (state) => state.path.to.logic
@@ -134,6 +96,8 @@ logic.selectors.month = (state) => logic.selector(state).month
 
 logic.selectors.month(store.getState()) === '2020-04'
 ```
+
+## Good practices
 
 It is good practice to have as many selectors as possible, each of which sort or filter the _raw_ data
 stored in your reducers further than the last.
@@ -155,7 +119,7 @@ You'll have a lot less bugs this way. 😉
 ## Props in Selectors
 
 Since `selectors` need to be recalculated when their inputs change, there's a twist when
-using `props` with them.
+using [`props`](/docs/meta/props) with them.
 
 Take the following buggy code:
 
@@ -197,42 +161,25 @@ const counterLogic = kea([
   // ...
   selectors({
     diffFromDefault: [
-      (selectors) => [selectors.counter, (_, props) => props.defaultCounter],
+      (s) => [s.counter, (_, props) => props.defaultCounter],
       (counter, defaultCounter) => counter - defaultCounter,
     ],
   }),
 ])
 ```
-# values
 
-The last of Kea's core concepts is `values`. You have already seen used with
-`useValues` in React components:
+## Selectors that return functions
 
-```javascript
-const { month } = useValues(logic)
-```
-
-Values are just a shorthand for accessing selectors with the store's latest state already applied.
-
-Basically:
+It's also possible to return a function as a selector. Here's a selector that returns a function that finds an user by `id`:
 
 ```javascript
-logic.values.month === logic.selectors.month(store.getState())
-```
-
-That's it.
-
-In practice, other than in React via `useValues`, you also access `values` in listeners. For example:
-
-```jsx
-const logic = kea([
-  // ... actions and reducers skipped
-
-  listeners(({ actions, values }) => ({
-    fetchDetails: async () => {
-      const details = await api.fetchDetails(values.username)
-      actions.setDetails(details)
-    },
-  })),
+const usersLogic = kea([
+  loaders({ users: { loadUsers: api.loadUsers } }),
+  selectors({
+    findById: [
+      (selectors) => [selectors.uesrs],
+      (users) => (id: number) => users.find((user) => user.id === id),
+    ],
+  }),
 ])
 ```

@@ -1,5 +1,7 @@
 # reducers
 
+## Reducers store values
+
 Reducers store your data and change it in response to actions.
 They are based on the [reducer](https://redux.js.org/basics/reducers) concept from Redux.
 
@@ -34,6 +36,8 @@ just dispatched. You then combine the two and return a new state.
 In the example above we have three actions: `increment`, `setCounter` and `reset`. We also have a
 reducer called `counter` that will update its value in response to those actions.
 It will be `0` by default.
+
+## No direct access
 
 Please note that the _only way_ to change the value of `counter` is by dispatching actions and reacting
 to them. You can't just jump in there and call `reducers.counter += 1` somewhere. All data manipulation
@@ -86,17 +90,18 @@ const logic = kea([
 ```
 
 This example is contrived of course, but should illustrate the point about composability.
-You can have any reducer depend on any action, even ones defined in other logic files!
-(See [Connecting Logic Together](/docs/BROKEN) in Additional Concepts)
+You can have any reducer depend on any action, even ones [defined in other logic files](/docs/meta/connect).
 
 Most of the time you want your actions and reducers to mix together freely, like they're attending
-a music festival in a pre-pandemic world.
+a music festival in a ~~pre~~post-pandemic world.
 
 If, however, you find yourself constantly writing code that has actions such as `setName`, `setPrice`,
 `setLoading` and `setError` with corresponding reducers `name`, `price`, `loading` and `error`
 and a 1:1 mapping between them, you're probably following an anti-pattern and doing something wrong.
 
-You'll see a more complete example to illustrate this point in the next section about listeners.
+You'll see a more complete example to illustrate this point in the doc about [listeners](/docs/core/listeners).
+
+## Pure functions
 
 One last thing, just like actions, reducers as well are [pure functions](https://en.wikipedia.org/wiki/Pure_function).
 That means no matter how many times you call a reducer with the same input (same `state` and `payload`),
@@ -144,8 +149,10 @@ This may seem weird and slow at first, but writing _immutable_ code like this gr
 performance in React. If you really do want to write mutable code,
 feel free to wrap your reducers with [immer](https://github.com/immerjs/immer).
 
+## No side effects
+
 The other thing you can't do in a reducer is to dispatch an action as a response to another action
-or to call an API endpoint. For this you use listeners.
+or to call an API endpoint. For this you use [listeners](/docs/core/listeners).
 
 To use the values stored in reducers in React, use the `useValues` hook:
 

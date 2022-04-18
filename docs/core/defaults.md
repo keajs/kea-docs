@@ -1,5 +1,7 @@
 # defaults
 
+## Set defaults directly in reducers
+
 There are two ways to pass defaults to reducers. We've been using this style until now:
 
 ```javascript
@@ -19,6 +21,8 @@ const logic = kea([
   }),
 ])
 ```
+
+## Use `defaults` builder
 
 If you choose, you can set your defaults explicitly in a `defaults` object:
 
@@ -41,7 +45,11 @@ const logic = kea([
 ])
 ```
 
-In case you pass both, the value in the `defaults` object will take precedence.
+## Precedence
+
+In case you pass both, the value in the `defaults` object will take precedence over the value in `reducers`.
+
+## Selectors as defaults
 
 You can also pass selectors as defaults:
 

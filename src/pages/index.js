@@ -71,13 +71,13 @@ const sections = [
 ]
 
 const tutorials = [
-  { name: '15min intro to the basic concepts', url: 'https://www.youtube.com/embed/R7GenyiYZC0' },
+  { name: 'Learn the basics in 15 minutes', url: 'https://www.youtube.com/embed/R7GenyiYZC0' },
   {
     name: 'Build a GitHub API client in 16 minutes',
     url: 'https://www.youtube.com/embed/R7GenyiYZC0',
   },
   {
-    name: 'Some other video in 17 minutes this time',
+    name: 'Build an infinite list in 17 minutes',
     url: 'https://www.youtube.com/embed/R7GenyiYZC0',
   },
 ]

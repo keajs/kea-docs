@@ -1,5 +1,7 @@
 # listeners
 
+## Running async code
+
 Kea prohibits you from writing impure code with side effects (e.g. API calls) in actions and reducers.
 But what are you to do if you live in the real world like _most_ of us?
 
@@ -24,10 +26,18 @@ const logic = kea([
 
 When the `loadUsers` action is dispatched, we, _ahem,_ load the users.
 
-The listener will get the action's `payload` as its first argument, but we will ignore it in this case.
+The listener will get the action's `payload` as its first argument.
 
-Q: What should we do with the `users` once we have them? <br/>
-A: We store them in a `reducer` through an `action` of course!
+## Loading and storing data
+
+:::note
+You may want to use the [loaders](/docs/plugins/loaders) plugin to simplify the steps in this section.
+:::
+
+### Storing results
+
+Q: In the example above, what should we do with the `users` once we have them? <br/>
+A: We store them in a `reducer` through an `action`... as there's no other way.
 
 ```javascript
 const logic = kea([
@@ -58,11 +68,18 @@ If you're used to React Hooks or other lightweight state management solution,
 then the above code might seem overly verbose to you. _"Why must we write `loadUsers` and `setUsers`
 twice?"_ is a valid question. _"Why can't listeners just implicitly create a new action"_ might be another.
 
-There's a point to being this explicit. If you're following good patterns, it often makes
-sense to use the actions that you're listening to in a reducer or vice-versa, usually to track
-second or third order state.
+First, if you don't like it, [wrap these three functions in another function](/docs/intro/what-is-kea#logic-builders) 
+that does just that, and abstract away the boring parts.
 
-To illustrate this point, let's track the `loading` state in our logic.
+Second, scratch that, just use the [loaders](/docs/plugins/loaders) plugin, as this has already been done for you.
+
+However, we're learning here, so it's good to spell things out. Sometimes though, you will need to explicitly define 
+your data flow, and this will be just the right amount of verbosity.
+
+### Tracking loading
+
+Let's also track the `loading` state in our logic.
+
 Obviously we need a `loading` reducer to store this value, but what about the actions?
 
 Well, here's one bad and _naïve_ way you could do it:
@@ -103,7 +120,7 @@ const logic = kea([
 ])
 ```
 
-If you read the `reducers` section above, you'll remember that it's an anti-pattern to only have
+If you read the [`reducers`](/docs/core/reducers) doc, you'll remember that it's an anti-pattern to only have
 `setThis` and `setThat` actions that only update `this` or `that`.
 
 The better approach to explicitly setting the `loading` state is to have it react to actions.
@@ -145,7 +162,11 @@ const logic = kea([
 ])
 ```
 
-That's already pretty sweet... but what if our API is [running off a potato](https://www.google.com/search?q=raspberry+pi+potato)
+That's already pretty sweet... 
+
+### Error handling
+
+... but what if our API is [running off a potato](https://www.google.com/search?q=raspberry+pi+potato)
 and occasionally throws an error (e.g. timeout)?
 
 Currently if that happens, `setUsers` will never be dispatched and we'll be `loading` forever!
@@ -201,92 +222,6 @@ const logic = kea([
   })),
 ])
 ```
-
-There are a few other cool things you can do with listeners:
-
-1. Listeners have built-in support for debouncing and handling out-of-order network requests through `breakpoints`
-2. You can share listeners between actions with `sharedListeners`
-
-These are covered in the [Additional Concepts](/docs/BROKEN) and
-[Advanced Topics](/docs/BROKEN) pages.
-
-## Shared listeners
-
-If multiple `listeners` need to run the same code, you can:
-
-1. Have all of them call a common action, which you then handle with another listener:
-
-```javascript
-const logic = kea([
-  actions({
-    firstAction: true,
-    secondAction: true,
-    commonAction: true,
-    // ...
-  }),
-
-  listeners(({ actions, values }) => ({
-    // two listeners with one shared action
-    firstAction: actions.commonAction,
-    secondAction: () => {
-      actions.commonAction()
-    },
-
-    // you can also pass an array of functions
-    commonAction: () => {
-      // do something common
-    },
-  })),
-])
-```
-
-This however dispatches a separate action, which is then listened to.
-
-2. If you want to share code between listeners without dispatching another action, use `sharedListeners`:
-
-```javascript
-const logic = kea([
-  actions({
-    anotherAction: true,
-    debouncedFetchResults: (username) => ({ username }),
-    oneActionMultipleListeners: true,
-    // ...
-  }),
-
-  listeners(({ actions, values, store, sharedListeners }) => ({
-    // two listeners with one shared action
-    anotherAction: sharedListeners.doSomething,
-
-    // you can also pass an array of functions
-    oneActionMultipleListeners: [
-      (payload, breakpoint, action) => {
-        /* ... */
-      },
-      sharedListeners.doSomething,
-      sharedListeners.logAction,
-    ],
-  })),
-
-  // if multiple actions must trigger similar code, use sharedListeners
-  sharedListeners(({ actions }) => ({
-    // all listeners and sharedListeners also get a third parameter:
-    // - action = the full dispatched action
-    doSomething: (payload, breakpoint, action) => {
-      if (action.type === actions.anotherAction.toString()) {
-        console.log(action)
-      }
-    },
-    logAction: (_, __, action) => {
-      console.log('action dispatched', action)
-    },
-  })),
-])
-```
-
-That function will be called directly, without an action being dispatched in the middle.
-
-You might still prefer to explicitly dispatch an action, as that level of abstraction may
-be better suited for the task at hand. You can use the shared action in a reducer for example.
 
 ## Breakpoints
 
@@ -404,3 +339,81 @@ kea([
   })),
 ])
 ```
+
+## Shared listeners
+
+If multiple `listeners` need to run the same code, you can:
+
+1. Have all of them call a common action, which you then handle with another listener:
+
+```javascript
+const logic = kea([
+  actions({
+    firstAction: true,
+    secondAction: true,
+    commonAction: true,
+    // ...
+  }),
+
+  listeners(({ actions, values }) => ({
+    // two listeners with one shared action
+    firstAction: actions.commonAction,
+    secondAction: () => {
+      actions.commonAction()
+    },
+
+    // you can also pass an array of functions
+    commonAction: () => {
+      // do something common
+    },
+  })),
+])
+```
+
+This however dispatches a separate action, which is then listened to.
+
+2. If you want to share code between listeners without dispatching another action, use `sharedListeners`:
+
+```javascript
+const logic = kea([
+  actions({
+    anotherAction: true,
+    debouncedFetchResults: (username) => ({ username }),
+    oneActionMultipleListeners: true,
+    // ...
+  }),
+
+  listeners(({ actions, values, store, sharedListeners }) => ({
+    // two listeners with one shared action
+    anotherAction: sharedListeners.doSomething,
+
+    // you can also pass an array of functions
+    oneActionMultipleListeners: [
+      (payload, breakpoint, action) => {
+        /* ... */
+      },
+      sharedListeners.doSomething,
+      sharedListeners.logAction,
+    ],
+  })),
+
+  // if multiple actions must trigger similar code, use sharedListeners
+  sharedListeners(({ actions }) => ({
+    // all listeners and sharedListeners also get a third parameter:
+    // - action = the full dispatched action
+    doSomething: (payload, breakpoint, action) => {
+      if (action.type === actions.anotherAction.toString()) {
+        console.log(action)
+      }
+    },
+    logAction: (_, __, action) => {
+      console.log('action dispatched', action)
+    },
+  })),
+])
+```
+
+That function will be called directly, without an action being dispatched in the middle.
+
+You might still prefer to explicitly dispatch an action, as that level of abstraction may
+be better suited for the task at hand. You can use the shared action in a reducer for example.

@@ -4,11 +4,9 @@ sidebar_position: 0
 
 # kea
 
-## Array of logic builders
+## Logic builders
 
-You pass `kea([])` an array of function calls, each of which add certain features to your [`logic`](/docs/meta/logic).
-
-For example `actions` and `reducers`:
+To create a  [`logic`](/docs/meta/logic), call `kea(input: LogicBuilder[])` with an array of logic builders.
 
 ```ts
 import { kea, actions, reducers } from 'kea'
@@ -18,13 +16,28 @@ export const loginLogic = kea<loginLogicType>([
   actions({
     setUsername: (username: string) => ({ username }),
   }),
+
   reducers({
     username: { setUsername: (_, { username }) => username },
   }),
+
+  // do something custom
+  (logic: BuiltLogic) => {
+    logic.cache.foobar = logic.actions.setUsername
+  },
+
+  // a logic builder that calls another logic builder inside it
+  (logic: BuiltLogic) => {
+    actions({
+      setPassword: (password) => ({ password }),
+    })(logic)
+  },
 ])
 ```
 
-Each of these just returns a function that modifies the logic, what we call a `LogicBuilder`:
+A `LogicBuilder` has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to modify [any of the fields](/docs/meta/logic#properties) on a `logic`.
+
+Normally you don't manipulate properties of your logic directly, but you use, uhm, _logic-builder-builders?_, like `actions` and `reducers` instead.
 
 ```ts
 // part of `actions` from kea core
@@ -65,11 +78,11 @@ kea([
 
 ```javascript
 kea([
-  actions(() => ({
+  actions((logic) => ({
     // added "() => ("
     increment: true,
   })), // added ")"
-  listeners(() => ({
+  listeners((logic) => ({
     // added "() => ("
     increment: () => {
       console.log('++!')
@@ -80,7 +93,7 @@ kea([
 
 What's the difference?
 
-First, if you pass a function, it gets evaluated lazily when the logic is built.
+If you pass a function, it gets evaluated lazily when the logic is built.
 
 If you're using values that are not guaranteed to be there, or not guaranteed to be available when your logic is evaluated,
 wrap the input in a function. 
@@ -105,8 +118,7 @@ kea([
 ])
 ```
 
-Second, the function you pass gets one argument, `logic`, which you
-can destructure to get `actions`, `values` and other goodies on the logic that you're building:
+The function you pass gets one argument, `logic`, which you can destructure to get `actions`, `values` and other goodies on the logic that you're building:
 
 ```javascript
 kea([
@@ -162,9 +174,9 @@ logic.extend([
 const { counter, negativeCounter } = useValues(logic)
 ```
 
-## Kea 2.0 syntax
+## Kea 2.0 input object syntax
 
-Up until Kea 2.0, we used this syntax:
+Up until Kea 2.0, instead of logic builders, you could pass an object to `kea({})`:
 
 ```javascript
 const logic = kea({
@@ -184,6 +196,6 @@ const logic = kea({
 })
 ```
 
-An object was passed to `kea({})`, instead of the array of logic builders. 
+This object would then be evaluated in a predefined order. 
 
-That syntax still works, and all your old code should function as is, but it is discouraged going further.
+That syntax still works, and most Kea 2.0 code should function as is in 3.0.

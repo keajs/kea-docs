@@ -184,9 +184,27 @@ logic.actions.doSomething.toString() === 'do something (logic)'
 
 An object you can use to store random data on that's accessible from all parts of the logic.
 
-This is not meant to pass data around, but to help plugins manage their work.
-
 Defaults to `{}`
+
+This is not meant to pass around application data (use reducers for that), but to help the logic's internals manage their work.
+
+This is also often used to store event listeners: 
+
+```ts
+import { kea, afterMount, beforeUnmount } from "kea";
+
+const logic = kea([
+  afterMount(({ actions, cache }) => {
+    cache.onMouseMove = (e) => {
+      console.log('mouse moved', e.offsetX, e.offsetY)
+    }
+    window.addEventListener('mousemove', cache.onMouseMove)
+  }),
+  beforeUnmount(({ actions }) => {
+    window.removeEventListener('mousemove', cache.onMouseMove)
+  }),
+])
+```
 
 ### logic.connections
 
