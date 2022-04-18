@@ -1,12 +1,74 @@
 import '../resetKea'
-import React, { useState } from 'react'
-import classnames from 'classnames'
+import React from 'react'
 import Layout from '@theme/Layout'
 import Link from '@docusaurus/Link'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import './styles.scss'
 import { Provider } from 'kea'
+
+const sections = [
+  {
+    url: '/docs/intro/',
+    title: 'Intro',
+    children: [
+      { url: '/docs/intro/what-is-kea', title: 'what is kea?' },
+      { url: '/docs/intro/installation', title: 'installation' },
+      { url: '/docs/intro/typescript', title: 'typescript' },
+      { url: '/docs/intro/testing', title: 'testing' },
+      { url: '/docs/intro/debugging', title: 'debugging' },
+      { url: '/docs/intro/context', title: 'context' },
+    ],
+  },
+  {
+    url: '/docs/core/',
+    title: 'Core',
+    children: [
+      { url: '/docs/core/kea', title: 'kea' },
+      { url: '/docs/core/actions', title: 'actions' },
+      { url: '/docs/core/defaults', title: 'defaults' },
+      { url: '/docs/core/events', title: 'events' },
+      { url: '/docs/core/listeners', title: 'listeners' },
+      { url: '/docs/core/reducers', title: 'reducers' },
+      { url: '/docs/core/selectors', title: 'selectors' },
+    ],
+  },
+  {
+    url: '/docs/meta/',
+    title: 'Meta',
+    children: [
+      { url: '/docs/meta/logic', title: 'logic' },
+      { url: '/docs/meta/connect', title: 'connect' },
+      { url: '/docs/meta/key', title: 'key' },
+      { url: '/docs/meta/path', title: 'path' },
+      { url: '/docs/meta/props', title: 'props' },
+    ],
+  },
+  {
+    url: '/docs/react/',
+    title: 'React',
+    children: [
+      { url: '/docs/react/useActions', title: 'useActions' },
+      { url: '/docs/react/useValues', title: 'useValues' },
+      { url: '/docs/react/useMountedLogic', title: 'useMountedLogic' },
+      { url: '/docs/react/useAllValues', title: 'useAllValues' },
+      { url: '/docs/react/BindLogic', title: 'BindLogic' },
+    ],
+  },
+  {
+    url: '/docs/plugins/',
+    title: 'Plugins',
+    children: [
+      { url: '/docs/plugins/loaders', title: 'loaders' },
+      { url: '/docs/plugins/router', title: 'router' },
+      { url: '/docs/plugins/forms', title: 'forms' },
+      { url: '/docs/plugins/saga', title: 'saga' },
+      { url: '/docs/plugins/subscriptions', title: 'subscriptions' },
+      { url: '/docs/plugins/localstorage', title: 'localstorage' },
+      { url: '/docs/plugins/window-values', title: 'window-values' },
+    ],
+  },
+]
 
 const tutorials = [
   { name: '15min intro to the basic concepts', url: 'https://www.youtube.com/embed/R7GenyiYZC0' },
@@ -95,69 +157,21 @@ function Home() {
       <section className="sections-table">
         <table>
           <tbody>
-            <tr>
-              <td>
-                <Link to="/docs/intro/">Intro</Link>:
-              </td>
-              <td>
-                <Link to="/docs/intro/what-is-kea">what is kea?</Link>&nbsp;|{' '}
-                <Link to="/docs/intro/installation">installation</Link>&nbsp;|{' '}
-                <Link to="/docs/intro/typescript">typescript</Link>&nbsp;|{' '}
-                <Link to="/docs/intro/testing">testing</Link>&nbsp;|{' '}
-                <Link to="/docs/intro/debugging">debugging</Link>&nbsp;|{' '}
-                <Link to="/docs/intro/context">context</Link>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <Link to="/docs/core/">Core</Link>:
-              </td>
-              <td>
-                <Link to="/docs/core/kea">kea</Link>&nbsp;| <Link to="/docs/core/logic">logic</Link>
-                &nbsp;| <Link to="/docs/core/actions">actions</Link>&nbsp;|{' '}
-                <Link to="/docs/core/defaults">defaults</Link>&nbsp;|{' '}
-                <Link to="/docs/core/events">events</Link>&nbsp;|{' '}
-                <Link to="/docs/core/listeners">listeners</Link>&nbsp;|{' '}
-                <Link to="/docs/core/reducers">reducers</Link>&nbsp;|{' '}
-                <Link to="/docs/core/selectors">selectors</Link>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <Link to="/docs/meta/">Meta</Link>:
-              </td>
-              <td>
-                <Link to="/docs/meta/props">props</Link>&nbsp;| <Link to="/docs/meta/key">key</Link>
-                &nbsp;| <Link to="/docs/meta/path">path</Link>&nbsp;|{' '}
-                <Link to="/docs/meta/connect">connect</Link>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <Link to="/docs/react/">React</Link>:
-              </td>
-              <td>
-                <Link to="/docs/react/useActions">useActions</Link>&nbsp;|{' '}
-                <Link to="/docs/react/useValues">useValues</Link>&nbsp;|{' '}
-                <Link to="/docs/react/useMountedLogic">useMountedLogic</Link>
-                &nbsp;| <Link to="/docs/react/useAllValues">useAllValues</Link>
-                &nbsp;| <Link to="/docs/react/BindLogic">BindLogic</Link>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <Link to="/docs/plugins/">Plugins</Link>:
-              </td>
-              <td>
-                <Link to="/docs/plugins/loaders">loaders</Link>&nbsp;|{' '}
-                <Link to="/docs/plugins/router">router</Link>&nbsp;|{' '}
-                <Link to="/docs/plugins/forms">forms</Link>
-                &nbsp;| <Link to="/docs/plugins/saga">saga</Link>&nbsp;|{' '}
-                <Link to="/docs/plugins/subscriptions">subscriptions</Link>&nbsp;|{' '}
-                <Link to="/docs/plugins/localstorage">localstorage</Link>
-                &nbsp;| <Link to="/docs/plugins/window-values">window-values</Link>
-              </td>
-            </tr>
+            {sections.map(({ title, url, children }) => (
+              <tr key={`${url}${title}`}>
+                <td>
+                  <Link to={url}>{title}</Link>:
+                </td>
+                <td>
+                  {children?.map((child, index) => (
+                    <>
+                      <Link to={child.url}>{child.title}</Link>
+                      {index !== children.length - 1 ? <>&nbsp;| </> : null}
+                    </>
+                  ))}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>
