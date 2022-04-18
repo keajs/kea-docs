@@ -16,7 +16,6 @@ const logic = kea([
 
 ## Why do we call it `logic`?
 
-
 Well, we had to call it something and everything else was already taken. 😅
 
 More seriously, the name `logic` implies that calling `kea()` return complex objects,
@@ -112,11 +111,11 @@ There are a few other options you can use. See the [logic API](/docs/BROKEN) for
 
 ## Properties
 
-Read the docs on [`kea([])`](/docs/core/kea) and the [core logic builders](/docs/core/) to learn how to
-build a logic. The 
+Outwardly, you usually only care about `logic.actions` and `logic.values`. The properties below are useful
+when you're building your own logic builders.
 
-There are several properties you may access on a logic.
-
+Read the docs on [`kea([])`](/docs/core/kea) and about the [core logic builders](/docs/core/) to learn how to
+build a logic itself. 
 
 
 ### logic.actionCreators

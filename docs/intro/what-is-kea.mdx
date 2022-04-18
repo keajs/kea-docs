@@ -4,6 +4,7 @@ sidebar_position: 1
 
 import { WebDev } from '../../src/components/img/WebDev'
 import { KeaReact } from '../../src/components/img/KeaReact'
+import useBaseUrl from '@docusaurus/useBaseUrl'
 
 # What is Kea?
 
@@ -63,13 +64,21 @@ These provide a stable foundation that all other features rely on.
 
 - Think of [`actions`](/docs/core/actions) as a unified messaging bus that every part of your app uses to communicate.
 - Think of [`reducers`](/docs/core/reducers) as the only "write" operation in the entire system, and only in response to actions.
-- Think of [`selectors`](/docs/core/selectors) as the only "read" operation in the entire system. They're also the computed caching layer.
+- Think of [`selectors`](/docs/core/selectors) as the only "read" operation in the entire system. They're exposed as [`values`](/docs/meta/logic#logicvalues), and also act as the computed caching layer.
 
 You can run side-effects in response to actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values with [`subscriptions`](/docs/plugins/subscriptions).
 
+<a href={useBaseUrl('img/introduction/how-does-kea-work.png')}>
+  <img
+    alt="Redux Devtools with Inline Paths"
+    src={useBaseUrl('img/introduction/how-does-kea-work.png')}
+    style={{ maxWidth: 715, width: '100%' }}
+  />
+</a>
+
 There are plugins that simplify data [`loading`](/docs/plugins/loaders), [`forms`](/docs/plugins/forms), [`routing`](/docs/plugins/router), and [other common tasks](/docs/plugins/).
 
-It's all pretty standard stuff you've surely seen elsewhere, but with a few twists (look for _breakpoints_), and in a nice package.
+It's all pretty standard stuff you've surely seen elsewhere, but with a few twists (look for [_breakpoints_](/docs/core/listeners#breakpoints)), and in a nice package.
 
 Click on any of the links above, or just read through the [core](/docs/core/), [meta](/docs/meta/) and [plugins](/docs/plugins/) sections in the docs to learn more.
 
@@ -130,7 +139,35 @@ loginLogic.values.username === 'posthog'
 loginLogic.values.password === ''
 ```
 
+I would normally use `actions` and `reducers` directly myself, but who knows, maybe `setters` can simplify your app.
 
+If not, perhaps you will use [`kea-forms`](/docs/plugins/forms) at some point. It's built exactly the same way: you pass
+`forms()` a few input parameters, and it'll add the relevant `actions` and `values` to your `logic`:
+
+```ts
+import { kea, forms } from 'kea'
+
+const logic = kea([
+  forms({
+    signupForm: {
+      defaults: { username: '', password: '' },
+      errors: ({ password }) => ({
+        password: password.length < 8 ? 'password too short' : undefined,
+      }),
+      submit: ({ username, password }) => api.fetchSignupResponse(username, password),
+    },
+  }),
+])
+
+logic.mount()
+logic.actions.setSignupFormValue('password', 'asd')
+logic.values.signupFormErrors.password === 'password too short'
+
+logic.actions.submitSingupForm()
+logic.values.isSignupFormSubmitting === true
+```
+
+It's a very practical way to build frontend apps.
 
 ## Data layer
 
@@ -159,7 +196,7 @@ To take full advantage of Kea, think of it as a self-sufficient data layer betwe
 The Kea project began in 2015 when I took on a job to build an app with [React](https://reactjs.org/) and [Redux](https://redux.js.org/).
 
 Redux of 2015 was fine, but I kept writing very similar code over and over again. Its main criticism at the time was "too much boilerplate",
-thus *back then* everyone invented their own abstractions. This includes the Redux maintainers themselves, but only later in 2018 with [Redux Toolkit](https://redux-toolkit.js.org/).
+thus _back then_ everyone invented their own abstractions. This includes the Redux maintainers themselves, but only later in 2018 with [Redux Toolkit](https://redux-toolkit.js.org/).
 
 We're still in 2015. My loose collection of helper functions grew into the first public release of Kea,
 version 0.1 at the start of 2016. By 2019, over three years, this had gradualy evolved into a unified _high level abstraction over Redux_ with Kea [0.28](https://v0.keajs.org/).
