@@ -37,24 +37,35 @@ resetContext({
 
 First, read the docs on the [redux-saga](https://redux-saga.js.org/) homepage to learn how sagas work.
 
-Adding `kea-saga` will give your logic stores access to the keys: `start`, `stop`, `takeEvery`, `takeLatest`, `workers`, `sagas`.
+Adding `kea-saga` will give you: `saga`, `cancelled`, `workers`, `takeEvery`, `takeLatest`.
 
 ```javascript
 import { kea } from 'kea'
+import { saga, cancelled } from 'kea-saga'
 
-export default kea({
+export default kea([
   // ... see the api docs for more
 
-  start: function* () {
+  saga(function* () {
     // saga started or component mounted
     console.log(this)
-  },
+  }),
 
-  stop: function* () {
+  cancelled(function* () {
     // saga cancelled or component unmounted
-  },
+  }),
 
-  takeEvery: ({ actions, actionCreators, values, workers }) => ({
+  workers({
+    *dynamicWorker(action) {
+      const { id, message } = action.payload // if from takeEvery/takeLatest
+      // reference with workers.dynamicWorker
+    },
+    longerWayToDefine: function* () {
+      // another way to define a worker
+    },
+  }),
+
+  takeEvery(({ actions, actionCreators, values, workers }) => ({
     simpleAction: function* () {
       // inline worker
 
@@ -80,126 +91,56 @@ export default kea({
       // another way to define an inline worker
     },
     actionWithDynamicPayload: workers.dynamicWorker,
-  }),
+  })),
 
-  takeLatest: ({ actions, workers }) => ({
+  takeLatest(({ actions, workers }) => ({
     actionWithStaticPayload: function* () {
       // inline worker
     },
     actionWithManyParameters: workers.dynamicWorker,
-  }),
-
-  workers: {
-    *dynamicWorker(action) {
-      const { id, message } = action.payload // if from takeEvery/takeLatest
-      // reference with workers.dynamicWorker
-    },
-    longerWayToDefine: function* () {
-      // another way to define a worker
-    },
-  },
-
-  sagas: [saga1, saga2],
-})
+  })),
+])
 ```
 
-### start: `function * () {}`
+### saga: `function * () {}`
 
-Saga that is started whenever the component is connected or the saga exported from this
-component starts
-
-Note: sagas are started before your _wrapped component's_ `componentDidMount`. Actions
-dispatched before this lifecycle method will not be seen inside `start`.
-
-```javascript
- // Input
-const logic = kea({
-    start: function * () {
-        // saga started or component mounted
-        console.log(this)
-    }
-}}
-
-// Output
-logic.saga == function * () {
-    // saga started or component mounted
-    console.log(this)
-    // => {
-    //      actionCreators,
-    //      actions,
-    //      workers,
-    //      values,
-    //      path,
-    //      key,
-    //      get: function * (),
-    //      fetch: function * ()
-    //    }
-}
-```
-
-### stop: `function * () {}`
-
-Saga that is started whenever the component is disconnected or the saga exported from this
-component is cancelled
-
-This function is called right before your _wrapped component's_ `componentWillUnmount`
-lifecycle method.
+Saga that is started whenever the component is mounted.
 
 ```javascript
 // Input
-const logic = kea({
-  stop: function* () {
-    // saga cancelled or component unmounted
-  },
-})
+const logic = kea([
+  saga(function* () {
+    // saga started or component mounted
+    console.log(this)
+  }),
+])
+```
 
-// Output
-logic.saga ==
-  function* () {
-    try {
-      // start()
-    } finally {
-      if (cancelled()) {
-        // saga cancelled or component unmounted
-      }
-    }
-  }
+### cancelled: `function * () {}`
+
+Saga that is started whenever the component is unmounted or the saga exported from this component is cancelled.
+
+```javascript
+const logic = kea([
+  cancelled(function* () {
+    // saga cancelled or component unmounted
+  }),
+])
 ```
 
 ### takeEvery: `({ actions }) => ({})`
 
 Run the following workers every time the action is dispatched
 
-Note: sagas are started before your wrapped component's `componentDidMount`. Actions dispatched
-before this lifecycle method will not be seen by `takeEvery`.
-
 ```javascript
-// Input
-const logic = kea({
-  takeEvery: ({ actions, workers }) => ({
+const logic = kea([
+  takeEvery(({ actions, workers }) => ({
     [actions.simpleAction]: function* () {
       // inline worker
     },
     [actions.actionWithDynamicPayload]: workers.dynamicWorker,
-  }),
-})
-
-// Output
-logic.saga ==
-  function* () {
-    // pseudocode
-    yield fork(function* () {
-      yield [
-        takeEvery(
-          actions.simpleAction.toString(),
-          function* () {
-            // inline worker
-          }.bind(this)
-        ),
-        takeEvery(actions.actionWithDynamicPayload.toString(), workers.dynamicWorker.bind(this)),
-      ]
-    })
-  }
+  })),
+])
 ```
 
 ### takeLatest: `({ actions }) => ({})`
@@ -207,36 +148,15 @@ logic.saga ==
 Run the following workers every time the action is dispatched, cancel the previous worker if still
 running
 
-Note: sagas are started before your wrapped component's `componentDidMount`. Actions dispatched
-before this lifecycle method will not be seen by `takeLatest`.
-
 ```javascript
-// Input
-const logic = kea({
-  takeLatest: ({ actions, workers }) => ({
+const logic = kea([
+  takeLatest(({ actions, workers }) => ({
     [actions.simpleAction]: function* () {
       // inline worker
     },
     [actions.actionWithDynamicPayload]: workers.dynamicWorker,
-  }),
-})
-
-// Output
-logic.saga ==
-  function* () {
-    // pseudocode
-    yield fork(function* () {
-      yield [
-        takeLatest(
-          actions.simpleAction.toString(),
-          function* () {
-            // inline worker
-          }.bind(this)
-        ),
-        takeLatest(actions.actionWithDynamicPayload.toString(), workers.dynamicWorker.bind(this)),
-      ]
-    })
-  }
+  })),
+])
 ```
 
 #### workers: `{}`
@@ -244,67 +164,31 @@ logic.saga ==
 An object of workers which you may reference in other sagas.
 
 ```javascript
+import { workers } from 'kea-saga'
+
 // Input
-const logic = kea({
-    workers: {
-        * dynamicWorker (action) {
-            const { id, message } = action.payload // if from takeEvery/takeLatest
-            // reference with workers.dynamicWorker
-        },
-        longerWayToDefine: function * () {
-            // another worker
-        }
-    }
-})
-
-// Output
-logic.workers == {
-  dynamicWorker: function (action) *
-    const { id, message } = action.payload // if from takeEvery/takeLatest
-    // reference with workers.dynamicWorker
-  }.bind(logic),
-
-  longerWayToDefine: function () * {
-    // another worker
-  }.bind(logic)
-}
-```
-
-### sagas: `[]`
-
-Array of sagas that get exported with this component's saga
-
-```javascript
-// Input
-const logic = kea({
-  sagas: [saga1, saga2],
-})
-
-// Output
-logic.saga ==
-  function* () {
-    yield fork(saga1)
-    yield fork(saga2)
-
-    // start() ...
-  }
-```
-
-## Note about `autoConnect`
-
-The current saga plugin (v2.0.0) does not support `autoConnect`. That means if you want to call `otherLogic.actions.something()`
-inside a saga, you must first make sure `otherLogic` is connected to your logic:
-
-```javascript
-import { otherLogic } from './otherLogic'
-
-const logic = kea({
-  connect: [otherLogic],
-
-  takeLatest: () => ({
-    updateNameAsync: async (name) => {
-      otherLogic.actions.doSomething()
+const logic = kea([
+  workers({
+    *dynamicWorker(action) {
+      const { id, message } = action.payload // if from takeEvery/takeLatest
+      // reference with workers.dynamicWorker
+    },
+    longerWayToDefine: function* () {
+      // another worker
     },
   }),
-})
+])
+
+// Output
+logic.workers ==
+  {
+    dynamicWorker: function* (action) {
+      const { id, message } = action.payload // if from takeEvery/takeLatest
+      // reference with workers.dynamicWorker
+    }.bind(logic),
+
+    longerWayToDefine: function* () {
+      // another worker
+    }.bind(logic),
+  }
 ```

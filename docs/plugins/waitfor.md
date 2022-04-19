@@ -1,21 +1,15 @@
----
-id: waitfor
-title: WaitFor
-sidebar_label: WaitFor
----
+# waitfor
 
 Sometimes when doing Server Side Rendering (SSR) or [testing](/docs/BROKEN) your logic, you might
 want to `await` for an action. This is what the [kea-waitfor](https://github.com/keajs/kea-waitfor)
 plugin does!
 
 :::note Keep In Mind
-`kea-waitfor` in not (YET!) designed to be used in listeners. Only use it outside your logic,
-like in tests or in a Server Side Rendering context.
-
-However, if you're feeling lucky and use it anyway in a listener, remember to add a [`breakpoint`](/docs/BROKEN) after the wait!
+`kea-waitfor` in mostly designed to be used in like in tests or in a Server Side Rendering context, not in listeners.
+However, if you're feeling lucky, remember to add a [`breakpoint`](/docs/BROKEN) after the wait!
 :::
 
-# Installation
+## Installation
 
 First install the [`kea-waitfor`](https://github.com/keajs/kea-waitfor) package:
 
@@ -49,7 +43,7 @@ To wait for a kea action, use `waitForAction`:
 ```javascript
 import { waitForAction } from 'kea-waitfor'
 
-const payload = await waitForAction(logic.actions.myAction)
+const payload = await waitForAction(logic.actionTypes.myAction)
 ```
 
 For example:
@@ -58,23 +52,23 @@ For example:
 import { kea } from 'kea'
 import { waitForAction } from 'kea-waitfor'
 
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setValue: (value) => ({ value }),
     valueWasSet: (value) => ({ value }),
-  },
+  }),
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     setValue: async ({ value }) => {
       await delay(300)
       actions.valueWasSet(value)
     },
-  }),
-})
+  })),
+])
 
 logic.mount()
 logic.actions.setValue('hamburger')
-const { value } = await waitForAction(logic.actions.valueWasSet)
+const { value } = await waitForAction(logic.actionTypes.valueWasSet)
 
 console.log(value)
 // --> 'hamburger'
@@ -95,25 +89,25 @@ For example:
 ```javascript
 import { waitForCondition } from 'kea-waitfor'
 
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setValue: (value) => ({ value }),
     valueWasSet: (value) => ({ value }),
-  },
+  }),
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     setValue: async ({ value }) => {
       await delay(300)
       actions.valueWasSet(value)
     },
-  }),
-})
+  })),
+])
 
 logic.mount()
 logic.actions.setValue('cheeseburger')
 const { value } = await waitForCondition((action) => {
   return (
-    action.type === logic.actions.valueWasSet.toString() && action.payload.value === 'cheeseburger'
+    action.type === logic.actionTypes.valueWasSet && action.payload.value === 'cheeseburger'
   )
 })
 

@@ -10,4 +10,5 @@ sidebar_position: 5
 - [router](/docs/meta/router)
 - [saga](/docs/meta/saga)
 - [subscriptions](/docs/meta/subscriptions)
+- [waitfor](/docs/meta/waitfor)
 - [window-values](/docs/meta/window-values)
