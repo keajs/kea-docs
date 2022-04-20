@@ -195,10 +195,12 @@ function Home() {
             <h2>{name}</h2>
           </div>
         ))}
-        <div className="subscribe">
-          Subscribe to the <a href="https://keajs.ck.page/80aecebec7">Kea Newsletter</a> to learn of
-          new tutorials when they come out
-        </div>
+      </section>
+
+      <section className="homepage-subscribe">
+        <h1>Kea Newsletter</h1>
+        Subscribe to the <a href="https://keajs.ck.page/80aecebec7">Kea Newsletter</a> to learn of
+        new tutorials when they come out
       </section>
 
       <main>
