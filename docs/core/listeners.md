@@ -1,8 +1,12 @@
+---
+sidebar_position: 4
+---
+
 # listeners
 
 ## Running async code
 
-Kea prohibits you from writing impure code with side effects (e.g. API calls) in actions and reducers.
+Kea prohibits you from writing _impure_ code with side effects (e.g. API calls) in actions and reducers.
 But what are you to do if you live in the real world like _most_ of us?
 
 Enter listeners.
@@ -31,13 +35,14 @@ The listener will get the action's `payload` as its first argument.
 ## Loading and storing data
 
 :::note
-You may want to use the [loaders](/docs/plugins/loaders) plugin to simplify the steps in this section.
+You may want to use the [loaders](/docs/plugins/loaders) plugin to simplify the steps in this guide even further.
 :::
 
 ### Storing results
 
-Q: In the example above, what should we do with the `users` once we have them? <br/>
-A: We store them in a `reducer` through an `action`... as there's no other way.
+In the example above, we built a listener that fetched a `users` array. However, what do we do with it next? Where do we store it?
+
+Of course we store it in a `reducer` through an `action`... since there's literally no other way to store data in Kea.
 
 ```javascript
 const logic = kea([
@@ -46,21 +51,16 @@ const logic = kea([
     setUsers: (users) => ({ users }),
   }),
 
+  reducers({
+    users: [[], { setUsers: (_, { users }) => users }],
+  }),
+
   listeners(({ actions }) => ({
     loadUsers: async () => {
       const users = await api.get('users')
       actions.setUsers(users)
     },
   })),
-
-  reducers({
-    users: [
-      [],
-      {
-        setUsers: (_, { users }) => users,
-      },
-    ],
-  }),
 ])
 ```
 
@@ -68,13 +68,13 @@ If you're used to React Hooks or other lightweight state management solution,
 then the above code might seem overly verbose to you. _"Why must we write `loadUsers` and `setUsers`
 twice?"_ is a valid question. _"Why can't listeners just implicitly create a new action"_ might be another.
 
-First, if you don't like it, [wrap these three functions in another function](/docs/intro/what-is-kea#logic-builders) 
+First, if you don't like it, [wrap these three functions in another function](/docs/core/kea#logic-builders)
 that does just that, and abstract away the boring parts.
 
 Second, scratch that, just use the [loaders](/docs/plugins/loaders) plugin, as this has already been done for you.
 
-However, we're learning here, so it's good to spell things out. Sometimes though, you will need to explicitly define 
-your data flow, and this will be just the right amount of verbosity.
+However, we're learning here, so it's good to spell things out. Sometimes though, you will need to explicitly define
+your data flow, and this has proven to be just the right amount of verbosity.
 
 ### Tracking loading
 
@@ -120,7 +120,7 @@ const logic = kea([
 ])
 ```
 
-If you read the [`reducers`](/docs/core/reducers) doc, you'll remember that it's an anti-pattern to only have
+If you read the [`reducers`](/docs/core/reducers) chapter, you'll remember that it's an anti-pattern to only have
 `setThis` and `setThat` actions that only update `this` or `that`.
 
 The better approach to explicitly setting the `loading` state is to have it react to actions.
@@ -162,7 +162,7 @@ const logic = kea([
 ])
 ```
 
-That's already pretty sweet... 
+That's already pretty sweet...
 
 ### Error handling
 
@@ -222,6 +222,11 @@ const logic = kea([
   })),
 ])
 ```
+
+It's like a little matrix of values and their transformations, as code. 
+
+In the real world, you would use the [loaders](/docs/plugins/loaders) plugins instead of writing the code above. 
+Remember, Kea is built to help you [abstract away all the boring parts](/docs/core/kea#logic-builders).
 
 ## Breakpoints
 

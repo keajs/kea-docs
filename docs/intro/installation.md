@@ -4,9 +4,6 @@ sidebar_position: 2
 
 # Installation
 
-Instructions for various frameworks:
-- [next.js](/docs/BROKEN)
-
 ## Shortcut: CRA template
 
 To create a new app based on [kea's create-react-app typescript template](https://github.com/keajs/cra-template-kea-typescript),

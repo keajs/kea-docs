@@ -14,6 +14,10 @@ const logic = kea([
 ])
 ```
 
+:::warning
+The docs below describe what to do with a `logic` after you have built it. If this is your first time here, read more about [how to create a logic with `kea()` in the first place](/docs/core/kea).
+:::
+
 ## Why do we call it `logic`?
 
 Well, we had to call it something and everything else was already taken. 😅
@@ -45,9 +49,6 @@ const unmount = builtLoginLogic.mount()
    which doesn't do much.
 3. **Mounted**. Once a logic is built, it can be mounted. This means attaching its the `reducers` to
    Redux, making its `selectors` actually point to a `value` in the store, registering all `listeners` handlers, firing all `afterMount` events, and so on.
-
-If you use Kea with React though [hooks](/docs/react/), logic is mounted automatically. When all components
-that use a `logic` are removed from React's tree, that `logic` will be unmounted automatically.
 
 ## Mounting and Unmounting
 
@@ -85,8 +86,8 @@ logic.values.counter
 // => throw new Error()!
 ```
 
-In case you need to pass props to your logic, for example if it is [keyed](/docs/BROKEN),
-you should [build the logic](/docs/BROKEN) explicitly before calling `mount()` on it:
+In case you need to pass props to your logic, for example if it is [keyed](/docs/meta/key),
+you should [build the logic](/docs/meta/logic#logicbuildprops) explicitly before calling `mount()` on it:
 
 ```javascript
 // create the counter logic from the examples above, but with a key!
@@ -105,8 +106,6 @@ logic({ id: 123, otherProp: false })
 
 unmount()
 ```
-
-There are a few other options you can use. See the [logic API](/docs/BROKEN) for more details.
 
 
 ## Properties
@@ -156,6 +155,26 @@ logic.mount()
 logic.actionKeys ==
   {
     'do something (logic)': 'doSomething',
+  }
+```
+
+### logic.actionTypes
+
+An object that returns the Redux action's `type` for an action's local key:
+
+Defaults to `{}`
+
+```javascript
+const logic = kea([
+  actions({
+    doSomething: (value) => ({ value }),
+  }),
+])
+
+logic.mount()
+logic.actionTypes ==
+  {
+    doSomething: 'do something (logic)',
   }
 ```
 
@@ -500,6 +519,108 @@ logic(props)     --> logic.build(props)
 logic(Component) --> logic.wrap(Component)
 ```
 
+### logic.build(props)
+
+Build the logic, but don't yet connect it to Redux
+
+You may also use the shorthand `logic(props)`.
+
+Builds are cached on the context, so calling it a on every render is very fast, assuming the key doesn't change.
+
+```javascript
+// create a logic
+const logic = kea([
+  key((props) => props.id),
+
+  actions({
+    doSomething: true,
+  }),
+
+  reducers({
+    myValue: ['yes'],
+  }),
+])
+
+// get a built copy
+const builtLogic = logic.build({ id: 10 })
+
+// you may now access all the properties
+// ... keeping in mind it's not yet mounted
+
+// probably not useful if the logic is not mounted
+builtLogic.actions.doSomething()
+
+// a disconnected selector, will probably throw when called
+builtLogic.selectors.myValue(state)
+
+// this will throw since the logic is not mounted
+builtLogic.values.myValue
+```
+
+### logic.mount()
+
+Mount the logic on Redux, return a function that unmounts
+
+Shorthand for `logic.build().mount()`
+
+```javascript
+const logic = kea([])
+
+// When you call logic.mount(), we actually send it through .build():
+logic.mount() == logic.build().mount()
+
+// With logic with keys, this is true:
+logic(props).mount() == logic.build(props).mount()
+
+// In any case, logic.mount() connects this logic to Redux
+// and also mounts all other connected logic.
+// It returns a function, which when called will unmount the logic from the store:
+const unmount = logic.mount()
+
+logic.actions.doSomething()
+console.log(logic.values.myValue)
+
+unmount()
+```
+
+### logic.extend(input)
+
+Up until a logic has been built and mounted, you can extend it:
+
+```javascript
+const logic = kea([
+  actions({
+    increment: (amount = 1) => ({ amount }),
+    decrement: (amount = 1) => ({ amount }),
+  }),
+
+  reducers({
+    counter: [
+      0,
+      {
+        increment: (state, { amount }) => state + amount,
+        decrement: (state, { amount }) => state - amount,
+      },
+    ],
+  }),
+])
+
+logic.extend([
+  reducers({
+    negativeCounter: [
+      0,
+      {
+        increment: (state, { amount }) => state - amount,
+        decrement: (state, { amount }) => state + amount,
+      },
+    ],
+  }),
+])
+
+// later in React
+const { counter, negativeCounter } = useValues(logic)
+```
+
 ### logic.wrap(Component)
 
 Wrap the logic around a React Component (functional or Class) and give it access to all actions and values.
@@ -540,114 +661,4 @@ class MyClassComponent extends Component {
 }
 
 const ConnectedClassComponent = logic(MyClassComponent)
-```
-
-### logic.build(props)
-
-Build the logic, but don't yet connect it to Redux
-
-You may also use the shorthand `logic(props)`.
-
-Builds are cached on the context, so calling it a on every render is very fast, assuming the key doesn't change.
-
-```javascript
-// create a logic
-const logic = kea([
-  key((props) => props.id),
-
-  actions({
-    doSomething: true,
-  }),
-
-  reducers({
-    myValue: ['yes'],
-  }),
-])
-
-// get a built copy
-const builtLogic = logic.build({ id: 10 })
-
-// you may now access all the properties
-// ... keeping in mind it's not yet mounted
-
-// action creator (returns object { type: 'do something', payload: {} })
-builtLogic.actionCreators.doSomething()
-
-// bound actions. dispatches the created action automatically
-// probably not useful if the logic is not mounted
-builtLogic.actions.doSomething()
-
-// get the contants
-builtLogic.constants == { SOMETHING: 'SOMETHING' }
-
-// a disconnected selector, will probably throw when called
-builtLogic.selectors.myValue(state)
-
-// this will throw since the logic is not mounted
-builtLogic.values.myValue
-```
-
-:::note
-`logic.build` accepts a second parameter: `.build(props, autoConnectInListener)`
-
-To read more on the `autoConnectInListener` parameter, check out
-["Calling `mount()` inside listeners with `autoConnect: true`"](/docs/BROKEN)
-under the "Usage without React" page.
-:::
-
-### logic.mount()
-
-Mount the logic on Redux, return a function that unmounts
-
-Shorthand for `logic.build().mount()`
-
-```javascript
-const logic = kea([])
-
-// When you call logic.mount(), we actually send it through .build():
-logic.mount() == logic.build().mount()
-
-// With logic with keys, this is true:
-logic(props).mount() == logic.build(props).mount()
-
-// In any case, logic.mount() connects this logic to Redux
-// and also mounts all other connected logic.
-// It returns a function, which when called will unmount the logic from the store:
-const unmount = logic.mount()
-
-logic.actions.doSomething()
-console.log(logic.values.myValue)
-
-unmount()
-```
-
-### logic.extend(input)
-
-Add more features to the logic
-
-```javascript
-// create a logic
-const logic = kea([
-  actions({
-    doSomething: true,
-  }),
-
-  reducers({
-    myValue: ['yes'],
-  }),
-])
-
-logic.extend([
-  actions({
-    doSomethingElse: true,
-  }),
-
-  reducers({
-    anotherValue: ['no'],
-  }),
-])
-
-// Now you can use both:
-Object.keys(logic.build().actions) == ['doSomething', 'doSomethingElse']
-Object.keys(logic.build().selectors) == ['myValue', 'anotherValue']
 ```

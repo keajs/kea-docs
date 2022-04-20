@@ -1,3 +1,6 @@
+---
+sidebar_position: 1
+---
 # actions
 
 ## Everything starts with an action
@@ -66,11 +69,11 @@ function BigButton() {
 In the code above, clicking the button calls `addToCounter` with one argument, `1000`.
 
 The action then converts it to a `payload` of `{ amount: 1000 }`, which will later be used in
-reducers, listeners and other friendly plugins.
+reducers, listeners and other curious places.
 
-## Action Creators
+## Action creators and types
 
-Since kea actions are [compatible with Redux](https://redux.js.org/basics/actions), calling
+Since kea's actions are [compatible with Redux](https://redux.js.org/basics/actions), calling
 `addCounter(1000)` actually creates and dispatchs an object that also has a `type` key and looks
 something like this:
 
@@ -78,15 +81,15 @@ something like this:
 addToCounter(1000) === { type: 'add to counter', payload: { amount: 1000 } }
 ```
 
-:::note
 Calling `logic.actions.addToCounter(1000)` dispatches the action directly. If you only want to _create_
 the action object without dispatching it, use `logic.actionCreators.addToCounter(1000)`
-:::
+
+To get the Redux type of an action, use `logic.actionTypes.addToCounter`
 
 ## Shorthand when no parameters
 
-There's one shorthand that can be useful. In case your actions take no arguments (e.g. `loadUsers`),
-just pass `true`, or anything else that's not a function, instead of an arguments-to-payload serializer:
+In case your actions take no arguments (e.g. `loadUsers`),
+just pass `true`, or anything else that's not a function, instead of a payload creator:
 
 ```jsx
 import { kea, actions } from 'kea'

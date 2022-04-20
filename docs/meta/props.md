@@ -1,16 +1,19 @@
 ## Props
 
-When you use `logic()` as a function and pass it an object as an argument, that object will be saved
-as `props`:
+When you build a `logic`, you can pass it an object that will be stored as `props`:
 
 ```javascript
 const props = { id: 10 }
 const logic = kea([])
-logic(props).props === props
+
+logic.build(props).props === logic(props).props === props
 ```
 
-Calling `logic(props)` is a fast operation. Only the `props` on the logic will be updated in case the
+Calling [`logic(props)`](/docs/meta/logic#logic-1) or [`logic.build(props)`](/docs/meta/logic#logicbuildprops) is a fast operation. Only the `props` on the logic will be updated in case the
 logic is already mounted. Thus it's safe to call from a React component.
+
+
+## Defaults from React
 
 You can pass random data from React onto the logic this way. For example various defaults.
 

@@ -26,11 +26,11 @@ const sections = [
     children: [
       { url: '/docs/core/kea', title: 'kea' },
       { url: '/docs/core/actions', title: 'actions' },
-      { url: '/docs/core/defaults', title: 'defaults' },
-      { url: '/docs/core/events', title: 'events' },
-      { url: '/docs/core/listeners', title: 'listeners' },
       { url: '/docs/core/reducers', title: 'reducers' },
       { url: '/docs/core/selectors', title: 'selectors' },
+      { url: '/docs/core/listeners', title: 'listeners' },
+      { url: '/docs/core/events', title: 'events' },
+      { url: '/docs/core/defaults', title: 'defaults' },
     ],
   },
   {

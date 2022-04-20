@@ -1,3 +1,6 @@
+---
+sidebar_position: 5
+---
 # events
 
 ## `afterMount()`
@@ -9,14 +12,14 @@ import { kea, afterMount } from 'kea'
 import { loaders } from 'kea-loaders'
 
 const logic = kea([
-  afterMount(({ actions }) => {
-    actions.fetchUsers()
-  }),
   loaders({
     users: {
       fetchUsers: async () => await api.getUsers()
     }
   })
+  afterMount(({ actions }) => {
+    actions.fetchUsers()
+  }),
 ])
 ```
 
@@ -24,6 +27,8 @@ const logic = kea([
 
 The `beforeUnmount` event fires right before a logic is unmounted. Here you can cancel listeners and do other
 cleanup.
+
+If you need to share data between `afterMount` and `beforeUnmount`, use [`logic.cache`](/docs/meta/logic#logiccache)
 
 ```ts
 import { kea, afterMount, beforeUnmount } from "kea";
@@ -44,7 +49,7 @@ const logic = kea([
 
 ## `events()`
 
-You can hook into all four mount and unmount lifecycle events of a logic with `events`:
+You can hook into two other mount and unmount events with the `events` builder:
 
 ```javascript
 import { kea, events } from 'kea'

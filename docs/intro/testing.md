@@ -83,7 +83,6 @@ Then make sure your logic is [mounted](/docs/meta/logic#mount) before the tests 
 
 ```ts
 describe('dashboardLogic', () => {
-  let unmount: () => void
   let logic: ReturnType<typeof dashboardLogic.build>
 
   beforeEach(() => {

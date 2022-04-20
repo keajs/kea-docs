@@ -160,9 +160,9 @@ for `kea<logicType<LocalType, LocalUser>>`
 
 ### Create logic-builder-type-builders
 
-To make your custom _logic-builder-builders_ work with typegen, you must write a _logic-builder-type-builder_ :sweat_smile:.
+To make your custom builderes work with typegen, you must write a _logic-builder-type-builder_ :sweat_smile:.
 
-This involves creating a `setters.typegen.ts` file next to your `setters.ts` _logic-builder-builder_.
+This involves creating a `setters.typegen.ts` file next to your `setters.ts` builder.
 Check out the sample [typedFormDemoLogic](https://github.com/keajs/kea-typegen/tree/kea-3.0/samples/typed-builder), or [typegen.ts from kea-forms](https://github.com/keajs/kea-forms/blob/kea-3.0/src/typegen.ts), for examples of such a type builders.
 
 These type builders area a new area of development for kea, starting with 3.0, and we're working on making this simpler for all.

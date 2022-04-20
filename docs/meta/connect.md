@@ -56,15 +56,18 @@ const otherLogic = kea([
 otherLogic.mount() // also mounts userLogic
 ```
 
-### Manual actions with `connect({ actions: [] })`
+### Directly to actions with `connect({ actions: [] })`
 
 ```ts
 import { kea, connect, actions } from 'kea'
 
-const userLogic = kea([actions({ reloadUser: true, resetUser: true })])
+const userLogic = kea([
+  // userLogic has two actions
+  actions({ reloadUser: true, resetUser: true }),
+])
 
 const otherLogic = kea([
-  // pull in reloadUser from userLogic
+  // pull in two actions from userLogic
   connect({ actions: [userLogic, ['reloadUser', 'resetUser']] }),
 ])
 
@@ -72,12 +75,15 @@ otherLogic.mount() // also mounts userLogic
 otherLogic.actions.reloadUser() // actually triggers userLogic.actions.reloadUser
 ```
 
-### Manual values with `connect({ values: [] })`
+### Directly to values with `connect({ values: [] })`
 
 ```ts
 import { kea, connect, reducers } from 'kea'
 
-const userLogic = kea([reducers({ user: [[]], userLoading: [false] })])
+const userLogic = kea([
+  // userLogic has two reducers
+  reducers({ user: [[]], userLoading: [false] }),
+])
 const otherLogic = kea([
   // make sure userLogic is mounted
   connect({ values: [userLogic, ['user', 'userLoading']] }),
@@ -89,7 +95,7 @@ otherLogic.values.user == userLogic.values.user
 
 ## Connecting logics with a `key`
 
-If the logics you're connecting all share a [`key`](/docs/meta/key), you may convert the input to `conenct` to a function, which receives
+If the logics you're connecting all share a [`key`](/docs/meta/key), you may convert the input of `conenct` to a function, which receives
 `props` as its argument:
 
 ```ts
@@ -98,27 +104,32 @@ import { kea, key, connect } from 'kea'
 const userLogic = kea([
   // use a key from 'id'
   key((props) => props.id),
+  // get the user after mount
+  loaders(({ props }) => ({ user: { getUser: () => api.getUser(props.id) } })),
+  afterMount(({ actions }) => actions.getUser()),
 ])
 
 const profileLogic = kea([
   // also use a key from 'id'
   key((props) => props.id),
-  // make sure userLogic is mounted
+  // connect((props) => ...), pass the `id` along:
   connect(({ id }) => ({ values: [userLogic({ id }), ['user']] })),
 ])
 
 profileLogic({ id: 12 }).mount() // also mounts userLogic({ id: 12 })
+profileLogic({ id: 12 }).values.user // selected directly from userLogic({ id: 12 })
 ```
 
-## Requires manual connection
+## Connecting in listeners
 
 ### Using values from another logic in a listener
 
 When you need to access another logic's values in a listener, make sure that logic is mounted with the methods
-below. Then access `usersLogic.values` directly:
+above. Then access `usersLogic.values` directly:
 
 ```javascript
 const dashboardLogic = kea([
+  // make sure usersLogic is mounted together with the logic
   connect([usersLogic]),
   listeners({
     refreshDashboard: async () => {
@@ -153,8 +164,11 @@ const logic = kea([
 
 ## Automatically when building
 
-When used in a key in a logic builder - like all the cases below - `usersLogic` will be automatically connected to the logic that called it
-and mounted/unmounted as needed.
+There are three cases when a logic is connected automatically to another, without having to explicitly `connect`. 
+The explicit connection doesn't hurt though. 
+
+In the following cases, when a key from `usersLogic` is used in a different logic builder, will be automatically connected to the 
+logic that called it and hence mounted/unmounted in tandem.
 
 ### Listening to an action from another logic
 
@@ -182,7 +196,7 @@ const dashboardLogic = kea([
 
 ### Using an action from another logic in a reducer
 
-This `[otherLogic.actionTypes.doSomething]` syntax also works in reducers:
+Or use this `[otherLogic.actionTypes.doSomething]` syntax in a reducer:
 
 ```javascript
 const usersLogic = kea([])
@@ -206,7 +220,7 @@ const shadowUsersLogic = kea([
 
 ### Using a selector from another logic in a selector
 
-... and selectors:
+... or a selector:
 
 ```javascript
 const usersLogic = kea([])

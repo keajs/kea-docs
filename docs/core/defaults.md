@@ -1,3 +1,7 @@
+---
+sidebar_position: 6
+---
+
 # defaults
 
 ## Set defaults directly in reducers
@@ -59,12 +63,12 @@ import { kea, defaults, reducers } from 'kea'
 const counterLogic = kea([])
 
 const logic = kea([
+  // must be a function to evaluate at build time when counterLogic is mounted 
   defaults(() => ({
-    // must be a function to evaluate at build time
     counterCopy: counterLogic.selectors.counter,
   })),
 
-  reducers({
+  reducers(() => ({
     counterCopy: [
       counterLogic.selectors.counter,
       {
@@ -72,7 +76,7 @@ const logic = kea([
         decrement: (state, { amount }) => state - amount,
       },
     ],
-  }),
+  })),
 ])
 ```
 

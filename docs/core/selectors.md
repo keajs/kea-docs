@@ -1,13 +1,16 @@
+---
+sidebar_position: 3
+---
 # selectors
 
-## Selects from the store
+## Select from the state
 
-Selectors are used to locate specific values in the state object.
+Selectors are used to get specific values from the state object.
 
-A selector is a function in the format:
+At it's core, a selector is just a function in the format:
 
 ```ts
-const someValueSelector = (state: Record<string, any>) => state.some.value
+const someValueSelector = (state: Record<string, any>) => state.some.value.from.the.state.object
 ```
 
 ## Automatically created for reducers
@@ -15,15 +18,34 @@ const someValueSelector = (state: Record<string, any>) => state.some.value
 Each reducer automatically gets a corresponding selector:
 
 ```ts
-const rootLogic = kea([path(['rootLogic']), reducers({ pieceOfData: ['default value', {}] })])
+const rootLogic = kea([
+  // our path is "state.root.logic"
+  path(['root.logic']), 
+  // add reducer "pieceOfData"
+  reducers({ pieceOfData: ['default value', {}] })])
 
+// the following are added to the logic
 rootLogic.reducers.pieceOfData = () => 'default value'
-rootLogic.selectors.pieceOfData = (state) => state.rootLogic.pieceOfData
+rootLogic.selectors.pieceOfData = (state) => state.root.logic.pieceOfData
 ```
+
+## Values
+
+Every selector has a corresponding `value`. Values are just a shorthand for selectors on the current `state` of the store.
+
+Basically:
+
+```javascript
+logic.values.pieceOfData === logic.selectors.pieceOfData(store.getState())
+```
+
+That's it.
+
+Use values anywhere in your listeners or elsewhere, where you need to access the current value of a reducer or selector.
 
 ## Computed values
 
-Use the `selectors` _logic-builder-builder_ to create selectors which cache and merge other selectors:
+Use the `selectors` builder to create selectors which combine and cache other selectors:
 
 ```javascript
 const logic = kea([
@@ -62,28 +84,13 @@ function RecordsForThisMonth() {
 }
 ```
 
-## Values
+## Caching
 
-`values` are just a shorthand for accessing selectors with the store's latest state already applied.
+Selectors are recalculated only if the value of their inputs changes. In the example above,
+no matter how often your components ask for `recordsForSelectedMonth`, they will get
+a cached response as long as `month` and `records` haven't changed since last time.
 
-Basically:
-
-```javascript
-logic.values.month === logic.selectors.month(store.getState())
-```
-
-That's it.
-
-## Keep in mind
-
-- Selectors are recalculated only if the value of their inputs changes. In the example above,
-  no matter how often your components ask for `recordsForSelectedMonth`, they will get
-  a cached response as long as `month` and `records` haven't changed since last time.
-- The order of selectors doesn't matter. If you add another selector called
-  `sortedRecordsForSelectedMonth`, it can be defined either before or after `recordsForSelectedMonth`.
-  As long as you don't have circular dependencies, the order doesn't matter.
-
-## Good practices
+## Single source of truth
 
 It is good practice to have as many selectors as possible, each of which sort or filter the _raw_ data
 stored in your reducers further than the last.
@@ -101,6 +108,25 @@ Instead, on `selectUser(id)`, store `selectedUserId` in a reducer. Then create a
 that combines `selectedUserId` and `users` to dynamically find the selected user.
 
 You'll have a lot less bugs this way. 😉
+
+## Selectors that return functions
+
+It's also possible to return a function in a selector. Here's a selector that returns a function that finds an user by `id`:
+
+```javascript
+const usersLogic = kea([
+  loaders({ users: { loadUsers: api.loadUsers } }),
+  selectors({
+    findById: [
+      (selectors) => [selectors.uesrs],
+      (users) => (id: number) => users.find((user) => user.id === id),
+    ],
+  }),
+])
+
+usersLogic.mount()
+const user = usersLogic.values.findById(12)
+```
 
 ## Props in Selectors
 
@@ -149,22 +175,6 @@ const counterLogic = kea([
     diffFromDefault: [
       (s) => [s.counter, (_, props) => props.defaultCounter],
       (counter, defaultCounter) => counter - defaultCounter,
-    ],
-  }),
-])
-```
-
-## Selectors that return functions
-
-It's also possible to return a function as a selector. Here's a selector that returns a function that finds an user by `id`:
-
-```javascript
-const usersLogic = kea([
-  loaders({ users: { loadUsers: api.loadUsers } }),
-  selectors({
-    findById: [
-      (selectors) => [selectors.uesrs],
-      (users) => (id: number) => users.find((user) => user.id === id),
     ],
   }),
 ])

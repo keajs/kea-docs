@@ -1,3 +1,6 @@
+---
+sidebar_position: 2
+---
 # reducers
 
 ## Reducers store values
@@ -47,17 +50,11 @@ While this may _feel_ limiting at first, there is method to madness here. Pushin
 through actions makes for stable and predictable apps that run better, crash less often and
 even do your laundry. We all want that, don't we?
 
-Casual readers of other lightweight state management libraries might
-protest that you need to write the name of the action (`increment`) twice to get the job done:
-once in `actions` and once in `reducers`. _Think of the extra keystrokes_ I hear them say.
-
-There's method to this madness as well. First, you should always optimise for [read-time convenience
-over write-time convenience](https://medium.com/marius-andra-blog/two-strategies-for-writing-better-code-1be0dc240698).
-Second, being explicit with the relationships between actions and reducers makes for very composable
+Being explicit with the relationships between actions and reducers makes for very composable
 code. This is best illustrated with an example.
 
-Suppose we extend this logic and also store a `name`. We still want the page to have a global `reset`
-button that clears both pieces of data. The code would look like this:
+Suppose we extend the logic above, and also store a `name`. We now want the `reset` action to clear both pieces of data. 
+Easy peasy:
 
 ```javascript
 import { kea, actions, reducers } from 'kea'
@@ -97,9 +94,9 @@ a music festival in a ~~pre~~post-pandemic world.
 
 If, however, you find yourself constantly writing code that has actions such as `setName`, `setPrice`,
 `setLoading` and `setError` with corresponding reducers `name`, `price`, `loading` and `error`
-and a 1:1 mapping between them, you're probably following an anti-pattern and doing something wrong.
+and a singular 1:1 mapping between them, you're probably following an anti-pattern and doing something wrong.
 
-You'll see a more complete example to illustrate this point in the doc about [listeners](/docs/core/listeners).
+You'll see an example of this anti-pattern in the section about [listeners](/docs/core/listeners).
 
 ## Pure functions
 
@@ -153,6 +150,8 @@ feel free to wrap your reducers with [immer](https://github.com/immerjs/immer).
 
 The other thing you can't do in a reducer is to dispatch an action as a response to another action
 or to call an API endpoint. For this you use [listeners](/docs/core/listeners).
+
+## Using in React
 
 To use the values stored in reducers in React, use the `useValues` hook:
 

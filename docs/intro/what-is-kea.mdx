@@ -14,7 +14,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 
 Kea is a complete framework for managing application state in [React](https://reactjs.org/) webapps.
 
-Kea organises state in containers called [`logic`](/docs/meta/logic), which are _pretty big_ and _pretty opinionated_ units of state,
+Kea organises state in containers called `logic`, which are _pretty big_ and _pretty opinionated_ units of state,
 especially when compared to other solutions that are built around atoms and molecules.
 
 A [`logic`](/docs/meta/logic) is created by passing an array of logic builders to [`kea([])`](/docs/core/kea), such as [`actions()`](/docs/core/actions) and [`reducers()`](/docs/core/reducers):
@@ -80,94 +80,7 @@ There are plugins that simplify data [`loading`](/docs/plugins/loaders), [`forms
 
 It's all pretty standard stuff you've surely seen elsewhere, but with a few twists (look for [_breakpoints_](/docs/core/listeners#breakpoints)), and in a nice package.
 
-Click on any of the links above, or just read through the [core](/docs/core/), [meta](/docs/meta/) and [plugins](/docs/plugins/) sections in the docs to learn more.
-
-## Logic builders
-
-To build a logic, you give `kea` an array of logic builders. Before a logic is mounted, it is built, and all logic builders are run in succession:
-
-```ts
-import { kea, actions, BuiltLogic } from 'kea'
-
-const logic = kea([
-  // add `setUsername` to logic
-  actions({
-    setUsername: (username) => ({ username }),
-  }),
-
-  // do something custom
-  (logic: BuiltLogic) => {
-    logic.cache.foobar = logic.actions.setUsername
-  },
-
-  // a logic builder that calls another logic builder inside it
-  (logic: BuiltLogic) => {
-    actions({
-      setPassword: (password) => ({ password }),
-    })(logic)
-  },
-])
-```
-
-A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to modify [any of the fields](/docs/meta/logic#properties) on a `logic`.
-
-Normally you don't manipulate properties of your logic directly, but you use, uhm, _logic-builder-builders?_, like `actions` and `listeners` instead.
-
-You can build powerful abstractions when you nest logic builders. For example, here's a `setters` _logic-builder-builder_,
-which creates a `thing` reducer, and a corresponding `setThing` action, for every key it finds in its `input`:
-
-```ts
-import { kea, actions, reducers } from 'kea'
-
-const capitalize = (s: string) => `${s.charAt(0).toUpperCase()}${s.slice(1)}`
-
-function setters(input: Record<string, any>) {
-  return (logic) => {
-    for (const [key, value] of Object.entries(input)) {
-      actions({ [`set${capitalize(key)}`]: (value) => ({ [key]: value }) })(logic)
-      reducers({ [key]: [value, { [`set${capitalize(key)}`]: (_, p) => p[key] }] })(logic)
-    }
-  }
-}
-
-const loginLogic = kea([
-  setters({ username: 'keajs', password: '' }), // much shorter
-])
-loginLogic.mount()
-loginLogic.actions.setUsername('posthog')
-loginLogic.values.username === 'posthog'
-loginLogic.values.password === ''
-```
-
-I would normally use `actions` and `reducers` directly myself, but who knows, maybe `setters` can simplify your app.
-
-If not, perhaps you will use [`kea-forms`](/docs/plugins/forms) at some point. It's built exactly the same way: you pass
-`forms()` a few input parameters, and it'll add the relevant `actions` and `values` to your `logic`:
-
-```ts
-import { kea, forms } from 'kea'
-
-const logic = kea([
-  forms({
-    signupForm: {
-      defaults: { username: '', password: '' },
-      errors: ({ password }) => ({
-        password: password.length < 8 ? 'password too short' : undefined,
-      }),
-      submit: ({ username, password }) => api.fetchSignupResponse(username, password),
-    },
-  }),
-])
-
-logic.mount()
-logic.actions.setSignupFormValue('password', 'asd')
-logic.values.signupFormErrors.password === 'password too short'
-
-logic.actions.submitSingupForm()
-logic.values.isSignupFormSubmitting === true
-```
-
-It's a very practical way to build frontend apps.
+Click on any of the links above (starting with [`kea()`](/docs/core/kea)), or just read through the [core](/docs/core/), [meta](/docs/meta/) and [plugins](/docs/plugins/) sections to learn more.
 
 ## Data layer
 

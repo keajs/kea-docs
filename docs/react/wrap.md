@@ -6,7 +6,7 @@ sidebar_position: 5
 
 ## Wrapping for class components
 
-If you wrap your `Component` inside a `logic`, it'll get all the `values` and `actions` as props.
+If you `wrap` your `Component` inside a `logic`, it'll get all the `values` and `actions` as props.
 
 ```jsx
 const logic = kea([
@@ -33,5 +33,7 @@ class MyComponent extends Component {
   }
 }
 
+// Two identical lines, as `logic(Component)` is a shorthand for `logic.wrap(Component)`
 const MyConnectedComponent = logic(MyComponent)
+const MyConnectedComponent = logic.wrap(MyComponent)
 ```
