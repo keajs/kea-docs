@@ -198,9 +198,21 @@ function Home() {
       </section>
 
       <section className="homepage-subscribe">
-        <h1>Kea Newsletter</h1>
-        Subscribe to the <a href="https://keajs.ck.page/80aecebec7">Kea Newsletter</a> to learn of
-        new tutorials when they come out
+        <div className="background" />
+        <div className="foreground">
+          <h1>Kea Newsletter</h1>
+          <p>Learn of <Link to='/blog'>new releases</Link> and tutorials as soon as they come out</p>
+          <form action="https://app.convertkit.com/forms/2699831/subscriptions" method="post">
+            <input
+              name="email_address"
+              aria-label="Email Address"
+              placeholder="Email Address"
+              required
+              type="email"
+            />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
       </section>
 
       <main>
