@@ -25,8 +25,8 @@ npm install --save kea-saga redux-saga
 Then you install the plugin:
 
 ```javascript
-import sagaPlugin from 'kea-saga'
 import { resetContext } from 'kea'
+import { sagaPlugin } from 'kea-saga'
 
 resetContext({
   plugins: [sagaPlugin],
@@ -41,7 +41,7 @@ Adding `kea-saga` will give you: `saga`, `cancelled`, `workers`, `takeEvery`, `t
 
 ```javascript
 import { kea } from 'kea'
-import { saga, cancelled } from 'kea-saga'
+import { saga, cancelled, workers, takeEvery, takeLatest } from 'kea-saga'
 
 export default kea([
   // ... see the api docs for more

@@ -45,13 +45,10 @@ localStoragePlugin({
 ## Usage
 
 :::note
-To make a reducer persist in LocalStorage, your logic _must_ have a `path`.
-
-Use the [`babel-kea-plugin`](/docs/BROKEN) to
-automatically generate paths for every logic.
+To make a reducer persist in LocalStorage, your logic _must_ have a `path`.  See the [debugging](/docs/intro/debugging#logic-path) docs for more details.
 :::
 
-Just add `{ persist: true }` as an option to your reducers, and it will be stored:
+Just add `{ persist: true }` as an option to your `reducers`, or use the special `persistReducer` builder instead:
 
 ```javascript
 import { kea, reducers } from 'kea'

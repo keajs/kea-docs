@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 1
 ---
 
 # useValues
@@ -22,7 +22,14 @@ function MyComponent() {
 }
 ```
 
-:::note
+## Re-rendering
+
+A `useValues` hook will trigger a re-render if any action causes any of the subscribed values to change.
+
+Only the affected component and its children will be re-rendered, not your entire application.
+
+## Note on destructuring
+
 You can only use `useValues` with destructoring
 
 ```javascript
@@ -35,4 +42,3 @@ hooks when a value is accessed. Because hooks need to always be called in the sa
 you _can't_ just store the object returned from `useValues` and then use its properties later in
 the code. Doing so might call the internal hooks in an unspecified order. Use `useAllValues` if you
 need to do this.
-:::

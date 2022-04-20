@@ -17,53 +17,49 @@ npm install --save kea-forms
 Use the `forms` logic builder to either create a new reducer, or augment an existing reducer with actions and
 selectors to manipulate form-like data.
 
-Here, in our example `featureFlagLogic`, we take an existing reducer called `featureFlag` (exposed through a [loader](/docs/plugins/loaders)),
+In this example `featureFlagLogic`, we take an existing reducer called `featureFlag` (exposed through a [loader](/docs/plugins/loaders)),
 and convert it into a form.
 
 ```ts
 import { kea } from 'kea'
 import { loaders } from 'kea-loaders'
 import { forms } from 'kea-forms'
+import { router } from 'kea-router'
 
-export const featureFlagLogic = kea<featureFlagLogicType<FeatureFlagLogicProps>>([
+export const featureFlagLogic = kea<featureFlagLogicType>([
   path(['scenes', 'feature-flags', 'featureFlagLogic']),
   props({} as FeatureFlagLogicProps),
   key(({ id }) => id ?? 'new'),
 
+  afterMount(({ actions }) => actions.init()),
   loaders(({ props }) => ({
-    featureFlag: [
-      { ...NEW_FLAG } as FeatureFlagModel,
-      {
-        loadFeatureFlag: () => api.get(`api/feature_flags/${props.id}`),
-      },
-    ],
+    featureFlag: { init: () => api.get(`api/feature_flags/${props.id}`) },
   })),
 
   forms(({ actions }) => ({
     featureFlag: {
-      // not really needed again since loader already defines it
-      defaults: { ...NEW_FLAG } as FeatureFlagModel,
+      // not needed again if a loader or reducer already defines it
+      defaults: { id: undefined, key: '' } as FeatureFlagModel,
 
       // sync validation, will be shown as errors in the form
-      errors: (featureFlag) => ({
-        key: !featureFlag.key ? 'Must have a key' : undefined,
+      errors: ({ key }) => ({
+        key: !key ? 'Must have a key' : undefined,
       }),
 
-      // called on the form's onSubmit, unless a validation fails
-      submit: async (featureFlag, breakpoint) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { created_at, id, ...flag } = featureFlag
-        const newFeatureFlag = updatedFlag.id
-          ? await api.update(
-              `api/projects/${values.currentTeamId}/feature_flags/${updatedFlag.id}`,
-              flag
-            )
-          : await api.create(`api/projects/${values.currentTeamId}/feature_flags`, flag)
+      // called on the form's onSubmit, unless `errors` contains values
+      submit: async ({ id, ...flag }, breakpoint) => {
+        const updatedFlag = id
+          ? await api.update(`api/feature_flags/${id}`, flag)
+          : await api.create(`api/feature_flags`, flag)
+        // avoid double-clicks
         breakpoint()
-        actions.setFeatureFlagValues(newFeatureFlag)
-        lemonToast.success('Feature flag saved')
-        featureFlagsLogic.findMounted()?.actions.updateFlag(featureFlag)
-        router.actions.replace(urls.featureFlag(featureFlag.id))
+
+        // this action `resetFeatureFlag` is added by the `forms()` builder
+        actions.resetFeatureFlag(updatedFlag)
+
+        // housekeeping
+        console.log('Feature flag saved')
+        router.actions.replace(urls.featureFlag(updatedFlag.id))
       },
     },
   })),
@@ -114,11 +110,11 @@ import { Switch, Textarea, Input, Button } from '../ui' // stub
 import { Form, Field, Group } from 'kea-forms'
 import { featureFlagLogic, FeatureFlagLogicProps } from './featureFlagLogic'
 
-export function FeatureFlag({ id }: { id?: string } = {}): JSX.Element {
-  const logicProps: FeatureFlagLogicProps = { id: id ? parseInt(id) : 'new' }
+export function FeatureFlag({ id }: { id?: number }): JSX.Element {
+  const logicProps: FeatureFlagLogicProps = { id: id ?? 'new' }
   const {
     featureFlag, // the values in the object are the values in the form
-    isFeatureFlagSubmitting, // if the submit action is doing something
+    isFeatureFlagSubmitting, // if the `submit` action is doing something
   } = useValues(featureFlagLogic(logicProps))
   const {
     submitFeatureFlag, // if we need to submit it outside the normal form submit
@@ -179,3 +175,12 @@ export function FeatureFlag({ id }: { id?: string } = {}): JSX.Element {
   )
 }
 ```
+
+## Re-rendering
+
+The `useValues` hooks [re-render their components](/docs/react/useValues#re-rendering) if their values change, and then only downwards. Forms are no exception.
+
+If you fetch your form's values (e.g. `featureFlag`) at a root component (e.g. the one that contains all the fields), all the fields will re-render
+every time any value changes. 
+
+You should avoid this, and rely on `<Field>`, which re-render only when individual values change. 

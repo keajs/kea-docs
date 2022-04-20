@@ -4,9 +4,10 @@ Sometimes when doing Server Side Rendering (SSR) or [testing](/docs/BROKEN) your
 want to `await` for an action. This is what the [kea-waitfor](https://github.com/keajs/kea-waitfor)
 plugin does!
 
-:::note Keep In Mind
-`kea-waitfor` in mostly designed to be used in like in tests or in a Server Side Rendering context, not in listeners.
-However, if you're feeling lucky, remember to add a [`breakpoint`](/docs/BROKEN) after the wait!
+:::warning Keep In Mind
+`kea-waitfor` in designed for use in tests (and is surpassed by [kea-test-utils](/docs/intro/testing)), or in a Server Side Rendering context.
+It is not designed for daily use in listeners and elsewhere, as it's easy to miss dispatched events that happen synchronously.
+You have the danger of edge cases where you'll be waiting for an event that already passed.
 :::
 
 ## Installation
