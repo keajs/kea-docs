@@ -60,6 +60,7 @@ const sections = [
     url: '/docs/plugins/',
     title: 'Plugins',
     children: [
+      { url: '/docs/plugins/API', title: 'API' },
       { url: '/docs/plugins/loaders', title: 'loaders' },
       { url: '/docs/plugins/router', title: 'router' },
       { url: '/docs/plugins/forms', title: 'forms' },

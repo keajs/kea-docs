@@ -4,6 +4,7 @@ sidebar_position: 5
 
 # Plugins
 
+- [API](/docs/plugins/API)
 - [forms](/docs/plugins/forms)
 - [loaders](/docs/plugins/loaders)
 - [localstorage](/docs/plugins/localstorage)
