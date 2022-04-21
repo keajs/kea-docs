@@ -74,18 +74,25 @@ const sections = [
 ]
 
 const tutorials = [
-  { name: 'Learn the basics in 15 minutes', url: 'https://www.youtube.com/embed/R7GenyiYZC0' },
+  {
+    name: 'Learn the basics in 15 minutes',
+    url: 'https://www.youtube.com/embed/R7GenyiYZC0',
+    link: '/docs/tutorials/basics',
+  },
   {
     name: 'Build a GitHub API client in 16 minutes',
     url: 'https://www.youtube.com/embed/R7GenyiYZC0',
+    link: '/docs/tutorials/github',
   },
   {
     name: 'Using keys with your logic in 17 minutes',
     url: 'https://www.youtube.com/embed/R7GenyiYZC0',
+    link: '/docs/tutorials/keys',
   },
   {
     name: 'Build an infinite list in 18 minutes',
     url: 'https://www.youtube.com/embed/R7GenyiYZC0',
+    link: '/docs/tutorials/infinite-list',
   },
 ]
 
@@ -185,7 +192,7 @@ function Home() {
 
       <section className="homepage-videos">
         <h1>Tutorials</h1>
-        {tutorials.map(({ name, url }) => (
+        {tutorials.map(({ name, url, link }) => (
           <div className="homepage-video">
             <iframe
               src={url}
@@ -194,7 +201,7 @@ function Home() {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
-            <h2>{name}</h2>
+            <h2>{link ? <Link to={link}>{name}</Link> : name}</h2>
           </div>
         ))}
       </section>
@@ -203,7 +210,9 @@ function Home() {
         <div className="background" />
         <div className="foreground">
           <h1>Kea Newsletter</h1>
-          <p>Learn of <Link to='/blog'>new releases</Link> and tutorials as soon as they come out</p>
+          <p>
+            Learn of <Link to="/blog">new releases</Link> and tutorials as soon as they come out
+          </p>
           <form action="https://app.convertkit.com/forms/2699831/subscriptions" method="post">
             <input
               name="email_address"

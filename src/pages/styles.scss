@@ -261,6 +261,9 @@ section.sections-table {
       max-width: 100vw;
       max-height: 56.25vw; /* height/width ratio = 315/560 = .5625 */
     }
+    a {
+      color: inherit;
+    }
   }
 }
 
