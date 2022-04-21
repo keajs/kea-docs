@@ -4,30 +4,34 @@ title: Next.js
 sidebar_label: Next.js
 ---
 
-Here are the steps you must take to get Kea set up with Next.js
+:::note
+Here are the steps you must take to get set up **Kea with Next.js**.
+
+[For generic installation instructions, click here](/docs/intro/installation/).
+:::
 
 ## Install the packages
 
 In addition to the `kea`, [`redux`](https://redux.js.org/),
 [`react-redux`](https://react-redux.js.org/) and [`reselect`](https://github.com/reduxjs/reselect)
 packages that Kea normally requires, you must also install the
-[`babel-plugin-kea`](/docs/BROKEN) and
+[`babel-plugin-kea`](/docs/intro/debugging) and
 [`next-redux-wrapper`](https://github.com/kirill-konshin/next-redux-wrapper) packages:
 
 ```shell
 # if you're using yarn
-yarn add kea@next redux react-redux reselect next-redux-wrapper
+yarn add kea redux react-redux reselect next-redux-wrapper
 yarn add --dev babel-plugin-kea
 
 # if you're using npm
-npm install kea@next redux react-redux reselect next-redux-wrapper --save
+npm install kea redux react-redux reselect next-redux-wrapper --save
 npm install babel-plugin-kea --save-dev
 ```
 
 ## Set up babel-plugin-kea
 
 In order to properly hydrate your store between server and client renders, we must install the
-[`babel-plugin-kea`](/docs/BROKEN) package. This ensures that
+[`babel-plugin-kea`](/docs/intro/debugging) package. This ensures that
 every `kea()` call automatically gets a `path`, which help us link the same logic on the client and
 the server.
 
@@ -148,24 +152,33 @@ export default Github
 
 ## Sample app
 
-Here is the [Github API tutorial app](/docs/BROKEN), but adapted to work with Next.js
+Here is the Github API tutorial app, but adapted to work with Next.js
 server rendering. All the changes are highlighted with a finger. 👈
 
 ```javascript
 import React from 'react'
-import { kea, useActions, useValues } from 'kea'
+import {
+  kea,
+  actions,
+  reducers,
+  selectors,
+  listeners,
+  afterMount,
+  useActions,
+  useValues,
+} from 'kea'
 import fetch from 'isomorphic-unfetch' // 👈 can't use window.fetch anymore
 
 const API_URL = 'https://api.github.com'
 
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setUsername: (username) => ({ username }),
     setRepositories: (repositories) => ({ repositories }),
     setFetchError: (message) => ({ message }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     username: [
       'keajs',
       {
@@ -194,25 +207,23 @@ const logic = kea({
         setFetchError: (_, payload) => payload.message,
       },
     ],
-  },
+  }),
 
-  selectors: {
+  selectors({
     sortedRepositories: [
       (selectors) => [selectors.repositories],
       (repositories) => repositories.sort((a, b) => b.stargazers_count - a.stargazers_count),
     ],
-  },
-
-  events: ({ actions, values }) => ({
-    afterMount: () => {
-      // Only load data on the client if it's not already there 👈
-      if (values.repositories.length === 0 && !values.error) {
-        actions.setUsername(values.username)
-      }
-    },
   }),
 
-  listeners: ({ actions, props }) => ({
+  afterMount(({ actions, values }) => {
+    // Only load data on the client if it's not already there 👈
+    if (values.repositories.length === 0 && !values.error) {
+      actions.setUsername(values.username)
+    }
+  }),
+
+  listeners(({ actions, props }) => ({
     setUsername: async ({ username }, breakpoint) => {
       if (!props.resolve) {
         // 👈 no need to debounce the server's response
@@ -237,8 +248,8 @@ const logic = kea({
 
       props.resolve && props.resolve() // 👈 Resolved!
     },
-  }),
-})
+  })),
+])
 
 // No difference here
 function Github() {
