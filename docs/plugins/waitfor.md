@@ -1,6 +1,6 @@
 # waitfor
 
-Sometimes when doing Server Side Rendering (SSR) or [testing](/docs/BROKEN) your logic, you might
+Sometimes when doing Server Side Rendering (SSR) or [testing](/docs/intro/testing) your logic, you might
 want to `await` for an action. This is what the [kea-waitfor](https://github.com/keajs/kea-waitfor)
 plugin does!
 

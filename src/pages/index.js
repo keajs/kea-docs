@@ -18,6 +18,7 @@ const sections = [
       { url: '/docs/intro/testing', title: 'testing' },
       { url: '/docs/intro/debugging', title: 'debugging' },
       { url: '/docs/intro/context', title: 'context' },
+      { url: '/docs/intro/redux', title: 'redux' },
     ],
   },
   {

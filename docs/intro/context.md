@@ -1,3 +1,7 @@
+---
+sidebar_position: 6
+---
+
 # Context
 
 Kea stores all of its runtime data on a context. When you import `kea`, it comes with a default empty context.

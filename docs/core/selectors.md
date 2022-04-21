@@ -153,7 +153,7 @@ but not when `props.defaultCounter` changes.
 
 What if we would also like to update the selector when the props change?
 
-Previously [we defined](/docs/BROKEN) a selector as a function like this:
+Previously we defined a selector as a function like this:
 
 ```javascript
 const selector = (state) => state.path.to.something.counter

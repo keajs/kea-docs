@@ -1,116 +1,123 @@
 ---
-id: migrating-redux
-title: Migrating from Redux
+sidebar_position: 7
 ---
+
+# Redux Compatibility
 
 Since Kea is built on Redux, it is very easy to connect it to an existing Redux application.
 
-## Using Redux actions
+## Accessing the Redux store
+
+In [`listeners`](/docs/core/listeners) or elsewhere, use `getContext` to get Redux's `store` object:
+
+```javascript
+import { kea, listeners, getContext } from 'kea'
+
+const railsContext = (state) => state.railsContext // selector
+
+const logic = kea([
+  listeners({
+    someAction: () => {
+      // get the store
+      const { store } = getContext()
+      // use a selector to get a state
+      const { i18nLocale } = railsContext(store.getState())
+      // dispatch an action in return
+      store.dispatch({ type: 'REDUX_ACTION' })
+    },
+  }),
+])
+```
+
+## Using Redux actions in reducers and listeners
 
 You can use regular Redux actions in reducers and listeners. Just use their `type` as a key:
 
 ```javascript
-import { kea } from 'kea'
+import { kea, actions, reducers, listeners } from 'kea'
 
 import { LOCATION_CHANGE } from 'connected-react-router'
 
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     doit: true,
-  },
+  }),
 
-  reducers: ({ actions }) => ({
+  reducers(({ actionTypes }) => ({
     myValue: [
       false,
       {
         REDUX_ACTION: () => false, // use redux's action type
         [LOCATION_CHANGE]: () => false, // use it through a variable
         doit: () => true, // local action
-        [actions.doit]: () => true, // longer way to write
+        [actionTypes.doit]: () => true, // longer way to write
       },
     ],
-  }),
+  })),
 
-  listeners: {
+  listeners({
     REDUX_ACTION: (payload) => {
-      // when the location change event is triggered
+      // when the action with the type "REDUX_ACTION" is dispatched
     },
     [LOCATION_CHANGE]: (payload) => {
-      // when the location change event is triggered
-    },
-  },
-})
-```
-
-## Reading non-Kea state
-
-You can use regular selectors in your `selectors` blocks:
-
-```javascript
-const logic = kea({
-  selectors: {
-    someValue: [
-      (selectors) => [(state) => state.rails.i18nLocale, selectors.name],
-      (i18nLocale, name) => `${name} in ${i18nLocale} is "John"`,
-    ],
-  },
-})
-```
-
-In listeners you have access to the `store` object:
-
-```javascript
-const railsContext = (state) => state.rails // selector
-
-const logic = kea({
-  listeners: ({ store }) => ({
-    someAction: () => {
-      const { i18nLocale } = railsContext(store.getState())
-      store.dispatch({ type: 'REDUX_ACTION' })
+      // when the location change action is dispatched
     },
   }),
-})
+])
+```
+
+## Using non-kea selectors in selectors
+
+You can use regular selectors in your [`selectors`](/docs/core/selectors) builders:
+
+```javascript
+const localeSelector = (state) => state.railsContext.i18nLocale
+
+const logic = kea([
+  selectors({
+    someValue: [
+      (selectors) => [localeSelector, selectors.name],
+      (i18nLocale, name) => `${name} in ${i18nLocale} is "John"`,
+    ],
+  }),
+])
 ```
 
 ## Converting Redux actions and selectors into Kea actions and values
 
-You may pull in data from any part of the Redux state tree with `connect`.
+You may pull in data from any part of the Redux state tree with [`values` on `connect`](/docs/meta/connect#directly-to-values-with-connect-values--).
+
 Instead of passing a logic to fetch from, pass a selector:
 
 ```javascript
-import { kea } from 'kea'
-import someLogic from './some-logic'
+import { kea, connect } from 'kea'
+import someLogic from './someLogic'
 
-const logic = kea({
-  connect: {
+const logic = kea([
+  connect({
     values: [
+      // instead of logic like this
       someLogic,
-      [
-        // instead of logic like this
-        'prop1',
-        'prop2',
-      ],
+      ['prop1', 'prop2'],
+
+      // pass a selector
       (state) => state.rails,
-      [
-        // pass a selector
-        'i18nLocale',
-        'currentUserId',
-      ],
+      ['i18nLocale', 'currentUserId'],
+
+      // get everything as 'myForm'
       (state) => state.form.myForm,
-      [
-        '* as myForm', // get everything as 'myForm'
-      ],
+      ['* as myForm'],
     ],
-  },
+  }),
 
   // then use `currentUserId` and others as they were local values
-})
+])
 ```
 
 Similarly, use an object of action creators and select the ones you need:
 
 ```javascript
-import { kea } from 'kea'
+import { kea, connect } from 'kea'
 import someLogic from './some-logic'
 
 const actionsCreators = {
@@ -118,55 +125,34 @@ const actionsCreators = {
   otherAction: ({ id }) => ({ type: 'OTHER_ACTION', payload: { id } }),
 }
 
-const logic = kea({
-  connect: {
+const logic = kea([
+  connect({
     actions: [
+      // instead of logic like this
       someLogic,
-      [
-        // instead of logic like this
-        'action1',
-        'action2',
-      ],
+      ['action1', 'action2'],
+
+      // pass an object of action creators
       actionsCreators,
-      [
-        // pass an object of action creators
-        'doSomething', // and select what is needed
-        'otherAction',
-      ],
+      ['doSomething', 'otherAction'],
     ],
-  },
+  }),
 
   // they will be automatically binded to dispatch
-})
+])
 ```
-
-:::note
-See the
-[Kea API docs](/docs/BROKEN) for all options for connect.
-:::
 
 ## Using Kea actions and selectors elsewhere
 
 If the redux-only part of your app needs access to some values or actions from kea logic stores,
-you can import them like so:
+use `logic.actionCreators` and `logic.selectors` for interoperability. Don't forget to [`mount` the logic](/docs/meta/logic#lifecycles) first:
 
 ```javascript
-const logic = kea({
-  actions: {
-    addOne: true,
-  },
-  reducers: {
-    myNumber: [
-      0,
-      {
-        addOne: (state) => state + 1,
-      },
-    ],
-  },
-  selectors: {
-    myNumberDouble: [(selectors) => [selectors.myNumber], (myNumber) => myNumber * 2],
-  },
-})
+const logic = kea([
+  actions({ addOne: true }),
+  reducers({ myNumber: [0, { addOne: (state) => state + 1 }] }),
+  selectors({ myNumberDouble: [(s) => [s.myNumber], (n) => n * 2] }),
+])
 
 // The logic must be mounted before you can access its fields
 // This is done automatically when a React component is using it.
@@ -194,11 +180,4 @@ logic.values.myNumberDouble
 unmount()
 ```
 
-See the [logic API docs](/docs/BROKEN) for more details.
-
-<br />
-
-:::note Next steps
-
-- Check out how to [Write Plugins](/docs/BROKEN) for Kea.
-  :::
+See the docs on [logic properties](/docs/meta/logic#properties) for more details.
