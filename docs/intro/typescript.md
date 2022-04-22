@@ -126,8 +126,9 @@ npm install concurrently --save-dev
 
 ### When should you specify types?
 
-Normally you only need to specify each type once. This means at the boundaries: the `action` parameters and 
-any `defaults`, including in `reducers` or `loaders`.
+With TypeGen, you should only need to specify each type once. This means at the boundaries: the `action` parameters and
+any `defaults`, including in `reducers` or `loaders`. Everything else, including various return types, should be detected
+automatically.
 
 ```tsx
 import { Blog } from './blog'
@@ -160,19 +161,26 @@ for `kea<logicType<LocalType, LocalUser>>`
 
 ### Create logic-builder-type-builders
 
-To make your custom builderes work with typegen, you must write a _logic-builder-type-builder_ :sweat_smile:.
+To make your custom builders work with typegen, you must write a _logic-builder-type-builder_ :sweat_smile:.
 
-This involves creating a `setters.typegen.ts` file next to your `setters.ts` builder.
-Check out the sample [typedFormDemoLogic](https://github.com/keajs/kea-typegen/tree/kea-3.0/samples/typed-builder), or [typegen.ts from kea-forms](https://github.com/keajs/kea-forms/blob/kea-3.0/src/typegen.ts), for examples of such a type builders.
+This involves creating a `typegen.ts` or a `setters.typegen.ts` file next to your `setters.ts` builder. This file should
+export a function with the same name as the builder, and similar to the builder, add various actions, reducers
+and other features on the _type_ of the logic.
 
-These type builders area a new area of development for kea, starting with 3.0, and we're working on making this simpler for all.
+Check out the sample [typedForm.typegen.ts](https://github.com/keajs/kea-typegen/blob/kea-3.0/samples/typed-builder/typedForm.typegen.ts),
+or the more full-featured [`typegen.ts` from kea-forms](https://github.com/keajs/kea-forms/blob/kea-3.0/src/typegen.ts), 
+for examples of such type builders.
+
+:::note
+These type builders area a new area of development for kea, starting with 3.0, and we're working on making this API simpler for all.
 For now, you'll need to know how the TypeScript Compiler API works, and write code to manipulate TypeScript `Node`s and `TypeNode`s.
-ProTip: Get a useful debugger, and use the [TypeScript AST Viewer](https://ts-ast-viewer.com/).
+> ProTip: Get a useful debugger, and use the [TypeScript AST Viewer](https://ts-ast-viewer.com/).
+:::
 
 ### Caveats / Known issues
 
 1. Using namespaced types like `ExportedApi.RandomThing` is slightly broken.
-   You may sometimes need to create an `interface` that `extends` the original type, and use that in your actions/reducers. 
+   You may sometimes need to create an `interface` that `extends` the original type, and use that in your actions/reducers.
    Creating a `type` alias [will not work](https://github.com/microsoft/TypeScript/issues/19198#issuecomment-342596525), as
    "One difference is that interfaces create a new name that is used everywhere.
    Type aliases don’t create a new name — for instance, error messages won’t use the alias name". For example:
@@ -183,6 +191,6 @@ interface RandomThing extends ExportedApi.RandomThing {}
 
 2. With some tools you might need to "Reload All Files" or explicitly open `logicType.ts` to see the changes.
 
-3. `logic.extend()` doesn't work yet.
+3. Adding types with `logic.extend()` isn't implemented yet.
 
 Found a bug? Some type wrongly detected? [Post an issue in the kea-typegen repository](https://github.com/keajs/kea-typegen/issues).
