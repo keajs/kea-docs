@@ -36,7 +36,25 @@ yarn add kea redux react-redux reselect
 npm install kea redux react-redux reselect --save
 ```
 
-### 2. Optional: Reset Kea's context
+### 1. Wrap with `<Provider />`
+
+Wrap your `<App />` with `kea`'s `<Provider />`. For example:
+
+```javascript
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { resetContext, Provider } from 'kea'
+import App from './App'
+
+ReactDOM.render(
+  <Provider>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
+```
+
+### 3. Optional: Reset Kea's context
 
 Kea stores all of its data on a [context](/docs/intro/context), which must be set up before any `logic` can be used. This
 context stores a reference to the redux store, initializes all plugins, caches all built logic and keeps
@@ -44,10 +62,6 @@ track of what is mounted and what is not.
 
 Kea comes with a default context already set, but to initialize custom plugins and pass advanced options, call 
 `resetContext(options)` before rendering your app.
-
-### 3. Wrap with `<Provider />`
-
-Then wrap your `<App />` with `<Provider />`.
 
 This is how your `index.js` would look like if you used `create-react-app`:
 
@@ -58,26 +72,21 @@ import { resetContext, Provider } from 'kea' // 👈 add this
 import './index.css'
 import App from './App'
 
+// 👈 add resetContext if using custom plugins or options
 resetContext({
-  // 👈 add this
-  createStore: {
-    // options for redux (e.g. middleware, reducers, ...)
-  },
   plugins: [
     // additional kea plugins
   ],
 })
 
 ReactDOM.render(
-  // 👈 and update this
+  // 👈 add <Provider>
   <Provider>
     <App />
   </Provider>,
   document.getElementById('root')
 )
 ```
-
-That's it! Feel free to use `kea()` calls anywhere in your code!
 
 ### 4. TypeScript support
 
