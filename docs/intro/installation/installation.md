@@ -38,7 +38,7 @@ npm install kea redux react-redux reselect --save
 
 ### 2. Optional: Reset Kea's context
 
-Kea stores all of its data on a [context](context), which must be set up before any `logic` can be used. This
+Kea stores all of its data on a [context](/docs/intro/context), which must be set up before any `logic` can be used. This
 context stores a reference to the redux store, initializes all plugins, caches all built logic and keeps
 track of what is mounted and what is not.
 
@@ -81,8 +81,8 @@ That's it! Feel free to use `kea()` calls anywhere in your code!
 
 ### 4. TypeScript support
 
-If you're using [TypeScript](typescript) (and everybody should), and want automatic type generation,
-you'll need to [set up kea-typegen](typescript#option-2-kea-typegen) as well.
+If you're using [TypeScript](/docs/intro/typescript) (and everybody should), and want automatic type generation,
+you'll need to [set up kea-typegen](/docs/intro/typescript#option-2-kea-typegen) as well.
 
 First, run the following:
 
@@ -102,4 +102,4 @@ Then, change your start script in `package.json`
 }
 ```
 
-Read more about [TypeScript Support in Kea](./typescript).
+Read more about [TypeScript Support in Kea](/docs/intro/typescript).
