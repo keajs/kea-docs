@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 ---
+
 # selectors
 
 ## Select from the state
@@ -20,9 +21,10 @@ Each reducer automatically gets a corresponding selector:
 ```ts
 const rootLogic = kea([
   // our path is "state.root.logic"
-  path(['root.logic']), 
+  path(['root.logic']),
   // add reducer "pieceOfData"
-  reducers({ pieceOfData: ['default value', {}] })])
+  reducers({ pieceOfData: ['default value', {}] }),
+])
 
 // the following are added to the logic
 rootLogic.reducers.pieceOfData = () => 'default value'
@@ -175,6 +177,30 @@ const counterLogic = kea([
     diffFromDefault: [
       (s) => [s.counter, (_, props) => props.defaultCounter],
       (counter, defaultCounter) => counter - defaultCounter,
+    ],
+  }),
+])
+```
+
+## Custom isEquals
+
+Selectors input arrays take a third element, a custom `isEquals` function, which will be used to compare each input selector's value. For example:
+
+```ts
+import { kea, selectors, reducers } from 'kea'
+
+const logic = kea([
+  reducers({ values: [[]] }),
+  selectors({
+    reversedValues: [
+      (s) => [s.values],
+      (values) => [...values].reverse(),
+      // using default isEqualș: (a, b) => a === b
+    ],
+    reversedValuesIfLengthChanges: [
+      (s) => [s.values],
+      (values) => [...values].reverse(),
+      (a, b) => a.length === b.length,
     ],
   }),
 ])
