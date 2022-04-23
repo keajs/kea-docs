@@ -23,10 +23,14 @@ yarn add kea-loaders
 npm install --save kea-loaders
 ```
 
+## Optional: global callbacks
+
 If you want to configure a global error handler for loaders (e.g. notification alert), pass the following
 plugin to your resetContext call:
 
 ```javascript
+import { loadersPlugin } from 'kea-loaders'
+
 resetContext({
   plugins: [
     loadersPlugin({
@@ -52,7 +56,6 @@ resetContext({
 })
 ```
 
-Otherwise, feel free to just use the builder method.
 
 ## Sample usage
 

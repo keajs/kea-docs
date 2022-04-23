@@ -17,7 +17,7 @@ npm install --save kea-localstorage
 Then install the plugin:
 
 ```javascript
-import localStoragePlugin from 'kea-localstorage'
+import { localStoragePlugin } from 'kea-localstorage'
 import { resetContext } from 'kea'
 
 resetContext({
