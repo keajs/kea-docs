@@ -620,6 +620,25 @@ logic.extend([
 // later in React
 const { counter, negativeCounter } = useValues(logic)
 ```
+### logic.findMounted(props)
+
+If you don't want to explicitly connect a logic, but just to see if it's available, use `logic.findMounted(props): BuiltLogic`:
+
+```typescript
+import { reportingLogic } from './reportingLogic'
+
+const logic = kea([
+  listeners({
+    something: () => {
+      // only run if reportingLogic is mounted
+      reportingLogic.findMounted()?.actions.reportEvent({
+        event: 'something',
+        foobar: 'heck yeah',
+      })
+    },
+  }),
+])
+```
 
 ### logic.wrap(Component)
 
