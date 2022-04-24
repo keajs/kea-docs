@@ -16,7 +16,7 @@ cd my-kea-app-v2
 yarn start
 
 # 3.0, for now
-yarn create react-app --template kea-typescript@3.0.0-alpha.0 my-kea-app-v3
+yarn create react-app --template kea-typescript@next my-kea-app-v3
 cd my-kea-app-v3
 yarn start
 ```
