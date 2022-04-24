@@ -191,7 +191,7 @@ function Home() {
       </section>
 
       <section className="homepage-videos">
-        <h1>Tutorials</h1>
+        <h1>Kea Academy</h1>
         {tutorials.map(({ name, url, link }) => (
           <div className="homepage-video">
             <iframe
