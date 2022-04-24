@@ -10,7 +10,11 @@ To create a new app based on [kea's create-react-app typescript template](https:
 run the following:
 
 ```sh
-yarn create react-app --template kea-typescript my-kea-app
+# 2.0
+yarn create react-app --template kea-typescript my-kea-app-v2
+
+# 3.0, for now
+yarn create react-app --template kea-typescript@3.0.0-alpha.0 my-kea-app-v3
 cd my-kea-app
 yarn start
 ```
