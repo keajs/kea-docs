@@ -39,7 +39,7 @@ module.exports = {
         },
         footer: {
             style: 'dark',
-            copyright: `Copyright © 2015-${new Date().getFullYear()} <a href='https://twitter.com/mariusandra' style='color:var(--ifm-footer-color);text-decoration: underline;'>Marius Andra</a> and other Kea contributors. <a href="https://keajs.ck.page/80aecebec7" style='color:var(--ifm-footer-color);text-decoration: underline;'>Subscribe to the Kea Newsletter.</a>`,
+            copyright: `Copyright © 2015-${new Date().getFullYear()} <a href='https://twitter.com/mariusandra' style='color:var(--ifm-footer-color);text-decoration: underline;'>Marius Andra</a> and other Kea contributors. <a href="https://keajs.ck.page/80aecebec7" style='color:var(--ifm-footer-color);text-decoration: underline;'>Subscribe to new content</a>`,
         },
         posthog:
             process.env.NODE_ENV === 'production'
