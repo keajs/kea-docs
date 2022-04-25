@@ -65,8 +65,7 @@ createRoot(document.getElementById('root')).render(<App />)
 
 ### 3. Disable StrictMode
 
-If you're using `<React.StrictMode>` anywhere, remove it. Kea works well with React 18 and concurrent rendering, just not 
-with strict mode.
+If you're using `<React.StrictMode>` anywhere, remove it. Kea works well with React 18 and concurrent rendering, just not with strict mode.
 
 ### 4. TypeScript support
 

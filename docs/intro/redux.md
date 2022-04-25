@@ -4,7 +4,7 @@ sidebar_position: 7
 
 # Redux Compatibility
 
-Since Kea is built on Redux, it is very easy to connect it to an existing Redux application.
+Kea uses `redux` and `reselect` under the hood, and it's very easy to connect it to an existing Redux application.
 
 ## Accessing the Redux store
 
