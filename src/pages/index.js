@@ -193,6 +193,10 @@ function Home() {
 
       <section className="homepage-videos">
         <h1>Kea Academy</h1>
+        <p style={{ marginTop: -20 }}>
+          <strong>The V3 docs are alpha notice:</strong> Please ignore the video content, it's old.
+          The plan is to record a few 10min screencasts to demo the framework, and put them here.
+        </p>
         {tutorials.map(({ name, url, link }, index) => (
           <div className="homepage-video" key={link}>
             <Link to={link}><Thumbnail style={{ padding: 10 }} index={index} /></Link>
