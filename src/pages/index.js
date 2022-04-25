@@ -6,6 +6,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import './styles.scss'
 import { Provider } from 'kea'
+import { Thumbnail } from "../components/img/Thumbnail/Thumbnail";
 
 const sections = [
   {
@@ -192,16 +193,10 @@ function Home() {
 
       <section className="homepage-videos">
         <h1>Kea Academy</h1>
-        {tutorials.map(({ name, url, link }) => (
+        {tutorials.map(({ name, url, link }, index) => (
           <div className="homepage-video" key={link}>
-            <iframe
-              src={url}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-            <h2>{link ? <Link to={link}>{name}</Link> : name}</h2>
+            <Link to={link}><Thumbnail style={{ padding: 10 }} index={index} /></Link>
+            <h2><Link to={link}>{name}</Link></h2>
           </div>
         ))}
       </section>
