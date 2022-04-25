@@ -1,3 +1,4 @@
+import './Thumbnail.scss'
 import React, { CSSProperties } from 'react'
 // @ts-ignore
 import thumb1 from './thumb1.jpg'
@@ -10,6 +11,17 @@ import thumb4 from './thumb4.jpg'
 
 const thumbs = [thumb1, thumb2, thumb3, thumb4]
 
-export function Thumbnail({ index, style }: { index: number, style: CSSProperties }): JSX.Element {
-  return <img src={thumbs[index ?? 0]} style={style} />
+export interface ThumbnailProps {
+  index: number
+  style: CSSProperties
+  comingSoon: boolean
+}
+
+export function Thumbnail({ index, style, comingSoon }: ThumbnailProps): JSX.Element {
+  return (
+    <div className="Thumbnail">
+      <img src={thumbs[index ?? 0]} style={style} />
+      {comingSoon ? <div className="coming-soon">Coming soon</div> : null}
+    </div>
+  )
 }
