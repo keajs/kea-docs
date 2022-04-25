@@ -178,10 +178,10 @@ function Home() {
                 </td>
                 <td>
                   {children?.map((child, index) => (
-                    <>
+                    <React.Fragment key={index}>
                       <Link to={child.url}>{child.title}</Link>
                       {index !== children.length - 1 ? <>&nbsp;| </> : null}
-                    </>
+                    </React.Fragment>
                   ))}
                 </td>
               </tr>
@@ -193,7 +193,7 @@ function Home() {
       <section className="homepage-videos">
         <h1>Kea Academy</h1>
         {tutorials.map(({ name, url, link }) => (
-          <div className="homepage-video">
+          <div className="homepage-video" key={link}>
             <iframe
               src={url}
               title="YouTube video player"
