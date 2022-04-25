@@ -13,15 +13,13 @@
     "@docusaurus/preset-classic": "2.0.0-beta.18",
     "classnames": "^2.3.1",
     "docusaurus-plugin-sass": "^0.2.2",
-    "kea": "^3.0.0-alpha.9",
+    "kea": "^3.0.0-alpha.10",
     "kea-loaders": "^3.0.0-alpha.2",
     "kea-router": "^3.0.0-alpha.0",
     "posthog-docusaurus": "^1.0.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-gist": "^1.2.2",
-    "redux": "^4.1.2",
-    "reselect": "^4.1.5",
     "sass": "^1.50.0"
   },
   "browserslist": {

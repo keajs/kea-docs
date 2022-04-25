@@ -5653,11 +5653,13 @@ kea-typegen@^3.0.0-alpha.6:
     recast "^0.20.5"
     yargs "^16.2.0"
 
-kea@^3.0.0-alpha.9:
-  version "3.0.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/kea/-/kea-3.0.0-alpha.9.tgz#d8f45d8eb1d58596eb8e7821e3bf2e52ae2ca7ad"
-  integrity sha512-KMm4dEMElweOZnDnU5DuWFS0sO30OVbO/ngH1agUoaV9vNEYU8wzuShKeqmiixa9U5BjLbtFLFcPy+Vayatl6g==
+kea@^3.0.0-alpha.10:
+  version "3.0.0-alpha.10"
+  resolved "https://registry.yarnpkg.com/kea/-/kea-3.0.0-alpha.10.tgz#609bab36f7925c686621858a92942c9c543340d0"
+  integrity sha512-REuAzwjhcx+oWf0gzshNFXrSZiHSG+x84xsNyyP0U/Q5hWuxdU+e1aQTUT4ILHbbwGtZFu9VtYiB9QHC8moquQ==
   dependencies:
+    redux "^4.2.0"
+    reselect "^4.1.5"
     use-sync-external-store "^1.0.0"
 
 keyv@^3.0.0:
@@ -7297,10 +7299,10 @@ recursive-readdir@^2.2.2:
   dependencies:
     minimatch "3.0.4"
 
-redux@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/redux/-/redux-4.1.2.tgz#140f35426d99bb4729af760afcf79eaaac407104"
-  integrity sha512-SH8PglcebESbd/shgf6mii6EIoRM0zrQyjcuQ+ojmfxjTtE0z9Y8pa62iA/OJ58qjP6j27uyW4kUF4jl/jd6sw==
+redux@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.2.0.tgz#46f10d6e29b6666df758780437651eeb2b969f13"
+  integrity sha512-oSBmcKKIuIR4ME29/AeNUnl5L+hvBq7OaJWzaptTQJAntaPvxIJqfnjbaEiCzzaIz+XmVILfqAM3Ob0aXLPfjA==
   dependencies:
     "@babel/runtime" "^7.9.2"
 
