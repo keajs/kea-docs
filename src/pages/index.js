@@ -208,7 +208,7 @@ export default function Home() {
         <div className="foreground">
           <h1>Kea Newsletter</h1>
           <p>
-            Learn of <Link to="/blog">new releases</Link> and tutorials as soon as they come out
+            Learn of <Link to="/blog">new releases</Link> and tutorials as soon as they come out.
           </p>
           <form action="https://app.convertkit.com/forms/2699831/subscriptions" method="post">
             <input
