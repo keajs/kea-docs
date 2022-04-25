@@ -5,7 +5,6 @@ import Link from '@docusaurus/Link'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import './styles.scss'
-import { Provider } from 'kea'
 import { Thumbnail } from "../components/img/Thumbnail/Thumbnail";
 
 const sections = [
@@ -139,7 +138,7 @@ const QUOTES = [
   },
 ]
 
-function Home() {
+export default function Home() {
   const context = useDocusaurusContext()
   const { siteConfig = {} } = context
   return (
@@ -300,13 +299,5 @@ function Home() {
         </section>
       </main>
     </Layout>
-  )
-}
-
-export default function WrappedHome() {
-  return (
-    <Provider>
-      <Home />
-    </Provider>
   )
 }

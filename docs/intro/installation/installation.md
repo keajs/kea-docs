@@ -26,41 +26,21 @@ the plugins `kea-router` and `kea-loaders`. It's the fastest way to just try out
 
 ## Install Kea manually
 
-Installing `kea` is rather straightforward. You need to install some packages, optionally call `resetContext`
-and wrap your app with a `<Provider />` tag.
+Installing `kea` is rather straightforward. You need to install some packages and optionally call `resetContext`.
 
-### 1. Install some packages
+### 1. Install `kea`
 
-In addition to `kea` you will also need [`redux`](https://redux.js.org/),
-[`react-redux`](https://react-redux.js.org/) and [`reselect`](https://github.com/reduxjs/reselect).
+The `kea` package comes bundled with everything you need to get started. It also bundles `redux` and `reselect`.
 
 ```shell
 # if you're using yarn
-yarn add kea redux react-redux reselect
+yarn add kea
 
 # if you're using npm
-npm install kea redux react-redux reselect --save
+npm install kea --save
 ```
 
-### 1. Wrap with `<Provider />`
-
-Wrap your `<App />` with `kea`'s `<Provider />`. For example:
-
-```javascript
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { resetContext, Provider } from 'kea'
-import App from './App'
-
-ReactDOM.render(
-  <Provider>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-)
-```
-
-### 3. Optional: Reset Kea's context
+### 2. Optional: Reset Kea's context
 
 Kea stores all of its data on a [context](/docs/intro/context), which must be set up before any `logic` can be used. This
 context stores a reference to the redux store, initializes all plugins, caches all built logic and keeps
@@ -69,30 +49,23 @@ track of what is mounted and what is not.
 Kea comes with a default context already set, but to initialize custom plugins and pass advanced options, call 
 `resetContext(options)` before rendering your app.
 
-This is how your `index.js` would look like if you used `create-react-app`:
+```tsx
+import { resetContext } from 'kea'
+import { createRoot } from 'react-dom/client'
 
-```javascript
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { resetContext, Provider } from 'kea' // 👈 add this
-import './index.css'
-import App from './App'
-
-// 👈 add resetContext if using custom plugins or options
 resetContext({
   plugins: [
     // additional kea plugins
   ],
 })
 
-ReactDOM.render(
-  // 👈 add <Provider>
-  <Provider>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-)
+// some time later
+createRoot(document.getElementById('root')).render(<App />)
 ```
+
+### 3. Disable StrictMode
+
+If you're using `<React.StrictMode>` anywhere, remove it. Kea works well with concurrent rendering, just not with strict mode.
 
 ### 4. TypeScript support
 

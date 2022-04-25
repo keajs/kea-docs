@@ -12,19 +12,17 @@ Here are the steps you must take to get set up **Kea with Next.js**.
 
 ## Install the packages
 
-In addition to the `kea`, [`redux`](https://redux.js.org/),
-[`react-redux`](https://react-redux.js.org/) and [`reselect`](https://github.com/reduxjs/reselect)
-packages that Kea normally requires, you must also install the
+In addition to the `kea`, you must also install the
 [`babel-plugin-kea`](/docs/intro/debugging) and
 [`next-redux-wrapper`](https://github.com/kirill-konshin/next-redux-wrapper) packages:
 
 ```shell
 # if you're using yarn
-yarn add kea redux react-redux reselect next-redux-wrapper
+yarn add kea next-redux-wrapper
 yarn add --dev babel-plugin-kea
 
 # if you're using npm
-npm install kea redux react-redux reselect next-redux-wrapper --save
+npm install kea next-redux-wrapper --save
 npm install babel-plugin-kea --save-dev
 ```
 
@@ -37,7 +35,7 @@ the server.
 
 Add this to your `.babelrc`:
 
-```javascript
+```json
 {
   "presets": ["next/babel"],
   "plugins": ["babel-plugin-kea"]
@@ -54,7 +52,6 @@ have been annotated with comments.
 // pages/_app.js
 import React from 'react'
 import { resetContext } from 'kea'
-import { Provider } from 'react-redux'
 import App from 'next/app'
 import withRedux from 'next-redux-wrapper'
 
@@ -92,9 +89,7 @@ class MyApp extends App {
   render() {
     const { Component, pageProps, store } = this.props
     return (
-      <Provider store={store}>
-        <Component {...pageProps} />
-      </Provider>
+      <Component {...pageProps} />
     )
   }
 }
