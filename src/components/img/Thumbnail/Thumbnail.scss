@@ -1,5 +1,8 @@
 .Thumbnail {
   position: relative;
+  &.Thumbnail--coming-soon img {
+     opacity: 0.2
+  }
   .coming-soon {
     position: absolute;
     width: 100%;
@@ -8,7 +11,6 @@
     left: 0;
     z-index: 1;
     padding-top: 94px;
-    background: rgba(255,255,255,0.8);
     color: #aaa;
     text-transform: uppercase;
     font-weight: bold;

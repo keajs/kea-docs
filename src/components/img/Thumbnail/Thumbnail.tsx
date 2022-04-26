@@ -19,7 +19,7 @@ export interface ThumbnailProps {
 
 export function Thumbnail({ index, style, comingSoon }: ThumbnailProps): JSX.Element {
   return (
-    <div className="Thumbnail">
+    <div className={`Thumbnail${comingSoon ? ' Thumbnail--coming-soon' : ''}`}>
       <img src={thumbs[index ?? 0]} style={style} />
       {comingSoon ? <div className="coming-soon">Coming soon</div> : null}
     </div>
