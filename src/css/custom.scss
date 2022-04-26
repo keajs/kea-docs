@@ -26,6 +26,15 @@
     --ifm-strong-monospace-font-family: "Monaco", monospace;
 
     --ifm-heading-font-family: var(--ifm-normal-monospace-font-family);
+
+    --squeak-button-color: 57, 142, 61; // rgb triplet, no hex
+    --squeak-primary-color: 0, 0, 0; // rgb triplet, no hex, used for text
+    --squeak-warning-color: #FFF7E9; // for form warnings or errors
+    --squeak-thread-border-style: dashed; // thread lines that tie replies to questions
+    --squeak-input-text-color: 0, 0, 0; // rgb triplet, useful on dark input backgrounds
+    --squeak-input-background-color: transparent; // hex, rgb, rgba
+    --squeak-border-radius: .25rem; // adjusts all radii proportionally
+    --squeak-base-font-size: 16px; // eg: decrease 1px to scale down all text
 }
 
 html[data-theme='dark']:root {
@@ -44,6 +53,15 @@ html[data-theme='dark']:root {
     --code-color-green: #44d544;
     --code-color-gray: #bbb;
     --code-color-black: white;
+
+    --squeak-button-color: 105, 195, 110; // rgb triplet, no hex
+    --squeak-primary-color: 245, 246, 247; // rgb triplet, no hex, used for text
+    --squeak-warning-color: #FFF7E9; // for form warnings or errors
+    --squeak-thread-border-style: dashed; // thread lines that tie replies to questions
+    --squeak-input-text-color: 255, 255, 255; // rgb triplet, useful on dark input backgrounds
+    --squeak-input-background-color: rgba(255,255,255,0.0); // hex, rgb, rgba
+    --squeak-border-radius: .25rem; // adjusts all radii proportionally
+    --squeak-base-font-size: 16px; // eg: decrease 1px to scale down all text
 }
 
 .footer--dark {
