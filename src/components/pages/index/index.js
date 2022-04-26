@@ -6,7 +6,8 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import './styles.scss'
 import { Tutorials } from './Tutorials/Tutorials'
-import { Newsletter } from "./Newsletter/Newsletter";
+import { Newsletter } from './Newsletter/Newsletter'
+import { Squeak } from '../../squeak/Squeak'
 
 const sections = [
   {
@@ -170,7 +171,7 @@ export default function Home() {
 
       <Tutorials />
 
-<Newsletter/>
+      <Newsletter />
 
       <main>
         <div className="homepage-testimonials">
