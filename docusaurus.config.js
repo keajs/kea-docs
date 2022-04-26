@@ -68,6 +68,8 @@ module.exports = {
                   path.dirname(vfile.path),
                   path.resolve(__dirname, 'src/components/squeak/Squeak')
                 )
+                const fakeSlug =
+                  `/` + path.relative(__dirname, vfile.path).replaceAll(/\.[a-z]+$/g, '')
                 ast.children.push(
                   {
                     type: 'mdxJsxFlowElement',
@@ -88,7 +90,7 @@ module.exports = {
                     children: [
                       {
                         type: 'text',
-                        value: 'Ask questions about this page here.',
+                        value: `Ask questions about this page here.`,
                       },
                     ],
                   },
@@ -98,11 +100,9 @@ module.exports = {
                   },
                   {
                     type: 'jsx',
-                    value: '<Squeak slug={frontMatter.slug} />',
+                    value: `<Squeak slug={${JSON.stringify(fakeSlug)}} />`,
                   }
                 )
-                // console.log(vfile.path)
-                // debugger
               }
               return transformer
             },
