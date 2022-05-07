@@ -15,7 +15,15 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 Kea is a complete framework for managing state in [React](https://reactjs.org/) webapps.
 
 Kea organises state in containers called `logic`, which are _pretty big_ and _pretty opinionated_ units of state,
-especially when compared to other solutions that are built around atoms and molecules.
+especially when compared to other solutions that are built around atoms, molecules, or context objects.
+
+Kea doesn't limit itself to simple state management. Kea _also_ provides standard solutions to common tasks like [routing](/docs/plugins/router),
+[data loading](/docs/plugins/loaders), and [form handling](/docs/plugins/forms). All through cleverly nested _logic builders_.
+
+Kea believes the rigidity in its core structure and its set of standard tools introduce a lot of flexibility in your application: **you can actually focus on what matters!**
+The framework gets out of your way, as it should.
+
+## What's a logic?
 
 A [`logic`](/docs/meta/logic) is created by passing an array of logic builders to [`kea([])`](/docs/core/kea), such as [`actions()`](/docs/core/actions) and [`reducers()`](/docs/core/reducers):
 
@@ -123,7 +131,7 @@ to replace sagas, and soon made things even simpler with [Kea 2.0](/blog/kea-2.0
 the maturation of the [loaders](/docs/plugins/loaders) and [router](/docs/plugins/router) plugins, a new [testing](/docs/intro/testing) framework, and
 a solidification of a [data-first mindset](/blog/data-first-frontend-revolution) to guide development.
 
-Now in early 2022, it's time for yet another shift. [Kea 3.0](/blog/kea-3.0/) finally introduces [builders](/docs/intro/what-is-kea#logic-builders),
+Now in early 2022, it's time for yet another shift. [Kea 3.0](/blog/kea-3.0/) introduces [builders](/docs/intro/what-is-kea#logic-builders),
 making it possible to build abstractions on top of Kea on a whole new level. The new [`kea-forms`](/docs/plugins/forms) plugin
 takes full advantage of this new power.
 
