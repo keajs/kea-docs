@@ -28,7 +28,6 @@ which not only contain a piece of your state, but also all the _logic_ that mani
 It's a useful convention, and I suggest sticking to it. It's useful to call your logic with
 names that end with `Logic`, such as `accountLogic`, `dashboardLogic`, etc.
 
-
 ## Lifecycles
 
 A `logic` can be in three different states:
@@ -105,7 +104,7 @@ logicWithProps.unmount()
 
 All mounts and unmounts are counted. If you call `mount` twice, you need to call `unmount` twice to fully unmount.
 
-If you're not careful and call `logic.unmount()` more times than `logic.mount()`, you may unmount a logic that should 
+If you're not careful and call `logic.unmount()` more times than `logic.mount()`, you may unmount a logic that should
 still remain mounted. Some other logic probably depends on it.
 
 To better control the flow, `logic.mount` returns a function that can be used to unmount exactly once:
@@ -248,6 +247,7 @@ logic.extend([
 // later in React
 const { counter, negativeCounter } = useValues(logic)
 ```
+
 ### logic.findMounted(props)
 
 Find if a logic is mounted. Return the built logic if so:
@@ -316,8 +316,7 @@ Outwardly, you usually only care about `logic.actions` and `logic.values`. The p
 when you're building your own logic builders.
 
 Read the docs on [`kea([])`](/docs/core/kea) and about the [core logic builders](/docs/core/) to learn how to
-build a logic itself. 
-
+build a logic itself.
 
 ### logic.actionCreators
 
@@ -409,10 +408,10 @@ Defaults to `{}`
 
 This is not meant to pass around application data (use reducers for that), but to help the logic's internals manage their work.
 
-This is also often used to store event listeners: 
+This is also often used to store event listeners:
 
 ```ts
-import { kea, afterMount, beforeUnmount } from "kea";
+import { kea, afterMount, beforeUnmount } from 'kea'
 
 const logic = kea([
   afterMount(({ actions, cache }) => {
@@ -496,6 +495,37 @@ logic.events ==
       console.log('kea is awesome!')
     },
   }
+```
+
+### logic.inputs
+
+All the gathered inputs for building this logic
+
+```javascript
+inputs = [
+  events({
+    afterMount: () => {
+      console.log('kea is awesome!')
+    },
+  }),
+]
+const logic = kea(inputs)
+logic.inputs === inputs
+
+logic.extend([actions({})])
+
+logic.inputs === [...inputs, actions({})]
+```
+
+You can use `inputs` to inherit building blocks from other logic:
+
+```js
+const newLogic = kea([
+  ...otherLogic.inputs,
+  actions({
+    addMyStuff: true,
+  }),
+])
 ```
 
 ### logic.listeners
