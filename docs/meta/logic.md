@@ -259,10 +259,31 @@ const logic = kea([
   listeners({
     something: () => {
       // only run if reportingLogic is mounted
-      reportingLogic.findMounted()?.actions.reportEvent({
+      reportingLogic.findMounted({ id: 2 })?.actions.reportEvent({
         event: 'something',
         foobar: 'heck yeah',
       })
+    },
+  }),
+])
+```
+
+### logic.isMounted(props)
+
+Is a logic matching the given props mounted?
+
+```typescript
+import { reportingLogic } from './reportingLogic'
+
+const logic = kea([
+  listeners({
+    something: () => {
+      // only run if the logic for id: 2 is mounted
+      if (reportingLogic({ id: 2 }).isMounted()) {
+        console.log(reportingLogic({ id: 2 }).values.count)
+      }
+      // will throw if the logic for id: 123 is not mounted
+      console.log(reportingLogic({ id: 123 }).values.count)
     },
   }),
 ])
