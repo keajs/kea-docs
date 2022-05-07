@@ -66,9 +66,9 @@ function Login() {
 
 ## Core building blocks
 
-From [Redux](https://redux.js.org/), Kea inherits [`actions`](/docs/core/actions), [`reducers`](/docs/core/reducers), and [`selectors`](/docs/core/selectors) as its core building blocks.
+Just like [Redux](https://redux.js.org/), Kea uses [`actions`](/docs/core/actions), [`reducers`](/docs/core/reducers), and [`selectors`](/docs/core/selectors) as its core building blocks.
 
-These provide a stable foundation that all other features rely on.
+These provide a stable foundation that all other features are built on.
 
 - Think of [`actions`](/docs/core/actions) as a unified messaging bus that every part of your app uses to communicate.
 - Think of [`reducers`](/docs/core/reducers) as the only "write" operation in the entire system, and only in response to actions.
@@ -86,9 +86,7 @@ You can run side-effects in response to actions with [`listeners`](/docs/core/li
 
 There are plugins that simplify data [`loading`](/docs/plugins/loaders), [`forms`](/docs/plugins/forms), [`routing`](/docs/plugins/router), and [other common tasks](/docs/plugins/).
 
-It's all pretty standard stuff you've surely seen elsewhere, but with a few twists (look for [_breakpoints_](/docs/core/listeners#breakpoints)), and in a nice package.
-
-Click on any of the links above (starting with [`kea()`](/docs/core/kea)), or just read through the [core](/docs/core/), [meta](/docs/meta/) and [plugins](/docs/plugins/) sections to learn more.
+It's a lot of approachable and hopefully familiar code, but with a few twists (look for [_breakpoints_](/docs/core/listeners#breakpoints)), and in a nice package.
 
 ## Data layer
 
@@ -112,6 +110,14 @@ To take full advantage of Kea, think of it as a self-sufficient data layer betwe
 
 <KeaReact />
 
+## How to learn Kea?
+
+Start by reading through the [Core](/docs/core/) and [Meta](/docs/meta/) sections in the sidebar, and then just [going for it](/docs/intro/installation).
+
+You can also have a look at the ever expanding list of [video tutorials](/docs/tutorials/) to quickly get up to speed. [Start with the basics](/docs/tutorials/basics).
+
+I'm working on providing better tutorials and documentation, but these things take time. [Subscribe to the Kea mailing list](https://keajs.ck.page/80aecebec7) to get the latest updates.
+
 ## History
 
 The Kea project began in 2015 when I took on a job to build an app with [React](https://reactjs.org/) and [Redux](https://redux.js.org/).
@@ -134,12 +140,6 @@ a solidification of a [data-first mindset](/blog/data-first-frontend-revolution)
 Now in early 2022, it's time for yet another shift. [Kea 3.0](/blog/kea-3.0/) introduces [builders](/docs/intro/what-is-kea#logic-builders),
 making it possible to build abstractions on top of Kea on a whole new level. The new [`kea-forms`](/docs/plugins/forms) plugin
 takes full advantage of this new power.
-
-## How to learn Kea?
-
-Start by reading through the [Core](/docs/core/) and [Meta](/docs/meta/) sections in the sidebar, and then just [going for it](/docs/intro/installation).
-
-I'm working on providing better tutorials, but these things take time. [Subscribe to the Kea mailing list](https://keajs.ck.page/80aecebec7) to get the latest updates.
 
 ## What's a "kea"?
 
