@@ -6,7 +6,9 @@ sidebar_position: 0
 
 ## Logic builders
 
-To build a logic, you give `kea` an array of logic builders. Before a logic is mounted, it is built, and all logic builders are run in succession:
+To build a logic, you give `kea` an array of logic builders.
+
+Before a logic is mounted, it is built, and all logic builders are run in succession:
 
 ```ts
 import { kea, actions, BuiltLogic } from 'kea'
@@ -35,13 +37,13 @@ const logic = kea([
 ])
 ```
 
-A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to modify [any of the fields](/docs/meta/logic#properties) on a `logic`.
+A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to modify [any of the properties](/docs/meta/logic#properties) of a `logic`.
 
-Normally you don't manipulate properties of your logic directly, but you use builders like `actions` and `listeners` instead.
+Normally you don't manipulate properties of your logic directly, but you use wrap core builders like `actions` and `listeners` instead.
 
 :::note
 Technically, functions like `actions` and `reducers` are _logic-builder-builders_, since they return a `LogicBuilder`, but, to keep
-everyone's mental health reasonable, we're calling all functions that return logic builders, like `actions`, just "builders" for short.
+everyone's mental health expenses down, we're calling all functions that return logic builders, like `actions` or `listeners`, just "builders" for short.
 :::
 
 You can build powerful abstractions when you nest builders. For example, here's a `setters` builder,
@@ -70,9 +72,9 @@ loginLogic.values.username === 'posthog'
 loginLogic.values.password === ''
 ```
 
-I would normally use `actions` and `reducers` directly myself, but who knows, maybe `setters` can simplify your app.
+I'd _prefer_ using `actions` and `reducers` directly myself, but who knows, maybe `setters` can simplify your app.
 
-If not, perhaps you will use [`kea-forms`](/docs/plugins/forms) at some point. It's built exactly the same way: you pass
+If not, perhaps you will use the [`kea-forms`](/docs/plugins/forms) plugin at some point. It's built exactly the same way: you pass
 `forms()` a few input parameters, and it'll add the relevant `actions` and `values` to your `logic`:
 
 ```ts
@@ -102,8 +104,7 @@ It's a very practical way to build frontend apps.
 
 ## Input objects vs functions
 
-Whenever you're using any of kea's built-in primitives (`actions`, `reducers`, `listeners`, etc),
-you have two options.
+Whenever you're using any of kea's built-in primitives (`actions`, `reducers`, `listeners`, etc), you have two options.
 
 You can pass objects to them:
 
@@ -120,51 +121,22 @@ kea([
 ])
 ```
 
-... or you can pass functions to them:
+... or you can pass functions to them, which take the same `logic` as their only input, and get evaluated only on build:
 
 ```javascript
 kea([
   actions((logic) => ({
-    // added "() => ("
     increment: true,
-  })), // added ")"
+  })),
   listeners((logic) => ({
-    // added "() => ("
     increment: () => {
-      console.log('++!')
+      console.log('incrementing!')
     },
-  })), // added ")"
-])
-```
-
-What's the difference?
-
-If you pass a function, it gets evaluated lazily when the logic is built.
-
-If you're using values that are not guaranteed to be there, or not guaranteed to be available when your logic is evaluated,
-wrap the input in a function. 
-
-An example I've run into is an imported `otherLogic` being `undefined` due to the order in which your browser loads modules. 
-
-```javascript
-import { kea, reducers } from 'kea'
-kea([
-  reducers(() => ({
-    // evaluate later
-    counter: [
-      0,
-      {
-        increment: (state) => state + 1,
-        // otherLogic is undefined when loading this code
-        // so we must wrap a function around it
-        [otherLogic.actionTypes.setCounter]: (_, { counter }) => counter,
-      },
-    ],
   })),
 ])
 ```
 
-The function you pass gets one argument, `logic`, which you can destructure to get `actions`, `values` and other goodies on the logic that you're building:
+You can get `actions`, `values` and other goodies from this `logic`:
 
 ```javascript
 kea([
@@ -178,9 +150,21 @@ kea([
 ])
 ```
 
-The recommendation is to write the simplest code you can (start with `reducers({})`)
-and when you need to access `actions`, `values` or perform lazy evaluation, convert it into
-a function that destructures the logic.
+The recommendation is to write the simplest code you can (start with `reducers({})`), and convert it into a function when
+you need any data from the logic.
+
+There's one more case when converting the input to a function is useful. Sometimes, due to the order in which your
+browser loads modules, some imported values will be `undefined` when the code first runs. For example: 
+
+```javascript
+import { kea, connect } from 'kea'
+import { otherLogic } from './otherLogic'
+
+const logic = kea([
+  connect(otherLogic), // if this is `undefined` when this code is executed
+  connect(() => otherLogic), // wrap it in a function to load lazily
+])
+```
 
 ## Kea 2.0 input object syntax
 
@@ -204,7 +188,7 @@ const logic = kea({
 })
 ```
 
-This object would then be evaluated in a predefined order. 
+This object would then be evaluated in a predefined order.
 
 That syntax still works, and most Kea 2.0 code should function as is in 3.0. However, it's strongly encouraged
 to use the new 3.0 builders syntax going forward.
