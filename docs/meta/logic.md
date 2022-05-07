@@ -14,7 +14,7 @@ const logic = kea([
 ])
 ```
 
-:::warning
+:::note
 The docs below describe what to do with a `logic` after you have built it. If this is your first time here, read more about [how to create a logic with `kea()` in the first place](/docs/core/kea).
 :::
 
