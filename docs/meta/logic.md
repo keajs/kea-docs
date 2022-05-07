@@ -3,12 +3,12 @@ sidebar_position: 1
 ---
 
 :::note
-The docs below describe what to do with a `logic` after you have built it. If this is your first time here, start by learning about [how to create logic with `kea()`](/docs/core/kea).
+The docs below describe what to do with a `logic` after you have built it. If this is your first time here, start by learning about [how to create logic with `kea()`](/docs/meta/kea).
 :::
 
 # logic
 
-All Kea code lives inside a `logic`, which is created by passing logic builders to [`kea([])`](/docs/core/kea)
+All Kea code lives inside a `logic`, which is created by passing logic builders to [`kea([])`](/docs/meta/kea)
 
 ```ts
 import { kea } from 'kea'
@@ -44,7 +44,7 @@ const unmount = builtLoginLogic.mount()
 ```
 
 1. **Initialized**. When your JS interpreter encounters a `kea([...builders])` call, it stores a reference to `builders` inside `logic`. It doesn't run anything yet.
-2. **Built**. To build a logic, apply all [logic builders](/docs/core/kea) in order. The result is a complete `builtLogic` object with various properties, but
+2. **Built**. To build a logic, apply all [logic builders](/docs/meta/kea) in order. The result is a complete `builtLogic` object with various properties, but
    which doesn't do much on its own.
 3. **Mounted**. Once a logic is built, it can be mounted. This means attaching its the `reducers` to
    Redux, making its `selectors` actually point to a `value` in the store, registering all `listeners`, firing all `afterMount` events, and so on.
@@ -336,7 +336,7 @@ const ConnectedClassComponent = logic(MyClassComponent)
 Outwardly, you usually only care about `logic.actions` and `logic.values`. The properties below are useful
 when you're building your own logic builders.
 
-Read the docs on [`kea([])`](/docs/core/kea) and about the [core logic builders](/docs/core/) to learn how to
+Read the docs on [`kea([])`](/docs/meta/kea) and about the [core logic builders](/docs/core/) to learn how to
 build a logic itself.
 
 ### logic.actionCreators

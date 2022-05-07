@@ -5,7 +5,7 @@ sidebar_label: API
 
 # Plugins API
 
-Sometimes, [logic builders](/docs/core/kea#logicbuilders) aren't enough, and you need to hook into the global
+Sometimes, [logic builders](/docs/meta/kea#logicbuilders) aren't enough, and you need to hook into the global
 lifecycle of _every_ logic, inject middleware into Redux, or create new default keys like `logic.wormholes = {}`. 
 
 That's where plugins come in.
@@ -103,6 +103,6 @@ const woohooPlugin = (config?: WoohooPluginConfig): KeaPlugin => ({
 
 Plugins before Kea 3.0 were all of the above, plus [logic builders as a complicated system of build steps](https://v2.keajs.org/docs/guide/writing-plugins#plugin-build-steps).
 
-With the introduction of true [logic builders](/docs/core/kea#logicbuilders), the build step system has been replaced with a simple
+With the introduction of true [logic builders](/docs/meta/kea#logicbuilders), the build step system has been replaced with a simple
 trio of legacy build events, run when we encounter an old `{}` object style `LogicInput`. Hopefully you won't have to care about it.
 

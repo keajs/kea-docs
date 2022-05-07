@@ -4,7 +4,6 @@ sidebar_position: 2
 
 # Core
 
-- [kea](/docs/core/kea)
 - [actions](/docs/core/actions)
 - [defaults](/docs/core/defaults)
 - [events](/docs/core/events)

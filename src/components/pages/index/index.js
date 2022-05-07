@@ -27,7 +27,6 @@ const sections = [
     url: '/docs/core/',
     title: 'Core',
     children: [
-      { url: '/docs/core/kea', title: 'kea' },
       { url: '/docs/core/actions', title: 'actions' },
       { url: '/docs/core/reducers', title: 'reducers' },
       { url: '/docs/core/selectors', title: 'selectors' },
@@ -40,6 +39,7 @@ const sections = [
     url: '/docs/meta/',
     title: 'Meta',
     children: [
+      { url: '/docs/meta/kea', title: 'kea' },
       { url: '/docs/meta/logic', title: 'logic' },
       { url: '/docs/meta/connect', title: 'connect' },
       { url: '/docs/meta/key', title: 'key' },

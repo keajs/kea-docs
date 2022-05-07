@@ -225,7 +225,7 @@ const logic = kea([
 It's like a little matrix of values and their transformations, as code. 
 
 In the real world, you would use the [loaders](/docs/plugins/loaders) plugins instead of writing the code above. 
-Remember, Kea is built to help you [abstract away all the boring parts](/docs/core/kea#logic-builders).
+Remember, Kea is built to help you [abstract away all the boring parts](/docs/meta/kea#logic-builders).
 
 ## Breakpoints
 
