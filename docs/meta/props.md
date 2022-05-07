@@ -6,33 +6,28 @@ When you build a `logic`, you can pass it an object that will be stored as `prop
 const props = { id: 10 }
 const logic = kea([])
 
-logic.build(props).props === logic(props).props === props
+;(logic.build(props).props === logic(props).props) === props
 ```
 
-Calling [`logic(props)`](/docs/meta/logic#logic-1) or [`logic.build(props)`](/docs/meta/logic#logicbuildprops) is a fast operation. Only the `props` on the logic will be updated in case the
-logic is already mounted. Thus it's safe to call from a React component.
+Calling [`logic(props)`](/docs/meta/logic#logic-1) or [`logic.build(props)`](/docs/meta/logic#logicbuildprops) is a fast operation.
 
+In case the logic is already mounted, its `props` will be updated to the new passed props.
 
-## Defaults from React
+## Pass data from React
 
-You can pass random data from React onto the logic this way. For example various defaults.
-
-It's as simple as this:
+You can pass random data from React onto the logic via `props`. For example various defaults:
 
 ```jsx
 function FancyPantsCounter() {
-  // without props
-  const { counter } = useValues(counterLogic)
-  // with props
-  const { counter } = useValues(counterLogic({ defaultCounter: 1000 }))
+  const builtLogic = counterLogic({
+    defaultCounter: 1000,
+    onChange: (c) => console.log(c),
+  })
+  const { counter } = useValues(builtLogic)
 
   // ...
 }
-```
 
-Then just use `props` wherever you need to. For example:
-
-```javascript
 const counterLogic = kea([
   actions({
     increment: (amount) => ({ amount }),
@@ -47,11 +42,30 @@ const counterLogic = kea([
       },
     ],
   })),
-  listeners(({ props }) => ({
+  listeners(({ props, values }) => ({
     increment: ({ amount }) => {
       console.log(`incrementing by ${amount}`)
       console.log(`default ${props.defaultCounter || 0}`)
+      props.onChange?.(values.counter)
     },
   })),
+])
+```
+
+## Typed Props
+
+When using [kea-typegen](/docs/intro/typescript), you may pass a type to the `props` builder:
+
+```ts
+import { kea, props } from 'kea'
+import { logicType } from './logicType'
+
+interface LogicProps {
+  id: number
+}
+
+const logic = kea<logicType<LogicProps>>([
+  // specify the type here
+  props({} as LogicProps),
 ])
 ```
