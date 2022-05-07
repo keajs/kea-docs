@@ -50,11 +50,9 @@ While this may _feel_ limiting at first, there is method to madness here. Pushin
 through actions makes for stable and predictable apps that run better, crash less often and
 even do your laundry. We all want that, don't we?
 
-Being explicit with the relationships between actions and reducers makes for very composable
-code. This is best illustrated with an example.
+Being explicit with the relationships between actions and reducers makes for very composable code. 
 
-Suppose we extend the logic above, and also store a `name`. We now want the `reset` action to clear both pieces of data. 
-Easy peasy:
+Suppose our logic also stores a `name`. Can we make the `reset` action clear both pieces of data? Naturally:
 
 ```javascript
 import { kea, actions, reducers } from 'kea'
@@ -86,21 +84,23 @@ const logic = kea([
 ])
 ```
 
-This example is contrived of course, but should illustrate the point about composability.
+It's starting to look like a neatly defined state graph of sorts... :thinking_face:
+
 You can have any reducer depend on any action, even ones [defined in other logic files](/docs/meta/connect).
 
-Most of the time you want your actions and reducers to mix together freely, like they're attending
-a music festival in a ~~pre~~post-pandemic world.
+:::note Anti-pattern warning
+Kea's actions and reducers are intended to mix together freely within a logic.
 
-If, however, you find yourself constantly writing code that has actions such as `setName`, `setPrice`,
+If you find yourself constantly writing code that has actions such as `setName`, `setPrice`,
 `setLoading` and `setError` with corresponding reducers `name`, `price`, `loading` and `error`
 and a singular 1:1 mapping between them, you're probably following an anti-pattern and doing something wrong.
 
-You'll see an example of this anti-pattern in the section about [listeners](/docs/core/listeners).
+You'll see an example of this anti-pattern in the section about [listeners](/docs/core/listeners#tracking-loading).
+:::
 
 ## Pure functions
 
-One last thing, just like actions, reducers as well are [pure functions](https://en.wikipedia.org/wiki/Pure_function).
+Just like actions, reducers are also [pure functions](https://en.wikipedia.org/wiki/Pure_function).
 That means no matter how many times you call a reducer with the same input (same `state` and `payload`),
 it should always give the same output.
 
@@ -143,13 +143,12 @@ const todosLogic = kea([
 ```
 
 This may seem weird and slow at first, but writing _immutable_ code like this greatly improves
-performance in React. If you really do want to write mutable code,
-feel free to wrap your reducers with [immer](https://github.com/immerjs/immer).
+performance in React, by making it obvious what has changed and what hasn't. 
+If you really do want to write mutable code, feel free to wrap your reducers with [immer](https://github.com/immerjs/immer).
 
 ## No side effects
 
-The other thing you can't do in a reducer is to dispatch an action as a response to another action
-or to call an API endpoint. For this you use [listeners](/docs/core/listeners).
+In a reducer you can not dispatch actions, nor run any asynchronous code. For this you use [listeners](/docs/core/listeners).
 
 ## Using in React
 

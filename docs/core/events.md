@@ -3,6 +3,49 @@ sidebar_position: 5
 ---
 # events
 
+## `events()`
+
+You can hook into all the mount and unmount events with the `events` builder:
+
+```javascript
+import { kea, events } from 'kea'
+
+const logic = kea([
+  events(({ actions, values }) => ({
+    beforeMount: () => {
+      // run before the logic is mounted
+    },
+    afterMount: () => {
+      // run after the logic is mounted
+    },
+    beforeUnmount: () => {
+      // run before the logic is unmounted
+    },
+    afterUnmount: () => {
+      // run after the logic is unmounted
+    },
+  })),
+])
+```
+
+All events accept either a function or an array of functions:
+
+```javascript
+const usersLogic = kea([
+  events(({ actions, values }) => ({
+    afterMount: [actions.fetchUsers, () => actions.fetchDetails(values.user.id)],
+
+    // these four lines do the same:
+    beforeUnmount: actions.cleanup,
+    beforeUnmount: [actions.cleanup],
+    beforeUnmount: () => actions.cleanup(),
+    beforeUnmount: [() => actions.cleanup()],
+  })),
+])
+```
+
+The `afterMount` and `beforeUnmount` events are also available as their own builders.
+
 ## `afterMount()`
 
 The `afterMount` event runs code after a logic has been mounted. It's often used to start fetching data.
@@ -44,46 +87,5 @@ const logic = kea([
   beforeUnmount(({ actions }) => {
     window.removeEventListener('mousemove', cache.onMouseMove)
   }),
-])
-```
-
-## `events()`
-
-You can hook into two other mount and unmount events with the `events` builder:
-
-```javascript
-import { kea, events } from 'kea'
-
-const logic = kea([
-  events(({ actions, values }) => ({
-    beforeMount: () => {
-      // run before the logic is mounted
-    },
-    afterMount: () => {
-      // run after the logic is mounted
-    },
-    beforeUnmount: () => {
-      // run before the logic is unmounted
-    },
-    afterUnmount: () => {
-      // run after the logic is unmounted
-    },
-  })),
-])
-```
-
-All events accept either a function or an array of functions:
-
-```javascript
-const usersLogic = kea([
-  events(({ actions, values }) => ({
-    afterMount: [actions.fetchUsers, () => actions.fetchDetails(values.user.id)],
-
-    // these four lines do the same:
-    beforeUnmount: actions.cleanup,
-    beforeUnmount: [actions.cleanup],
-    beforeUnmount: () => actions.cleanup(),
-    beforeUnmount: [() => actions.cleanup()],
-  })),
 ])
 ```

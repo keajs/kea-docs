@@ -86,11 +86,35 @@ function RecordsForThisMonth() {
 }
 ```
 
-## Caching
+## Default Memoization
 
 Selectors are recalculated only if the value of their inputs changes. In the example above,
 no matter how often your components ask for `recordsForSelectedMonth`, they will get
 a cached response as long as `month` and `records` haven't changed since last time.
+
+## Custom Memoization
+
+To change the default memoization behaviour, pass `memoizeOptions` as the third element to the selector array. 
+This is passed [directly to reselect](https://github.com/reduxjs/reselect#defaultmemoizefunc-equalitycheckoroptions--defaultequalitycheck). 
+
+```ts
+interface MemoizeOptions {
+  equalityCheck?: EqualityFn
+  resultEqualityCheck?: EqualityFn
+  maxSize?: number
+}
+
+const logic = kea({
+    selectors: {
+        widgetKeys: [
+            (selectors) => [selectors.widgets],
+            (widgets) => Object.keys(widgets),
+            // DefaultMemoizeOptions
+            { resultEqualityCheck: deepEqual },
+        ],
+    },
+})
+```
 
 ## Single source of truth
 
@@ -182,26 +206,3 @@ const counterLogic = kea([
 ])
 ```
 
-## Custom isEquals
-
-Selectors input arrays take a third element, a custom `isEquals` function, which will be used to compare each input selector's value. For example:
-
-```ts
-import { kea, selectors, reducers } from 'kea'
-
-const logic = kea([
-  reducers({ values: [[]] }),
-  selectors({
-    reversedValues: [
-      (s) => [s.values],
-      (values) => [...values].reverse(),
-      // using default isEqualș: (a, b) => a === b
-    ],
-    reversedValuesIfLengthChanges: [
-      (s) => [s.values],
-      (values) => [...values].reverse(),
-      (a, b) => a.length === b.length,
-    ],
-  }),
-])
-```

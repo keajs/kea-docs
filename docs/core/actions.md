@@ -78,7 +78,7 @@ Since kea's actions are [compatible with Redux](https://redux.js.org/basics/acti
 something like this:
 
 ```javascript
-addToCounter(1000) === { type: 'add to counter', payload: { amount: 1000 } }
+addToCounter(1000) === dispatch({ type: 'add to counter', payload: { amount: 1000 } })
 ```
 
 Calling `logic.actions.addToCounter(1000)` dispatches the action directly. If you only want to _create_
@@ -88,8 +88,7 @@ To get the Redux type of an action, use `logic.actionTypes.addToCounter`
 
 ## Shorthand when no parameters
 
-In case your actions take no arguments (e.g. `loadUsers`),
-just pass `true`, or anything else that's not a function, instead of a payload creator:
+In case your actions take no arguments (e.g. `loadUsers`), just pass `true`.
 
 ```jsx
 import { kea, actions } from 'kea'
@@ -99,7 +98,7 @@ const logic = kea([
     addToCounter: (amount) => ({ amount }),
     addOneThousand: true,
     loadUsers: true,
-    takeOutGarbage: false,
+    takeOutGarbage: true,
   }),
 ])
 ```
@@ -111,13 +110,13 @@ The `payload` then will be `{ value: true }`... but you'll just ignore it anyway
 One more thing. It's **strongly** recommended to _always_ return an object
 as a payload from your actions:
 
-```jsx
+```tsx
 import { kea, actions } from 'kea'
 
 const logic = kea([
   actions({
-    addToCounter: (amount) => ({ amount }), // ❤️ DO this!
-    badBadAddToCounter: (amount) => amount, // 💔 DO NOT do this!
+    addToCounter: (amount: number) => ({ amount }), // ❤️ DO this!
+    badBadAddToCounter: (amount: number) => amount, // 💔 DO NOT do this!
   }),
 ])
 ```

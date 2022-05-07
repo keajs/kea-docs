@@ -64,17 +64,16 @@ const logic = kea([
 ])
 ```
 
-If you're used to React Hooks or other lightweight state management solution,
-then the above code might seem overly verbose to you. _"Why must we write `loadUsers` and `setUsers`
+:::note this-Not-DRY Warning 
+If you're used to lighter state management solution,
+the above code might seem overly verbose to you. _"Why must we write `loadUsers` and `setUsers`
 twice?"_ is a valid question. _"Why can't listeners just implicitly create a new action"_ might be another.
 
-First, if you don't like it, [wrap these three functions in another function](/docs/core/kea#logic-builders)
-that does just that, and abstract away the boring parts.
+That's not how it works in Kea. Listeners just listen, and reducers reduce. You need to define their actions explicitly.
 
-Second, scratch that, just use the [loaders](/docs/plugins/loaders) plugin, as this has already been done for you.
-
-However, we're learning here, so it's good to spell things out. Sometimes though, you will need to explicitly define
-your data flow, and this has proven to be just the right amount of verbosity.
+In the real world, you'd probably use the [loaders](/docs/plugins/loaders) plugin for this example, which does automatically 
+create an action if one does not exist. However, we're learning here, and it's good to spell things out. 
+:::
 
 ### Tracking loading
 
@@ -388,20 +387,6 @@ const logic = kea([
     // ...
   }),
 
-  listeners(({ actions, values, store, sharedListeners }) => ({
-    // two listeners with one shared action
-    anotherAction: sharedListeners.doSomething,
-
-    // you can also pass an array of functions
-    oneActionMultipleListeners: [
-      (payload, breakpoint, action) => {
-        /* ... */
-      },
-      sharedListeners.doSomething,
-      sharedListeners.logAction,
-    ],
-  })),
-
   // if multiple actions must trigger similar code, use sharedListeners
   sharedListeners(({ actions }) => ({
     // all listeners and sharedListeners also get a third parameter:
@@ -414,6 +399,20 @@ const logic = kea([
     logAction: (_, __, action) => {
       console.log('action dispatched', action)
     },
+  })),
+  
+  listeners(({ actions, values, store, sharedListeners }) => ({
+    // two listeners with one shared action
+    anotherAction: sharedListeners.doSomething,
+
+    // you can also pass an array of functions
+    oneActionMultipleListeners: [
+      (payload, breakpoint, action) => {
+        /* ... */
+      },
+      sharedListeners.doSomething,
+      sharedListeners.logAction,
+    ],
   })),
 ])
 ```
