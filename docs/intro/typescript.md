@@ -6,6 +6,8 @@ sidebar_position: 3
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
+## Create and pass a `logicType`
+
 To add TypeScript support to your logic, create a `logicType`, and pass it as the `kea` function's type argument:
 
 ```ts
@@ -119,7 +121,7 @@ npm install concurrently --save-dev
   "scripts": {
     "start": "concurrently \"yarn start:app\" \"yarn start:kea\" -n APP,KEA -c blue,green",
     "start:app": "webpack-dev-server",
-    "start:kea": "kea-typegen watch"
+    "start:kea": "kea-typegen watch --write-paths"
   }
 }
 ```
@@ -136,8 +138,8 @@ import { logicType } from './logicType'
 
 export const LocalType = 'YES' | 'NO'
 
+// The kea<...> part is automatically added and kept up to date by kea-typegen 
 const logic = kea<logicType<LocalType>>([
-  // 👈🦜 managed automatically by typegen
   actions({
     openBlog: (id: number, blog?: Blog) => ({ id, blog }), // 👈 add types here
     closeBlog: (answer: LocalType) => ({ answer }),
@@ -161,19 +163,20 @@ for `kea<logicType<LocalType, LocalUser>>`
 
 ### Create logic-builder-type-builders
 
-To make your custom builders work with typegen, you must write a _logic-builder-type-builder_ :sweat_smile:.
+**If you're building custom logic builders**, and want typegen to automatically generate types, you must write a _logic-builder-type-builder_. :sweat_smile:
 
 This involves creating a `typegen.ts` or a `setters.typegen.ts` file next to your `setters.ts` builder. This file should
 export a function with the same name as the builder, and similar to the builder, add various actions, reducers
 and other features on the _type_ of the logic.
 
 Check out the sample [typedForm.typegen.ts](https://github.com/keajs/kea-typegen/blob/kea-3.0/samples/typed-builder/typedForm.typegen.ts),
-or the more full-featured [`typegen.ts` from kea-forms](https://github.com/keajs/kea-forms/blob/kea-3.0/src/typegen.ts), 
+or the more full-featured [`typegen.ts` from kea-forms](https://github.com/keajs/kea-forms/blob/kea-3.0/src/typegen.ts),
 for examples of such type builders.
 
 :::note
 These type builders area a new area of development for kea, starting with 3.0, and we're working on making this API simpler for all.
 For now, you'll need to know how the TypeScript Compiler API works, and write code to manipulate TypeScript `Node`s and `TypeNode`s.
+
 > ProTip: Get a useful debugger, and use the [TypeScript AST Viewer](https://ts-ast-viewer.com/).
 :::
 
@@ -189,8 +192,11 @@ For now, you'll need to know how the TypeScript Compiler API works, and write co
 interface RandomThing extends ExportedApi.RandomThing {}
 ```
 
-2. With some tools you might need to "Reload All Files" or explicitly open `logicType.ts` to see the changes.
+2. Alternatively, disable such errors in your `logicType.tsx` files, by passing `--add-ts-nocheck` to kea-typegen.
 
-3. Adding types with `logic.extend()` isn't implemented yet.
+3. With some tools you might need to "Reload All Files" or explicitly open `logicType.ts` to see the changes.
+
+4. Adding types with `logic.extend()` isn't implemented yet.
+
 
 Found a bug? Some type wrongly detected? [Post an issue in the kea-typegen repository](https://github.com/keajs/kea-typegen/issues).

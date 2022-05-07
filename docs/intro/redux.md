@@ -48,9 +48,9 @@ const logic = kea([
       false,
       {
         REDUX_ACTION: () => false, // use redux's action type
-        [LOCATION_CHANGE]: () => false, // use it through a variable
+        [LOCATION_CHANGE]: () => false, // use a type through a variable
         doit: () => true, // local action
-        [actionTypes.doit]: () => true, // longer way to write
+        [actionTypes.doit]: () => true, // local action through a redux type
       },
     ],
   })),
@@ -76,8 +76,8 @@ const localeSelector = (state) => state.railsContext.i18nLocale
 const logic = kea([
   selectors({
     someValue: [
-      (selectors) => [localeSelector, selectors.name],
-      (i18nLocale, name) => `${name} in ${i18nLocale} is "John"`,
+      (selectors) => [localeSelector, selectors.name, () => '!'],
+      (i18nLocale, name, point) => `${name} in ${i18nLocale} is "John"${point}`,
     ],
   }),
 ])
@@ -85,7 +85,7 @@ const logic = kea([
 
 ## Converting Redux actions and selectors into Kea actions and values
 
-You may pull in data from any part of the Redux state tree with [`values` on `connect`](/docs/meta/connect#directly-to-values-with-connect-values--).
+You may pull in data from any part of the Redux state tree with [`connect({ values })`](/docs/meta/connect#connect-values--).
 
 Instead of passing a logic to fetch from, pass a selector:
 

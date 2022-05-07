@@ -15,7 +15,7 @@ yarn create react-app --template kea-typescript my-kea-app-v2
 cd my-kea-app-v2
 yarn start
 
-# 3.0, for now
+# 3.0, until fully released
 yarn create react-app --template kea-typescript@next my-kea-app-v3
 cd my-kea-app-v3
 yarn start
@@ -84,8 +84,8 @@ Then, change your start script in `package.json`
 {
   "scripts": {
     "start": "concurrently \"yarn start:app\" \"yarn start:kea\" -n APP,KEA -c blue,green",
-    "start:app": "react-scripts start  # put your old 'start' script here",
-    "start:kea": "kea-typegen watch"
+    "start:app": "# put your old 'start' script here",
+    "start:kea": "kea-typegen watch --write-paths"
   }
 }
 ```

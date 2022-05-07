@@ -47,14 +47,20 @@ it('setting search query loads remote items', async () => {
 It doesn't matter if the actions you're matching have already been dispatched or if we need to wait for them.
 Kea-Test-Utils' `.toDispatchActions` can both query a recorded history of actions, and wait for new ones to arrive.
 
-In turn, `.toMatchValues` matches values as they were after the matched action, no matter what they are now.
+In turn, `.toMatchValues` matches values as they were after the last matched action, no matter what they are now.
 
 ### Installing
 
 - [Install and configure jest](https://jestjs.io/docs/getting-started)
-- Install `kea-test-utils` with either:
-  - `yarn add --dev kea-test-utils`
-  - `npm install --save-dev kea-test-utils`
+- Install `kea-test-utils` with either
+
+```shell
+# With yarn
+yarn add --dev kea-test-utils
+
+# With npm
+npm install --save-dev kea-test-utils
+```
 
 ### Reset the context before each test
 
@@ -89,10 +95,14 @@ describe('dashboardLogic', () => {
     logic = dashboardLogic({ id: 123 })
     logic.mount()
   })
+
+  test('runs before and after mount events', async () => {
+    await expectLogic(logic).toMatchValues({ id: 123 })
+  })
 })
 ```
 
-If you run `resetContext` between tests, and use enough [breakpoints in your listeners](/docs/core/listeners#breakpoint), you shouldn't need to worry about unmounting logic.
+If you run `resetContext` between tests, and use enough [breakpoints in your listeners](/docs/core/listeners#breakpoints), you shouldn't need to worry about unmounting logic.
 
 ### `expectLogic()`
 
@@ -210,9 +220,19 @@ await expectLogic(logic, () => logic.actions.doSomething())
   })
 ```
 
-#### `truth` and `partial`
+#### Match values at the end of history
 
-Use the `truth` and `partial` helpers, or jest's `expect` matchers to make matching easier:
+If you use `toDispatchActions([])`, we lock the history index that `toMatchValues` uses to the last matched action.
+
+This allows you to effortlessly query history, but sometimes you might want to see what are the current values. Here
+you have two options.
+
+1. Actually match a better action with `.toDispatchActions(['doSomethingElse'])` if applicable
+2. Use `.clearHistory()` to reset all matched actions. See below for details.
+
+### `truth` and `partial`
+
+Use the `truth` and `partial` helpers, or jest's `expect` matchers to make matching values easier:
 
 ```ts
 import { expectLogic, partial, truth } from 'kea-test-utils'
@@ -229,16 +249,6 @@ await expectLogic(logic, () => logic.actions.loadResults())
     results: expect.arrayContaining([expect.objectContaining({ id: 33 })]), // jest matchers work too
   })
 ```
-
-#### Match values at the end of history
-
-If you use `toDispatchActions([])`, we lock the history index that `toMatchValues` uses to the last matched action.
-
-This allows you to effortlessly query history, but sometimes you might want to see what are the current values. Here
-you have two options.
-
-1. Actually match a better action with `.toDispatchActions(['doSomethingElse'])` if applicable
-2. Use `.clearHistory()` to reset all matched actions. See below for details.
 
 ### `.toMount()`
 

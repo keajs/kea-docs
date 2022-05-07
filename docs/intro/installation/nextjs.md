@@ -6,8 +6,9 @@ sidebar_label: Next.js
 
 :::note
 Here are the steps you must take to get set up **Kea with Next.js**.
-
 [For generic installation instructions, click here](/docs/intro/installation/).
+
+This guide might not be fully up to date. Please submit a PR if you find something that has changed.
 :::
 
 ## Install the packages
