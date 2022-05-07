@@ -6,12 +6,41 @@ When you build a `logic`, you can pass it an object that will be stored as `prop
 const props = { id: 10 }
 const logic = kea([])
 
-;(logic.build(props).props === logic(props).props) === props
+logic(props).props === props
+logic.build(props).props === props
 ```
 
 Calling [`logic(props)`](/docs/meta/logic#logic-1) or [`logic.build(props)`](/docs/meta/logic#logicbuildprops) is a fast operation.
 
 In case the logic is already mounted, its `props` will be updated to the new passed props.
+
+## Props are merged
+
+When you build logic with multiple props, they get merged.
+
+```ts
+// logic keyed on id
+type LogicProps = {
+  id: number
+  username?: string
+  defaultRecord?: string
+}
+
+const logic = kea([
+  props({} as LogicProps),
+  key((props) => props.id),
+  actions({ doSomething: true }),
+])
+
+// mount once with one set of props
+logic({ id: 1, username: 'keajs', defaultRecord: 'something' }).mount()
+
+// call with another set of props
+logic({ id: 1, defaultRecord: 'new' }).actions.doSomething()
+
+// props are always merged, never overridden
+logic({ id: 1 }).props === { id: 1, username: 'keajs', defaultRecord: 'new' }
+```
 
 ## Pass data from React
 
@@ -68,32 +97,4 @@ const logic = kea<logicType<LogicProps>>([
   // specify the type here
   props({} as LogicProps),
 ])
-```
-
-## Props are merged
-
-When you build logic with multiple props, they get merged.
-
-```ts
-// logic keyed on id
-type LogicProps = {
-  id: number
-  username?: string
-  defaultRecord?: string
-}
-
-const logic = kea([
-  props({} as LogicProps),
-  key((props) => props.id),
-  actions({ doSomething: true }),
-])
-
-// mount once with one set of props
-logic({ id: 1, username: 'keajs', defaultRecord: 'something' }).mount()
-
-// call with another set of props
-logic({ id: 1, defaultRecord: 'new' }).actions.doSomething()
-
-// props are always merged, never overridden
-logic({ id: 1 }).props === { id: 1, username: 'keajs', defaultRecord: 'new' }
 ```
