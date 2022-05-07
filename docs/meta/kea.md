@@ -154,7 +154,7 @@ The recommendation is to write the simplest code you can (start with `reducers({
 you need any data from the logic.
 
 There's one more case when converting the input to a function is useful. Sometimes, due to the order in which your
-browser loads modules, some imported values will be `undefined` when the code first runs. For example: 
+browser loads modules, some imported values will be `undefined` when the code first runs. For example:
 
 ```javascript
 import { kea, connect } from 'kea'
@@ -168,7 +168,7 @@ const logic = kea([
 
 ## Kea 2.0 input object syntax
 
-Up until Kea 2.0, instead of logic builders, you could pass an object to `kea({})`:
+Kea 3.0 introduced logic builders. Before that, you had to pass an object to `kea({})` with keys representing the builders:
 
 ```javascript
 const logic = kea({
@@ -188,7 +188,28 @@ const logic = kea({
 })
 ```
 
-This object would then be evaluated in a predefined order.
+This syntax still works, and is guaranteed be supported until at least January 19th, 2038.
 
-That syntax still works, and most Kea 2.0 code should function as is in 3.0. However, it's strongly encouraged
-to use the new 3.0 builders syntax going forward.
+However, you're encouraged to use Kea 3.0's builder syntax. Mostly because it makes it a lot easier to use and build custom builders.
+
+You can also mix and match, for example:
+
+```javascript
+import { kea, actions, listeners } from 'kea'
+
+const logic = kea([
+  { actions: { doThing: true } },
+  actions({ doAnotherThing: true }),
+  { reducers: {}, selectors: {} },
+  listeners({
+    doThing: () => {},
+    doAnotherThing: () => {},
+  }),
+])
+```
+
+To automatically convert all logic in the old syntax into the new syntax, run:
+
+```shell
+npx kea-typegen@next write --convert-to-builders
+```
