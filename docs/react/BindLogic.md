@@ -1,9 +1,12 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
+
 # BindLogic
 
-When using a *[keyed logic](/docs/meta/key)*, such as this `itemLogic`:
+## Avoid key prop drilling
+
+When using a _[keyed logic](/docs/meta/key)_, such as this `itemLogic`:
 
 ```js
 const itemLogic = kea([
@@ -14,7 +17,7 @@ const itemLogic = kea([
     },
   })),
   afterMount(({ actions }) => {
-     actions.loadItem()
+    actions.loadItem()
   }),
 ])
 ```
@@ -44,7 +47,9 @@ function ItemStatus({ id }) {
 
 Passing that `id` around, just to reference the same logic in several related components feels repetitive.
 
-Use the tag `<BindLogic />` to remember a logic's `props` for all the nested components:
+## BindLogic
+
+Use the `<BindLogic />` tag to remember a logic's `props` for all the nested components:
 
 ```jsx
 function Item({ id }) {
@@ -71,3 +76,18 @@ function ItemStatus() {
 
 Using `<BindLogic />`, Kea stores the built logic `itemLogic({ id })` inside a React Context.
 All child components that call `useValues(itemLogic)` will get that specific mounted instance of the logic.
+
+## Getting the bound logic
+
+To get the bound built logic and its props, use `useMountedLogic`:
+
+```js
+function ItemTitle() {
+  // get a logic with the bound props
+  const logic = useMountedLogic(itemLogic)
+  console.log(logic.props)
+  // use the built logic
+  const { item } = useValues(logic)
+  return <div>{item?.title}</div>
+}
+```

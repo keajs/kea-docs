@@ -1,12 +1,14 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 ---
 
 # wrap
 
-## Wrapping for class components
+## Wrap components
 
 If you `wrap` your `Component` inside a `logic`, it'll get all the `values` and `actions` as props.
+
+This works for both class and functional components.
 
 ```jsx
 const logic = kea([
