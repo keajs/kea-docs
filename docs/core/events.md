@@ -1,6 +1,7 @@
 ---
 sidebar_position: 5
 ---
+
 # events
 
 ## `events()`
@@ -12,18 +13,16 @@ import { kea, events } from 'kea'
 
 const logic = kea([
   events(({ actions, values }) => ({
-    beforeMount: () => {
-      // run before the logic is mounted
-    },
-    afterMount: () => {
-      // run after the logic is mounted
-    },
-    beforeUnmount: () => {
-      // run before the logic is unmounted
-    },
-    afterUnmount: () => {
-      // run after the logic is unmounted
-    },
+    // run before the logic is mounted
+    beforeMount: () => {},
+    // run after the logic is mounted
+    afterMount: () => {},
+    // run before the logic is unmounted
+    beforeUnmount: () => {},
+    // run after the logic is unmounted
+    afterUnmount: () => {},
+    // run when the logic gets a new set of props
+    propsChanged: (props, oldProps) => {},
   })),
 ])
 ```
@@ -74,7 +73,7 @@ cleanup.
 If you need to share data between `afterMount` and `beforeUnmount`, use [`logic.cache`](/docs/meta/logic#logiccache)
 
 ```ts
-import { kea, afterMount, beforeUnmount } from "kea";
+import { kea, afterMount, beforeUnmount } from 'kea'
 import { loaders } from 'kea-loaders'
 
 const logic = kea([
@@ -88,4 +87,31 @@ const logic = kea([
     window.removeEventListener('mousemove', cache.onMouseMove)
   }),
 ])
+```
+
+## `propsChanged(props, oldProps)`
+
+The `propsChanged` event fires when the logic gets a new set of props:
+
+```ts
+import { kea, props } from 'kea'
+import { logicType } from './logicType'
+
+interface LogicProps {
+  id: number
+}
+
+const logic = kea<logicType<LogicProps>>([
+  props({} as LogicProps),
+  propsChanged(({ actions, props }, oldProps) => {
+    console.log({ props, oldProps })
+  }),
+  afterMount(({ props }) => {
+    console.log({ props })
+  }),
+])
+
+logic({ id: 1 }).mount() // log: { props: { id: 1 } }
+logic({ id: 2 }) // log: { props: { id: 2 }, oldProps: { id: 1 } }
+logic({ id: 3 }) // log: { props: { id: 3 }, oldProps: { id: 2 } }
 ```

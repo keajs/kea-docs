@@ -98,3 +98,23 @@ const logic = kea<logicType<LogicProps>>([
   props({} as LogicProps),
 ])
 ```
+
+## Detect Changes
+
+You may use the [`propsChanged` event](/docs/core/events#propschangedprops-oldprops) to detect when props changed:
+
+```ts
+import { kea, props } from 'kea'
+import { logicType } from './logicType'
+
+interface LogicProps {
+  id: number
+}
+
+const logic = kea<logicType<LogicProps>>([
+  props({} as LogicProps),
+  propsChanged(({ actions, props }, oldProps) => {
+    console.log({ props, oldProps })
+  }),
+])
+```
