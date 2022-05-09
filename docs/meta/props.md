@@ -129,7 +129,6 @@ and want to power it with a logic.
 ```tsx
 import React from 'react'
 import { kea, actions, reducers, listeners, props, propsChanged, path, useValues, useActions } from 'kea'
-
 import type { textFieldLogicType } from './TextFieldType'
 
 interface TextFieldLogicProps {
@@ -138,7 +137,6 @@ interface TextFieldLogicProps {
 }
 
 const textFieldLogic = kea<textFieldLogicType<TextFieldLogicProps>>([
-  path(['App', 'DemoForm', 'TextField']),
   props({ value: '', onChange: undefined } as TextFieldLogicProps),
 
   actions({ setValue: (value: string) => ({ value }) }),
