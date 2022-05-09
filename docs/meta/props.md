@@ -118,3 +118,44 @@ const logic = kea<logicType<LogicProps>>([
   }),
 ])
 ```
+
+## Sync `props` from React
+
+Here's a sample `TextField` that syncs `props` with React, and translates those to its `actions` and `values`.
+
+This example is over-engineered, but serves as a practical example if you need to build a controlled React component,
+and want to power it with a logic.
+
+```tsx
+import React from 'react'
+import { kea, actions, reducers, listeners, props, propsChanged, path, useValues, useActions } from 'kea'
+
+import type { textFieldLogicType } from './TextFieldType'
+
+interface TextFieldLogicProps {
+  value: string
+  onChange?: (value: string) => void
+}
+
+const textFieldLogic = kea<textFieldLogicType<TextFieldLogicProps>>([
+  path(['App', 'DemoForm', 'TextField']),
+  props({ value: '', onChange: undefined } as TextFieldLogicProps),
+
+  actions({ setValue: (value: string) => ({ value }) }),
+  reducers(({ props }) => ({ value: [props.value, { setValue: (_, { value }) => value }] })),
+  listeners(({ props }) => ({ setValue: ({ value }) => props.onChange?.(value) })),
+
+  propsChanged(({ actions, props }, oldProps) => {
+    if (props.value !== oldProps.value) {
+      actions.setValue(props.value)
+    }
+  }),
+])
+
+export function TextField(props: TextFieldLogicProps) {
+  const { value } = useValues(textFieldLogic(props))
+  const { setValue } = useActions(textFieldLogic(props))
+
+  return <input value={value} onChange={(e) => setValue(e.target.value)} />
+}
+```
