@@ -10,15 +10,15 @@ const tutorials = [
   },
   {
     name: 'Build a GitHub API client in 16 minutes',
-    link: '/#newsletter',
+    link: 'https://keajs.ck.page/80aecebec7',
   },
   {
     name: 'Using keys with your logic in 17 minutes',
-    link: '/#newsletter',
+    link: 'https://keajs.ck.page/80aecebec7',
   },
   {
     name: 'Build an infinite list in 18 minutes',
-    link: '/#newsletter',
+    link: 'https://keajs.ck.page/80aecebec7',
   },
 ]
 export function Tutorials() {
@@ -31,11 +31,22 @@ export function Tutorials() {
       </p>
       {tutorials.map(({ name, link }, index) => (
         <div className="homepage-video" key={`${link}::${name}`}>
-          <Link to={link}>
-            <Thumbnail style={{ padding: 10 }} index={index} comingSoon={index > 0} />
-          </Link>
+          {link.indexOf('https:') === 0 ? (
+            <a href={link}>
+              <Thumbnail style={{ padding: 10 }} index={index} comingSoon={index > 0} />
+            </a>
+          ) : (
+            <Link to={link}>
+              <Thumbnail style={{ padding: 10 }} index={index} comingSoon={index > 0} />
+            </Link>
+          )}
           <h2>
-            <Link to={link}>{name}</Link>
+            {' '}
+            {link.indexOf('https:') === 0 ? (
+              <a href={link}>{name}</a>
+            ) : (
+              <Link to={link}>{name}</Link>
+            )}
           </h2>
         </div>
       ))}
