@@ -122,7 +122,7 @@ export function FeatureFlag({ id }: { id?: number }): JSX.Element {
   } = useActions(featureFlagLogic(logicProps))
 
   return (
-    <Form logic={featureFlagLogic} props={logicProps} formKey="featureFlag">
+    <Form logic={featureFlagLogic} props={logicProps} formKey="featureFlag" enableFormOnSubmit>
       <Field name="active">
         {/* value, onChange, onValueChange, name, label, id */}
         {({ value, onValueChange }) => (
