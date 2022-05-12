@@ -1,24 +1,13 @@
-.Tutorials {
-  width: 100%;
-  margin: 0 auto;
+.Tutorial-Video {
+  display: inline-block;
+  vertical-align: top;
   text-align: center;
-  padding: 60px 20px;
-
-  h1 {
-    margin-bottom: 50px;
+  max-width: 360px;
+  .Thumbnail {
+    width: 100%;
+    max-height: 240px;
   }
-
-  .homepage-video {
-    display: inline-block;
-    vertical-align: top;
-    text-align: center;
-    max-width: 360px;
-    .Thumbnail {
-      width: 100%;
-      max-height: 240px;
-    }
-    a {
-      color: inherit;
-    }
+  a {
+    color: inherit;
   }
 }

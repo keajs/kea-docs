@@ -24,12 +24,12 @@ const tutorials = [
     comingSoon: true,
   },
 ]
+
 export function Tutorials() {
   return (
-    <section className="Tutorials">
-      <h1>Kea Tutorials</h1>
+    <>
       {tutorials.map(({ name, link, comingSoon }, index) => (
-        <div className="homepage-video" key={`${link}::${name}`}>
+        <div className="Tutorial-Video" key={`${link}::${name}`}>
           {link.indexOf('https:') === 0 ? (
             <a href={link}>
               <Thumbnail style={{ padding: 10 }} index={index} comingSoon={comingSoon} />
@@ -49,6 +49,6 @@ export function Tutorials() {
           </h2>
         </div>
       ))}
-    </section>
+    </>
   )
 }

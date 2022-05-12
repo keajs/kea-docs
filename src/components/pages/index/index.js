@@ -169,7 +169,13 @@ export default function Home() {
         </table>
       </section>
 
-      <Tutorials />
+      <section className="Homepage-Tutorials">
+        <h1>
+          <Link to="/docs/tutorials/">Kea Tutorials</Link>
+        </h1>
+
+        <Tutorials />
+      </section>
 
       <Newsletter />
 

@@ -321,6 +321,21 @@ section.sections-table {
   }
 }
 
+.Homepage-Tutorials {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 60px 20px;
+
+  h1 {
+    margin-bottom: 50px;
+
+    a {
+      color: inherit;
+    }
+  }
+}
+
 .homepage-cta {
   //display: none;
   background: hsl(123deg 25% 85%);
