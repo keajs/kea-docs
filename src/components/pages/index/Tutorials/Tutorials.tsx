@@ -5,19 +5,19 @@ import { Thumbnail } from '../../../img/Thumbnail/Thumbnail'
 
 const tutorials = [
   {
-    name: 'Learn the basics in 15 minutes',
-    link: '/docs/tutorials/basics',
+    name: 'Introduction to Kea 3.0 in 30 minutes',
+    link: '/docs/tutorials/intro',
   },
   {
-    name: 'Build a GitHub API client in 16 minutes',
+    name: 'Build a GitHub API client in 20 minutes',
+    link: '/docs/tutorials/github',
+  },
+  {
+    name: 'Using keys with your logic',
     link: 'https://keajs.ck.page/80aecebec7',
   },
   {
-    name: 'Using keys with your logic in 17 minutes',
-    link: 'https://keajs.ck.page/80aecebec7',
-  },
-  {
-    name: 'Build an infinite list in 18 minutes',
+    name: 'Build an infinite list',
     link: 'https://keajs.ck.page/80aecebec7',
   },
 ]
@@ -25,19 +25,15 @@ export function Tutorials() {
   return (
     <section className="Tutorials">
       <h1>Kea Tutorials</h1>
-      <p style={{ marginTop: -20 }}>
-        <strong>The V3 docs are alpha warning:</strong> There are no videos. These are just
-        thumbnails.
-      </p>
       {tutorials.map(({ name, link }, index) => (
         <div className="homepage-video" key={`${link}::${name}`}>
           {link.indexOf('https:') === 0 ? (
             <a href={link}>
-              <Thumbnail style={{ padding: 10 }} index={index} comingSoon={index > 0} />
+              <Thumbnail style={{ padding: 10 }} index={index} comingSoon />
             </a>
           ) : (
             <Link to={link}>
-              <Thumbnail style={{ padding: 10 }} index={index} comingSoon={index > 0} />
+              <Thumbnail style={{ padding: 10 }} index={index} />
             </Link>
           )}
           <h2>

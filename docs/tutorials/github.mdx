@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 ---
+
 import '../../src/resetKea'
 
 import { Github as Github1 } from '../../src/components/tutorials/github/1-component/index.js'
@@ -14,7 +15,13 @@ import { Example } from '../../src/components/tutorials/github/example.js'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import { kea } from 'kea'
 
-# Build a GitHub API client in 16 minutes
+# Build a GitHub API client in 20 minutes
+
+:::warning This tutorial needs a refresh
+This tutorial was written for Kea 2.0.
+The video version of this tutorial, along with a Kea 3.0 refresh, is coming soon.
+The content is still 100% valid for Kea 3.0, so feel free to read it.
+:::
 
 In this step-by-step tutorial we are going to build a component that asks for a Github username
 and then fetches all the repositories for that user, using the Github API.
@@ -31,7 +38,7 @@ The final result will look like this:
 ## 1. Creating the React Component
 
 :::note
-To code along, use this [codesandbox](https://codesandbox.io/s/kea-github-tutorial-kvcgb?file=/src/app.js).
+To code along, see the [installation instructions](/docs/intro/installation)
 :::
 
 Now that you have seen the end result, let's build it, piece by piece.
@@ -89,13 +96,13 @@ In this case we need one action called `setUsername`, which takes one parameter,
 This is how you would write a logic with such an action:
 
 ```jsx
-import { kea } from 'kea'
+import { kea, actions } from 'kea'
 
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setUsername: (username) => ({ username }),
-  },
-})
+  }),
+])
 ```
 
 To store data you use a [**reducer**](/docs/core/reducers). Reducers are functions that react to actions and change
@@ -105,20 +112,20 @@ We need just one reducer, `username`, that reacts to the `setUsername` action an
 its payload. This is how that looks like:
 
 ```jsx
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setUsername: (username) => ({ username }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     username: [
       'keajs',
       {
         setUsername: (_, { username }) => username,
       },
     ],
-  },
-})
+  }),
+])
 ```
 
 Finally, we need a way to read the `username` value and call the `setUsername` action in our
@@ -139,22 +146,22 @@ Putting it all together, we end up with a component like this:
 
 ```jsx
 import React from 'react'
-import { kea, useActions, useValues } from 'kea'
+import { kea, actions, reducers, useActions, useValues } from 'kea'
 
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setUsername: (username) => ({ username }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     username: [
       'keajs',
       {
         setUsername: (_, payload) => payload.username,
       },
     ],
-  },
-})
+  }),
+])
 
 function Github() {
   const { username } = useValues(logic)
@@ -192,26 +199,26 @@ whenever it has been dispatched.
 This is how that's written in Kea:
 
 ```jsx
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setUsername: (username) => ({ username }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     username: [
       'keajs',
       {
         setUsername: (_, payload) => payload.username,
       },
     ],
-  },
+  }),
 
-  listeners: {
+  listeners({
     setUsername: async ({ username }, breakpoint) => {
       // Code to run when the `setUsername` action was dispatched
     },
-  },
-})
+  }),
+])
 ```
 
 ## 4. Trigger the actual call
@@ -223,8 +230,8 @@ For this we'll make a simple `window.fetch` call:
 ```javascript
 const API_URL = 'https://api.github.com'
 
-const logic = kea({
-  listeners: {
+const logic = kea([
+  listeners({
     setUsername: async ({ username }, breakpoint) => {
       const url = `${API_URL}/users/${username}/repos?per_page=250`
 
@@ -239,8 +246,8 @@ const logic = kea({
         // what to do with it?
       }
     },
-  },
-})
+  }),
+])
 ```
 
 ## 5. Store the response of the call
@@ -264,14 +271,14 @@ of this by just adding two new actions (in addition to `setUsername`):
 Hooking them up gives the following result:
 
 ```jsx
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setUsername: (username) => ({ username }),
     setRepositories: (repositories) => ({ repositories }),
     setFetchError: (error) => ({ error }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     username: [
       'keajs',
       {
@@ -300,12 +307,12 @@ const logic = kea({
         setFetchError: (_, { error }) => error,
       },
     ],
-  },
+  }),
 
-  listeners: {
+  listeners({
     // ...
-  },
-})
+  }),
+])
 ```
 
 Try to follow along and "connect the dots" to see what gets stored in which reducer when each of these
@@ -314,8 +321,8 @@ three actions is called.
 The final step is to add `setRepositories` and `setFetchError` into the listener:
 
 ```javascript
-const logic = kea({
-  listeners: ({ actions }) => ({
+const logic = kea([
+  listeners(({ actions }) => ({
     // 👈 added { actions }
     setUsername: async ({ username }, breakpoint) => {
       const url = `${API_URL}/users/${username}/repos?per_page=250`
@@ -329,8 +336,8 @@ const logic = kea({
         actions.setFetchError(json.message) // 👈
       }
     },
-  }),
-})
+  })),
+])
 ```
 
 ## 6. Display the result
@@ -395,15 +402,13 @@ We pass the current `value` of `username` to the action as a bit of a cheat (we'
 to what it already is), but it gets the job done:
 
 ```jsx
-const logic = kea({
-  // listeners: ...
+const logic = kea([
+  // listeners(...
 
-  events: ({ actions, values }) => ({
-    afterMount: () => {
-      actions.setUsername(values.username)
-    },
+  afterMount(({ actions, values }) => {
+    actions.setUsername(values.username)
   }),
-})
+])
 ```
 
 This is the result:
@@ -443,15 +448,15 @@ Luckily listeners come with one very cool feature: [breakpoints](/docs/core/list
 You might have noticed the second argument in the listener function is called `breakpoint`:
 
 ```javascript
-const logic = kea({
+const logic = kea([
   // ...
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     setUsername: async ({ username }, /* 👉 */ breakpoint /* 👈 */) => {
       //
     },
-  }),
-})
+  })),
+])
 ```
 
 The `breakpoint` function takes one argument: a number of milliseconds to wait.
@@ -470,10 +475,10 @@ terminates and only the second one starts, waiting another 300ms in case it too 
 ```javascript
 const API_URL = 'https://api.github.com'
 
-const logic = kea({
+const logic = kea([
   // ...
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     setUsername: async ({ username }, breakpoint) => {
       await breakpoint(300) // 👈 debounce for 300ms
 
@@ -488,8 +493,8 @@ const logic = kea({
         actions.setFetchError(json.message)
       }
     },
-  }),
-})
+  })),
+])
 ```
 
 That is so simple and so effective. With this code, when you type `microsoft` and you're fast enough,
@@ -517,10 +522,10 @@ With another breakpoint of course! This time we don't need an `async` in front o
 ```javascript
 const API_URL = 'https://api.github.com'
 
-const logic = kea({
+const logic = kea([
   // ...
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     setUsername: async ({ username }, breakpoint) => {
       await breakpoint(300)
 
@@ -538,8 +543,8 @@ const logic = kea({
         actions.setFetchError(json.message)
       }
     },
-  }),
-})
+  })),
+])
 ```
 
 This will make the app much nicer to use:
@@ -570,17 +575,17 @@ Here's how you would create a selector `sortedRepositories` that takes `reposito
 and returns a sorted array:
 
 ```jsx
-const logic = kea({
+const logic = kea([
   // ...
-  selectors: {
+  selectors({
     sortedRepositories: [
       (selectors) => [selectors.repositories],
       (repositories) => {
         return [...repositories].sort((a, b) => b.stargazers_count - a.stargazers_count)
       },
     ],
-  },
-})
+  }),
+])
 ```
 
 Please note that the [`Array.sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
@@ -607,10 +612,10 @@ To prevent this, we must wrap our fetch call in a `try / catch` block:
 ```javascript
 const API_URL = 'https://api.github.com'
 
-const logic = kea({
+const logic = kea([
   // ...
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     setUsername: async ({ username }, breakpoint) => {
       await breakpoint(300)
 
@@ -636,8 +641,8 @@ const logic = kea({
         actions.setFetchError(json.message)
       }
     },
-  }),
-})
+  })),
+])
 ```
 
 :::note
@@ -664,14 +669,14 @@ import { kea, useActions, useValues } from 'kea'
 
 const API_URL = 'https://api.github.com'
 
-const logic = kea({
-  actions: {
+const logic = kea([
+  actions({
     setUsername: (username) => ({ username }),
     setRepositories: (repositories) => ({ repositories }),
     setFetchError: (error) => ({ error }),
-  },
+  }),
 
-  reducers: {
+  reducers({
     username: [
       'keajs',
       {
@@ -700,18 +705,18 @@ const logic = kea({
         setFetchError: (_, { error }) => error,
       },
     ],
-  },
+  }),
 
-  selectors: {
+  selectors({
     sortedRepositories: [
       (selectors) => [selectors.repositories],
       (repositories) => {
         return [...repositories].sort((a, b) => b.stargazers_count - a.stargazers_count)
       },
     ],
-  },
+  }),
 
-  listeners: ({ actions }) => ({
+  listeners(({ actions }) => ({
     setUsername: async ({ username }, breakpoint) => {
       await breakpoint(300)
 
@@ -737,14 +742,12 @@ const logic = kea({
         actions.setFetchError(json.message)
       }
     },
-  }),
+  })),
 
-  events: ({ actions, values }) => ({
-    afterMount: () => {
-      actions.setUsername(values.username)
-    },
+  afterMount(({ actions, values }) => {
+    actions.setUsername(values.username)
   }),
-})
+])
 
 function Github() {
   const { username, isLoading, sortedRepositories, error } = useValues(logic)
