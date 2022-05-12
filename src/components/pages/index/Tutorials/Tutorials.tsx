@@ -14,7 +14,7 @@ const tutorials = [
     comingSoon: true,
   },
   {
-    name: 'Using keys with your logic',
+    name: 'Using props and keys within your logic',
     link: 'https://keajs.ck.page/80aecebec7',
     comingSoon: true,
   },
