@@ -1,7 +1,7 @@
 const React = require('react')
 
 module.exports = {
-    title: 'Kea 2.5',
+    title: 'Kea 2.6',
     tagline: 'State management for ambitious apps',
     url: 'https://keajs.org',
     baseUrl: '/',
@@ -17,7 +17,7 @@ module.exports = {
             textColor: '#ffffff',
         },
         navbar: {
-            title: 'Kea 2.5',
+            title: 'Kea 2.6',
             logo: {
                 alt: 'Kea Logo',
                 src: 'img/logo.svg',
