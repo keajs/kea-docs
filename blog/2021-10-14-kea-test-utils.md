@@ -10,7 +10,7 @@ tags: [kea, opinion, data-first]
 
 Big news, **we have a brand new logic testing framework!**
 
-Read all about it in the updated [Testing guide](/docs/guide/testing)!
+Read all about it in the updated [Testing guide](https://v2.keajs.org/docs/guide/testing)!
 
 Here's a teaser:
 

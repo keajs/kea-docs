@@ -1,8 +1,8 @@
 import React from 'react'
 export const WebDev = () => (
     <svg viewBox="0 0 1440 492" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%' }}>
-        <rect x="589" width="851" height="492" fill="#C4C4C4" fill-opacity="0.3" />
-        <rect width="589" height="492" fill="#C4C4C4" fill-opacity="0.5" />
+        <rect x="589" width="851" height="492" fill="#C4C4C4" fillOpacity="0.3" />
+        <rect width="589" height="492" fill="#C4C4C4" fillOpacity="0.5" />
         <rect x="115" y="99" width="178" height="305" fill="#C4C4C4" />
         <rect x="-143" y="94" width="178" height="305" fill="#C4C4C4" />
         <path

@@ -1,0 +1,19 @@
+.Thumbnail {
+  position: relative;
+  &.Thumbnail--coming-soon img {
+     opacity: 0.2
+  }
+  .coming-soon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    padding-top: 94px;
+    color: #aaa;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 30px;
+  }
+}

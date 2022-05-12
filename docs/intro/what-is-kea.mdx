@@ -1,0 +1,166 @@
+---
+sidebar_position: 1
+---
+
+import { WebDev } from '../../src/components/img/WebDev'
+import { KeaReact } from '../../src/components/img/KeaReact'
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
+# What is Kea?
+
+<WebDev />
+
+## Heavyweight state management for React
+
+Kea is a complete framework for managing state in [React](https://reactjs.org/) webapps.
+
+Kea organises state in containers called `logic`, which are _pretty big_ and _pretty opinionated_ units of state,
+especially when compared to other solutions that are built around atoms, molecules, or context objects.
+
+Kea doesn't limit itself to simple state management. Kea _also_ provides standard solutions to common tasks like [routing](/docs/plugins/router),
+[data loading](/docs/plugins/loaders), and [form handling](/docs/plugins/forms). All through cleverly nested _logic builders_.
+
+Kea believes the rigidity in its core structure and its set of standard tools introduce a lot of flexibility in your application: **you can actually focus on what matters!**
+The framework gets out of your way, as it should.
+
+## What's a logic?
+
+A [`logic`](/docs/meta/logic) is created by passing an array of logic builders to [`kea([])`](/docs/meta/kea), such as [`actions()`](/docs/core/actions) and [`reducers()`](/docs/core/reducers):
+
+For example:
+
+```ts
+import { kea, actions, reducers } from 'kea'
+
+const loginLogic = kea([
+  actions({
+    setUsername: (username: string) => ({ username }),
+  }),
+  reducers({
+    username: ['keajs', { setUsername: (_, { username }) => username }],
+  }),
+])
+```
+
+Here we created a logic with one action, `setUsername`, and one value, exposed through a `username` reducer.
+
+The resulting `loginLogic` can be used directly:
+
+```ts
+loginLogic.mount()
+loginLogic.actions.setUsername('posthog')
+loginLogic.values.username === 'posthog'
+```
+
+... or with [hooks](/docs/react/) in a React component, to tie its `mount`/`unmount` lifecycle to the component's.
+
+```tsx
+import { useValues, useActions } from 'kea'
+
+function Login() {
+  const { setUsername } = useActions(loginLogic)
+  const { username } = useValues(loginLogic)
+  // ...
+}
+```
+
+## Core building blocks
+
+Just like [Redux](https://redux.js.org/), Kea uses [`actions`](/docs/core/actions), [`reducers`](/docs/core/reducers), and [`selectors`](/docs/core/selectors) as its core building blocks.
+
+These provide a stable foundation that all other features are built on.
+
+- Think of [`actions`](/docs/core/actions) as a unified messaging bus that every part of your app uses to communicate.
+- Think of [`reducers`](/docs/core/reducers) as the only "write" operation in the entire system, and only in response to actions.
+- Think of [`selectors`](/docs/core/selectors) as the only "read" operation in the entire system. They're exposed as [`values`](/docs/meta/logic#logicvalues), and also act as the computed caching layer.
+
+You can run side-effects in response to actions with [`listeners`](/docs/core/listeners), or subscribe to changes in values with [`subscriptions`](/docs/plugins/subscriptions).
+
+<a href={useBaseUrl('img/introduction/how-does-kea-work.png')}>
+  <img
+    alt="Redux Devtools with Inline Paths"
+    src={useBaseUrl('img/introduction/how-does-kea-work.png')}
+    style={{ maxWidth: 715, width: '100%' }}
+  />
+</a>
+
+There are plugins that simplify data [`loading`](/docs/plugins/loaders), [`forms`](/docs/plugins/forms), [`routing`](/docs/plugins/router), and [other common tasks](/docs/plugins/).
+
+It's a lot of approachable and hopefully familiar code, but with a few twists (look for [_breakpoints_](/docs/core/listeners#breakpoints)), and in a nice package.
+
+## Data layer
+
+When fully deployed, Kea acts as a separate [data layer](/blog/data-first-frontend-revolution), which communicates with
+React through a strict boundary of `actions`, `props` and `values`. You should aim to keep as much of your data, and its manipulations
+within Kea's _data layer_, leaving React to do an amazing job as the _view layer_.
+
+That's right, MVC is back, but it's just D&V this time!
+
+Kea discourages the use of `useState` and `useEffect` for local scene data, because local state inevitably becomes global.
+
+Kea discourages the use of `Context` because you shouldn't re-render everything, everytime, always, everytime. Always.
+
+Kea believes that it's hard enough to get your data layer right, so why burden yourself even more, by cramming it in a DOM-like tree of React nodes?
+
+Kea thinks layers shield complexity, and promote simplicity.
+
+[Bring back the layers!](/blog/data-first-frontend-revolution)
+
+To take full advantage of Kea, think of it as a self-sufficient data layer between your APIs and React, shielding both from each other:
+
+<KeaReact />
+
+## How to learn Kea?
+
+Start by reading through the [Core](/docs/core/) and [Meta](/docs/meta/) sections in the sidebar, and then just [going for it](/docs/intro/installation).
+
+You can also have a look at the ever expanding list of [video tutorials](/docs/tutorials/) to quickly get up to speed. [Start with the basics](/docs/tutorials/intro).
+
+I'm working on providing better tutorials and documentation, but these things take time. [Subscribe to the Kea mailing list](https://keajs.ck.page/80aecebec7) to get the latest updates.
+
+## History
+
+The Kea project began in 2015 when I took on a job to build an app with [React](https://reactjs.org/) and [Redux](https://redux.js.org/).
+
+Redux of 2015 was fine, but I kept writing very similar code over and over again. Its main criticism at the time was "too much boilerplate",
+thus _back then_ everyone invented their own abstractions. This includes the Redux maintainers themselves, but only later in 2018 with [Redux Toolkit](https://redux-toolkit.js.org/).
+
+We're still in 2015. My loose collection of helper functions grew into the first public release of Kea,
+version 0.1 at the start of 2016. By 2019, over three years, this had gradualy evolved into a unified _high level abstraction over Redux_ with Kea [0.28](https://v0.keajs.org/).
+
+I had developed several large webapps with Kea and the [kea-saga](/docs/plugins/saga) plugin by then. It felt like coding at the bleeding
+edge of React + Redux development.
+
+Then, in 2019, something happened. [React v16.8](https://reactjs.org/blog/2019/02/06/react-v16.8.0.html) introduced [Hooks](https://reactjs.org/docs/hooks-intro.html),
+and to keep up, Kea went through a long [1.0](https://v1.keajs.org/) rewrite (5+ months of hard work over 300+ commits), introduced [listeners](/docs/core/listeners)
+to replace sagas, and soon made things even simpler with [Kea 2.0](/blog/kea-2.0/). Years 2020-2021 saw innovation in [type generation](/docs/intro/typescript),
+the maturation of the [loaders](/docs/plugins/loaders) and [router](/docs/plugins/router) plugins, a new [testing](/docs/intro/testing) framework, and
+a solidification of a [data-first mindset](/blog/data-first-frontend-revolution) to guide development.
+
+Now in early 2022, it's time for yet another shift. [Kea 3.0](/blog/kea-3.0/) introduces [builders](/docs/intro/what-is-kea#logic-builders),
+making it possible to build abstractions on top of Kea on a whole new level. The new [`kea-forms`](/docs/plugins/forms) plugin
+takes full advantage of this new power.
+
+## What's a "kea"?
+
+According to [Wikipedia](https://en.wikipedia.org/wiki/Kea):
+
+> The kea (/ˈkiːə/; Māori: [kɛ.a]) is a species of large parrot
+> found in the forested and alpine regions of the South Island of New Zealand.
+>
+> Kea are known for their intelligence and curiosity. Kea can solve logical puzzles, such as pushing
+> and pulling things in a certain order to get to food, and will work together to achieve a certain
+> objective.
+
+[Check out some videos](https://www.youtube.com/results?search_query=kea+the+smartest+parrot) to see
+this magnificent bird in action.
+
+Kea the parrot always finds the shortest and the smartest way to achieve a goal, such as getting food
+from a maze.
+
+Kea the framework follows a similar approach. It offers a simple and straightforward solution
+to the complicated problem of state management.
+
+Plus, when I started to learn React, I was on a plane back to Belgium from a holiday in New Zealand,
+having just [seen the bird](https://photos.app.goo.gl/5DNXZWCKtYveeu8c9) a week before. Plus it was
+available on `npm`.

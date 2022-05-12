@@ -1,0 +1,212 @@
+---
+sidebar_position: 0
+---
+
+import { Thumbnail } from '../../src/components/img/Thumbnail/Thumbnail'
+
+# Introduction to Kea 3.0 in 30 minutes
+
+In this tutorial we'll cover [`actions`](/docs/core/actions),
+[`reducers`](/docs/core/reducers), [`listeners`](/docs/core/listeners), [`selectors`](/docs/core/selectors),
+[`afterMount`](/docs/core/events), [`kea-forms`](/docs/plugins/forms) and [`kea-router`](/docs/plugins/router).
+This video is a high level overview of Kea, and does not go into all the depth behind each feature. You should have a basic
+understanding of React and Redux to follow.
+
+## Watch the video
+
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/zpu4vZX-r_Q"
+  title="YouTube video player"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  style={{ width: '100%', height: 'auto', aspectRatio: '16 / 10' }}
+/>
+
+## Code samples
+
+Here is the code that will build in the tutorial:
+
+### `Simple.tsx`
+
+```tsx
+import {
+  actions,
+  kea,
+  reducers,
+  useActions,
+  path,
+  useValues,
+  listeners,
+  afterMount,
+  beforeUnmount,
+} from 'kea'
+
+import type { simpleLogicType } from './SimpleType'
+
+const simpleLogic = kea<simpleLogicType>([
+  path(['App', 'Simple', 'Simple']),
+  actions({
+    increment: true,
+    decrement: true,
+  }),
+  reducers({
+    counter: [
+      0,
+      {
+        increment: (state) => state + 1,
+        decrement: (state) => state + 1,
+      },
+    ],
+  }),
+  listeners({
+    increment: async (_, breakpoint) => {
+      console.log('up and to the right!')
+      await breakpoint(1000)
+      console.log('only once')
+    },
+  }),
+  afterMount(({ actions, cache }) => {
+    cache.interval = window.setInterval(() => {
+      actions.increment()
+    }, 1000)
+  }),
+  beforeUnmount(({ cache }) => {
+    cache.interval && window.clearInterval(cache.interval)
+  }),
+])
+
+export function Simple() {
+  const { increment, decrement } = useActions(simpleLogic)
+  const { counter } = useValues(simpleLogic)
+
+  return (
+    <div>
+      <div>Counter: {counter}</div>
+      <button onClick={increment}>+</button>
+      <button onClick={decrement}>-</button>
+    </div>
+  )
+}
+```
+
+### `LoginForm.tsx`
+
+```tsx
+import './LoginForm.scss'
+import { kea, path, useValues } from 'kea'
+import { forms, Form, Field } from 'kea-forms'
+import type { loginLogicType } from './LoginFormType'
+
+const loginLogic = kea<loginLogicType>([
+  path(['App', 'LoginForm', 'LoginForm']),
+  forms(({ actions }) => ({
+    loginForm: {
+      defaults: { user: '', pass: '' },
+      errors: ({ user, pass }) => ({
+        user: !user ? 'Please enter a user' : '',
+        pass: !pass ? 'Please enter a password' : '',
+      }),
+      submit: async ({ user, pass }, breakpoint) => {
+        console.log(user, pass)
+        await breakpoint(1000)
+        console.log('we are in')
+        actions.resetLoginForm()
+      },
+    },
+  })),
+])
+
+export function LoginForm(): JSX.Element {
+  const { isLoginFormSubmitting } = useValues(loginLogic)
+  return (
+    <Form logic={loginLogic} formKey="loginForm" enableFormOnSubmit className="LoginForm">
+      {/* `value` and `onChange` are passed automatically to children of <Field> */}
+      <Field name="user" label="Username">
+        <input type="text" />
+      </Field>
+      <Field name="pass" label="Password">
+        <input type="password" />
+      </Field>
+      <button type="submit" disabled={isLoginFormSubmitting}>
+        Login!
+      </button>
+    </Form>
+  )
+}
+```
+
+### `App.tsx`
+
+```tsx
+import React from 'react'
+import './App.scss'
+import { Simple } from './Simple/Simple'
+import { LoginForm } from './LoginForm/LoginForm'
+import { actions, kea, reducers, path, useValues, selectors, useActions } from 'kea'
+
+import type { sceneLogicType } from './AppType'
+import { actionToUrl, router, urlToAction } from 'kea-router'
+
+export enum Scene {
+  LoginForm = 'login',
+  Simple = 'simple',
+}
+
+const scenes: Record<Scene, () => JSX.Element> = {
+  [Scene.LoginForm]: LoginForm,
+  [Scene.Simple]: Simple,
+}
+
+export const sceneLogic = kea<sceneLogicType<Scene>>([
+  path(['App', 'sceneLogic']),
+  actions({ setScene: (scene: Scene) => ({ scene }) }),
+  reducers({ scene: [Scene.LoginForm as Scene, { setScene: (_, { scene }) => scene }] }),
+  selectors({ Component: [(s) => [s.scene], (scene) => scenes[scene]] }),
+
+  actionToUrl({ setScene: ({ scene }) => `/${scene}` }),
+  urlToAction(({ actions, values }) => ({
+    '/': () => {
+      router.actions.push('/login')
+    },
+    '/:scene': ({ scene }) => {
+      if (scene && values.scene !== scene) {
+        actions.setScene(scene as Scene)
+      }
+    },
+  })),
+])
+
+function Menu() {
+  const { scene } = useValues(sceneLogic)
+  const { setScene } = useActions(sceneLogic)
+  return (
+    <div style={{ margin: 20 }}>
+      {Object.keys(scenes).map((key) => (
+        <button
+          key={key}
+          onClick={() => setScene(key as Scene)}
+          style={{ fontWeight: scene === key ? 'bold' : 'normal' }}
+        >
+          {key}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+export function App() {
+  const { Component } = useValues(sceneLogic)
+  return (
+    <div className="App">
+      <Header />
+      <Menu />
+      <div className="App-layout">
+        <Component />
+      </div>
+    </div>
+  )
+}
+```

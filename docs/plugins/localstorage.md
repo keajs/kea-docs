@@ -1,8 +1,4 @@
----
-id: localstorage
-title: LocalStorage
-sidebar_label: LocalStorage
----
+# localstorage
 
 You may store the content of your reducers in LocalStorage with the [`kea-localstorage`](https://github.com/keajs/kea-localstorage) plugin.
 
@@ -21,11 +17,11 @@ npm install --save kea-localstorage
 Then install the plugin:
 
 ```javascript
-import localStoragePlugin from 'kea-localstorage'
+import { localStoragePlugin } from 'kea-localstorage'
 import { resetContext } from 'kea'
 
 resetContext({
-    plugins: [localStoragePlugin],
+  plugins: [localStoragePlugin],
 })
 ```
 
@@ -35,56 +31,60 @@ The plugin takes the following options:
 
 ```javascript
 localStoragePlugin({
-    // in case you want to replace this, e.g. for tests or non browser environments
-    storageEngine: window.localStorage,
+  // in case you want to replace this, e.g. for tests or non browser environments
+  storageEngine: window.localStorage,
 
-    // added before all paths in localStorage keys
-    prefix: 'example',
+  // added before all paths in localStorage keys
+  prefix: 'example',
 
-    // to change the symbol that concats path parts
-    separator: '_',
+  // to change the symbol that concats path parts
+  separator: '_',
 })
 ```
 
 ## Usage
 
 :::note
-To make a reducer persist in LocalStorage, your logic *must* have a `path`.
-
-Use the [`babel-kea-plugin`](/docs/guide/debugging#automatic-paths-with-babel) to
-automatically generate paths for every logic. 
+To make a reducer persist in LocalStorage, your logic _must_ have a `path`.  See the [debugging](/docs/intro/debugging#logic-path) docs for more details.
 :::
 
-Just add `{ persist: true }` as an option to your reducers, and it will be stored:
+Just add `{ persist: true }` as an option to your `reducers`, or use the special `persistReducer` builder instead:
 
 ```javascript
-const logic = kea({
-    // path must be defined!
-    path: () => ['scenes', 'homepage', 'name'],
+import { kea, reducers } from 'kea'
+import { persistReducer } from 'kea-localstorage'
+const logic = kea([
+  // path must be defined!
+  path(['scenes', 'homepage', 'name']),
 
-    actions: {
-        updateName: (name) => ({ name }),
-    },
+  actions({
+    updateName: (name) => ({ name }),
+  }),
 
-    reducers: {
-        // just add { persist: true }
-        name: [
-            'chirpy',
-            { persist: true },
-            {
-                updateName: (state, payload) => payload.name,
-            },
-        ],
-        // you may override the prefix and separator keys
-        name: [
-            'chirpy',
-            { persist: true, prefix: 'example', separator: '_' },
-            {
-                updateName: (state, payload) => payload.name,
-            },
-        ],
-    },
-})
+  reducers({
+    // just add { persist: true }
+    name: [
+      'chirpy',
+      { persist: true },
+      {
+        updateName: (state, payload) => payload.name,
+      },
+    ],
+    // you may override the prefix and separator keys
+    complexName: [
+      'chirpy',
+      { persist: true, prefix: 'example', separator: '_' },
+      {
+        updateName: (state, payload) => payload.name,
+      },
+    ],
+    // this is not persisted here, but below
+    notAlreadyPersisted: ['name', {}]
+  }),
+  
+  // logic builder to persist existing reducers
+  persistReducer('notAlreadyPersisted')
+])
 ```
 
 :::note

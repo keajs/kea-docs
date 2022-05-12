@@ -1,0 +1,173 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+    --ifm-color-primary: hsl(123, 43%, 39%);
+    --ifm-color-primary-dark: hsl(123, 43%, 34%);
+    --ifm-color-primary-darker: hsl(123, 43%, 29%);
+    --ifm-color-primary-darkest: hsl(123, 43%, 24%);
+    --ifm-color-primary-light: hsl(123, 43%, 44%);
+    --ifm-color-primary-lighter: hsl(123, 43%, 49%);
+    --ifm-color-primary-lightest: hsl(123, 43%, 54%);
+    --ifm-code-font-size: 95%;
+
+    --code-color-blue: blue;
+    --code-color-brown: brown;
+    --code-color-purple: purple;
+    --code-color-green: green;
+    --code-color-gray: gray;
+    --code-color-black: black;
+
+    --ifm-normal-monospace-font-family: "Andale Mono", monospace;
+    --ifm-strong-monospace-font-family: "Monaco", monospace;
+
+    --ifm-heading-font-family: var(--ifm-normal-monospace-font-family);
+
+    --squeak-button-color: 57, 142, 61; // rgb triplet, no hex
+    --squeak-primary-color: 0, 0, 0; // rgb triplet, no hex, used for text
+    --squeak-warning-color: #FFF7E9; // for form warnings or errors
+    --squeak-thread-border-style: dashed; // thread lines that tie replies to questions
+    --squeak-input-text-color: 0, 0, 0; // rgb triplet, useful on dark input backgrounds
+    --squeak-input-background-color: transparent; // hex, rgb, rgba
+    --squeak-border-radius: .25rem; // adjusts all radii proportionally
+    --squeak-base-font-size: 16px; // eg: decrease 1px to scale down all text
+}
+
+html[data-theme='dark']:root {
+    --ifm-color-primary: hsl(123, 43%, 59%);
+    --ifm-color-primary-dark: hsl(123, 43%, 54%);
+    --ifm-color-primary-darker: hsl(123, 43%, 49%);
+    --ifm-color-primary-darkest: hsl(123, 43%, 44%);
+    --ifm-color-primary-light: hsl(123, 43%, 64%);
+    --ifm-color-primary-lighter: hsl(123, 43%, 69%);
+    --ifm-color-primary-lightest: hsl(123, 43%, 74%);
+    --ifm-code-font-size: 95%;
+
+    --code-color-blue: #77b2ee;
+    --code-color-brown: #ffbc00;
+    --code-color-purple: #e390ff;
+    --code-color-green: #44d544;
+    --code-color-gray: #bbb;
+    --code-color-black: white;
+
+    --squeak-button-color: 105, 195, 110; // rgb triplet, no hex
+    --squeak-primary-color: 245, 246, 247; // rgb triplet, no hex, used for text
+    --squeak-warning-color: #FFF7E9; // for form warnings or errors
+    --squeak-thread-border-style: dashed; // thread lines that tie replies to questions
+    --squeak-input-text-color: 255, 255, 255; // rgb triplet, useful on dark input backgrounds
+    --squeak-input-background-color: rgba(255,255,255,0.0); // hex, rgb, rgba
+    --squeak-border-radius: .25rem; // adjusts all radii proportionally
+    --squeak-base-font-size: 16px; // eg: decrease 1px to scale down all text
+}
+
+.footer--dark {
+    --ifm-footer-background-color: hsl(123deg 37% 21%);
+}
+
+.docusaurus-highlight-code-line {
+    background-color: rgb(72, 77, 91);
+    display: block;
+    margin: 0 calc(-1 * var(--ifm-pre-padding));
+    padding: 0 var(--ifm-pre-padding);
+}
+
+.example-panel {
+    border-width: var(--ifm-alert-border-width);
+    border-radius: var(--ifm-alert-border-radius);
+    box-sizing: border-box;
+    padding: var(--ifm-alert-padding-vertical) var(--ifm-alert-padding-horizontal);
+    background: hsla(220, 18%, 95%, 1);
+    position: relative;
+    margin-bottom: 20px;
+
+    html[data-theme='dark'] & {
+        background: hsla(220, 18%, 15%, 1);
+    }
+    input[type='text'] {
+        padding: 2px 8px;
+        border: none;
+        font-size: 16px;
+        line-height: 24px;
+        border-radius: var(--ifm-alert-border-radius);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
+        background: hsla(228, 20%, 99%, 1);
+        outline: none;
+    }
+    html[data-theme='dark'] & input[type='text'] {
+        color: white;
+        background: hsla(220, 18%, 35%, 1);
+        box-shadow: none;
+    }
+}
+
+.theme-doc-sidebar-menu, .navbar, .breadcrumbs {
+    font-family: var(--ifm-strong-monospace-font-family);
+}
+
+/* corner ribbons */
+:root {
+    --ribbon-color: hsl(123, 43%, 44%);
+    --ribbon-color-highlight: hsl(123, 43%, 39%);
+}
+html[data-theme='dark']:root {
+    --ribbon-color: hsl(123, 43%, 24%);
+    --ribbon-color-highlight: hsl(123, 43%, 19%);
+}
+
+a { text-decoration: underline; }
+
+.ribbon {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    position: absolute;
+    &::before,
+    &::after {
+        position: absolute;
+        z-index: -1;
+        content: '';
+        display: block;
+        border: 5px solid var(--ribbon-color-highlight);
+    }
+    span {
+        position: absolute;
+        display: block;
+        width: 225px;
+        padding: 15px 0;
+        background-color: var(--ribbon-color);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        color: #fff;
+        font: 700 18px/1 'Lato', sans-serif;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        text-transform: uppercase;
+        text-align: center;
+    }
+}
+
+.ribbon-top-right {
+    top: -10px;
+    right: -10px;
+
+    &::before,
+    &::after {
+        border-top-color: transparent;
+        border-right-color: transparent;
+    }
+    &::before {
+        top: 0;
+        left: 0;
+    }
+    &::after {
+        bottom: 0;
+        right: 0;
+    }
+    span {
+        left: -25px;
+        top: 30px;
+        transform: rotate(45deg);
+    }
+}
