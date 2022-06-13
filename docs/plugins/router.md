@@ -385,3 +385,17 @@ combineUrl('/path?key=value#hash', { key: 'otherValue' }, '#addHash=bla') ===
     hashParams: { hash: null, addHash: 'bla' },
   }
 ```
+
+### beforeUnload
+
+To trigger an alert if the user changes the route, use:
+
+```ts
+kea([
+  beforeUnload(({ actions, values }) => ({
+    enabled: () => values.formChanged,
+    message: 'Your changes will be lost. Are you sure you want to leave?',
+    onConfirm: () => actions.resetForm(),
+  })),
+])
+```
