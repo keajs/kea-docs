@@ -73,6 +73,13 @@ const sections = [
       { url: '/docs/plugins/window-values', title: 'window-values' },
     ],
   },
+  {
+    title: 'Community',
+    children: [
+      { url: 'https://github.com/hyvor/kea-ajax', title: 'ajax' },
+      { url: 'https://github.com/sanchezweezer/kea-socket.io', title: 'socket.io' },
+    ],
+  },
 ]
 
 const QUOTES = [
@@ -173,7 +180,10 @@ export default function Home() {
         <h1>
           <Link to="/docs/tutorials/">Kea Tutorials</Link>
         </h1>
-        <p>New tutorial every 2 weeks! <Link to='#newsletter'>Subscribe to the newsletter</Link> to not miss out.</p>
+        <p>
+          New tutorial every 2 weeks! <Link to="#newsletter">Subscribe to the newsletter</Link> to
+          not miss out.
+        </p>
         <Tutorials />
       </section>
 
