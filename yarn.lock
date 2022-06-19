@@ -6201,10 +6201,10 @@ kea-typegen@^3.1.1:
     recast "^0.20.5"
     yargs "^16.2.0"
 
-kea@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/kea/-/kea-3.0.1.tgz#d2b479948119e1c28b8ad84ff988e94444144aed"
-  integrity sha512-JJ1oI2CPcNGF2g0mV9mjU4NrElTIKyfPXoDm3QmloYZ9l/jXtXN8pAvv9cn4GRrCaEsosMYcSAKuM9NBPggKZQ==
+kea@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/kea/-/kea-3.0.2.tgz#9f5a43fa24c8d185d087aed6b9e6f54c0a247d91"
+  integrity sha512-2m340INc4VLB9daWLPT/nnMjgmuHcJQeTBhWzxDUYBFl4YZDz/Q9YYBTqvkFZEUAWLD11f+VgZZ7EoF5BLmqVw==
   dependencies:
     redux "^4.2.0"
     reselect "^4.1.5"
