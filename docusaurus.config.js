@@ -46,7 +46,7 @@ module.exports = {
       process.env.NODE_ENV === 'production'
         ? {
             apiKey: '6pDQjCoo5w1uvLr9O-TtyrNT67SpnZQ8fLLpR5CqatQ',
-            appUrl: 'https://app.posthog.com',
+            appUrl: 'https://empty-poetry-475a.tim9316.workers.dev',
           }
         : {
             apiKey: '8jVz0YZ2YPtP7eL1I5l5RQIp-WcuFeD3pZO8c0YDMx4',
