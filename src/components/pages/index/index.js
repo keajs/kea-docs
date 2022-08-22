@@ -181,8 +181,8 @@ export default function Home() {
           <Link to="/docs/tutorials/">Kea Tutorials</Link>
         </h1>
         <p>
-          New tutorial every 2 weeks! <Link to="#newsletter">Subscribe to the newsletter</Link> to
-          not miss out.
+          New tutorial coming soon! <Link to="#newsletter">Subscribe to the newsletter</Link> to not
+          miss out.
         </p>
         <Tutorials />
       </section>

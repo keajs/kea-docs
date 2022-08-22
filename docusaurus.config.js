@@ -3,7 +3,7 @@ const path = require('path')
 
 module.exports = {
   title: 'Kea 3.0',
-  tagline: 'Cheekily addi(c)tive state management for React',
+  tagline: 'Composable state management for React',
   url: 'https://keajs.org',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
@@ -49,7 +49,7 @@ module.exports = {
             appUrl: 'https://empty-poetry-475a.tim9316.workers.dev',
           }
         : {
-            apiKey: '8jVz0YZ2YPtP7eL1I5l5RQIp-WcuFeD3pZO8c0YDMx4',
+            apiKey: 'phc_hud5ktzWcxekqM29EnSrlGLd4IljkLUrCSfUQN2gJKe',
             appUrl: 'http://localhost:8000',
             enableInDevelopment: true,
           },
