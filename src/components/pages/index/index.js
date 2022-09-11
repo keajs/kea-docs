@@ -129,7 +129,7 @@ export default function Home() {
   const { siteConfig = {} } = context
   return (
     <Layout
-      title="Cheekily addi(c)tive state management for React"
+      title={siteConfig.tagline}
       description="Kea is a production-grade state management framework built for ambitious React apps."
     >
       <div className="homepage-hero">
