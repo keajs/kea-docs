@@ -4,7 +4,20 @@ sidebar_position: 2
 
 # Installation
 
-## Shortcut: CRA template
+## Shortcut 1: Vite starter
+
+Use [`vite-kea-react-ts-template`](https://github.com/keajs/vite-kea-react-ts-template) via `degit` as the basis for your project.
+
+Simplty run:
+
+```bash
+npx degit keajs/vite-kea-react-ts-template my-project
+cd my-project
+npm install
+npm run dev
+```
+
+## Shortcut 2: CRA template
 
 To create a new app based on [kea's create-react-app typescript template](https://github.com/keajs/cra-template-kea-typescript),
 run the following:
