@@ -232,7 +232,7 @@ Both the `push` and `replace` actions accept `searchParams` and `hashParams` as 
 third arguments. You can provide both an object or a string for them. You can also include the
 search and hash parts in the `url`.
 
-### Link tag
+### Link tag `<A />`
 
 Use the included `<A>` tag to link via the router. This changes the URL via `router.actions.push()` instead of reloading the entire page.
 
@@ -249,6 +249,28 @@ export function Page() {
       </li>
       <li>
         <A href="/contact">Contact</A>
+      </li>
+    </ul>
+  )
+}
+```
+
+### Active Link tag `<ActiveA />`
+
+The `<ActiveA />` tag will add an `active` class to all links that are currently active.
+
+```javascript
+import React from 'react'
+import { ActiveA } from 'kea-router'
+
+export function Page() {
+  return (
+    <ul>
+      <li>
+        <ActiveA href="/about">About me</ActiveA>
+      </li>
+      <li>
+        <ActiveA href="/contact">Contact</ActiveA>
       </li>
     </ul>
   )
@@ -393,9 +415,13 @@ To trigger an alert if the user changes the route, use:
 ```ts
 kea([
   beforeUnload(({ actions, values }) => ({
-    enabled: () => values.formChanged,
+    enabled: (newLocation?: CombinedLocation) => values.formChanged,
     message: 'Your changes will be lost. Are you sure you want to leave?',
     onConfirm: () => actions.resetForm(),
   })),
 ])
 ```
+
+The `enabled` function will only get the `newLocation` argument if the user navigates within the single page app. If the
+user navigates away from the app, for example by clicking an external link, or clicking "back" enough times, we will not
+know where they are going. The browser doesn't reveal this for privacy reasons.
