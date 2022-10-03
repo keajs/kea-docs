@@ -47,11 +47,13 @@ module.exports = {
         ? {
             apiKey: '6pDQjCoo5w1uvLr9O-TtyrNT67SpnZQ8fLLpR5CqatQ',
             appUrl: 'https://empty-poetry-475a.tim9316.workers.dev',
+            opt_in_web_app_injection: true,
           }
         : {
             apiKey: 'phc_hud5ktzWcxekqM29EnSrlGLd4IljkLUrCSfUQN2gJKe',
             appUrl: 'http://localhost:8000',
             enableInDevelopment: true,
+            opt_in_web_app_injection: true,
           },
   },
   presets: [
