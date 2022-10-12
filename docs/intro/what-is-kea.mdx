@@ -14,8 +14,10 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 
 Kea is a complete framework for managing state in [React](https://reactjs.org/) webapps.
 
-Kea organises state in containers called `logic`, which are _pretty big_ and _pretty opinionated_ units of state,
-especially when compared to other solutions that are built around atoms, molecules, or context objects.
+Kea organises state in containers called `logic`. Each logic groups related actions and values E.g. `loginFormLogic`,
+`profileLogic`, `routeLogic`.
+. Each logic is built by running `logic builders`, which give it
+features like `actions` or `values`.
 
 Kea doesn't limit itself to simple state management. Kea _also_ provides standard solutions to common tasks like [routing](/docs/plugins/router),
 [data loading](/docs/plugins/loaders), and [form handling](/docs/plugins/forms). All through cleverly nested _logic builders_.
