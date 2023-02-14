@@ -90,3 +90,19 @@ const logic = kea([
 :::note
 Please be aware that under the hood `kea-localstorage` overrides the default value for the reducer with whatever was stored in `localStorage`. This means that **any listeners** hooked to any actions related to the reducer will **not be triggered** (this is also due to the fact that a reducer may have multiple actions, and there's no way of knowing which one to trigger).
 :::
+
+### `storageKey`
+
+Pass a `storageKey`, to override the key used for storage. This allows multiple logics to share the same value. For example
+to have all keyed logics store a reducer globally.
+
+```js
+const someLogic = kea([
+  key(props => props.key), // not used for localstorage, overridden by storageKey
+  reducers(({ actions }) => ({
+    persistedValue: [0, { persist: true, storageKey: 'my.global.key' }, {
+      [actions.change]: (_, payload) => payload.value
+    }]
+  }))
+])
+```
