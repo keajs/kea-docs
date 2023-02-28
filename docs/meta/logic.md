@@ -248,9 +248,28 @@ logic.extend([
 const { counter, negativeCounter } = useValues(logic)
 ```
 
-### logic.findMounted(props)
+### logic.find(keyOrProps): BuiltLogic 
 
-Find if a logic is mounted. Return the built logic if so:
+Find if a logic is mounted. Throw an error if not.
+
+```typescript
+import { reportingLogic } from './reportingLogic'
+
+const logic = kea([
+  listeners({
+    something: () => {
+      // only run if reportingLogic is mounted
+      reportingLogic.findMounted(2).actions.reportEvent({
+        event: 'something',
+        foobar: 'heck yeah',
+      })
+    },
+  }),
+])
+```
+### logic.findMounted(keyOrProps): BuiltLogic | null
+
+Return a mounted logic or null.
 
 ```typescript
 import { reportingLogic } from './reportingLogic'
@@ -268,7 +287,7 @@ const logic = kea([
 ])
 ```
 
-### logic.isMounted(props)
+### logic.isMounted(keyOrProps): boolean
 
 Is a logic matching the given props mounted?
 
@@ -279,7 +298,7 @@ const logic = kea([
   listeners({
     something: () => {
       // only run if the logic for id: 2 is mounted
-      if (reportingLogic({ id: 2 }).isMounted()) {
+      if (reportingLogic.isMounted({ id: 2 })) {
         console.log(reportingLogic({ id: 2 }).values.count)
       }
       // will throw if the logic for id: 123 is not mounted
