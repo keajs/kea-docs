@@ -144,7 +144,7 @@ const usersLogic = kea([
   loaders({ users: { loadUsers: api.loadUsers } }),
   selectors({
     findById: [
-      (selectors) => [selectors.uesrs],
+      (selectors) => [selectors.users],
       (users) => (id: number) => users.find((user) => user.id === id),
     ],
   }),
