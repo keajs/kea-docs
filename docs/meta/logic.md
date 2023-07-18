@@ -259,7 +259,7 @@ const logic = kea([
   listeners({
     something: () => {
       // only run if reportingLogic is mounted
-      reportingLogic.findMounted(2).actions.reportEvent({
+      reportingLogic.find(2).actions.reportEvent({
         event: 'something',
         foobar: 'heck yeah',
       })
