@@ -182,6 +182,31 @@ export function FeatureFlag({ id }: { id?: number }): JSX.Element {
 }
 ```
 
+## Templates
+
+To provide your own `Field` templates, use the `template` tag together with `noStyle`. For example:
+
+```tsx
+import { FieldProps as KeaFieldProps, Field as KeaField } from 'kea-forms'
+
+interface FieldProps extends KeaFieldProps {
+  label: JSX.Element | string
+}
+
+export function Field({ children, name, label, ...props }: FieldProps): ReturnType<typeof KeaField> {
+  const template: KeaFieldProps['template'] = ({ label, kids, error }) => {
+    return (
+      <div>
+        {label ? <label>{label}</label> : null}
+        {kids as any}
+        {error ? <div className="error">{error}</div> : null}
+      </div>
+    )
+  }
+  return <KeaField {...props} children={children} name={name} label={label} template={template} noStyle />
+}
+```
+
 ## Re-rendering
 
 The `useValues` hooks [re-render their components](/docs/react/useValues#re-rendering) if their values change, and then only downwards. Forms are no exception.
