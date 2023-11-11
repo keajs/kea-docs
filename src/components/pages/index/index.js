@@ -176,18 +176,13 @@ export default function Home() {
         </table>
       </section>
 
-      <section className="Homepage-Tutorials">
-        <h1>
-          <Link to="/docs/tutorials/">Kea Tutorials</Link>
-        </h1>
-        <p>
-          New tutorial coming soon! <Link to="#newsletter">Subscribe to the newsletter</Link> to not
-          miss out.
-        </p>
-        <Tutorials />
-      </section>
+      {/*<section className="Homepage-Tutorials">*/}
+      {/*  <h1>*/}
+      {/*    <Link to="/docs/tutorials/">Kea Tutorials</Link>*/}
+      {/*  </h1>*/}
+      {/*</section>*/}
 
-      <Newsletter />
+      {/*<Newsletter />*/}
 
       <main>
         <div className="homepage-testimonials">

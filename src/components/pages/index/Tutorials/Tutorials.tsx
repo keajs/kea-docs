@@ -7,22 +7,23 @@ const tutorials = [
   {
     name: 'Introduction to Kea 3.0 in 30 minutes',
     link: '/docs/tutorials/intro',
+    comingSoon: false,
   },
-  {
-    name: 'Build a GitHub API client in 20 minutes',
-    link: '/docs/tutorials/github',
-    comingSoon: true,
-  },
-  {
-    name: 'Using props and keys within your logic',
-    link: 'https://keajs.ck.page/80aecebec7',
-    comingSoon: true,
-  },
-  {
-    name: 'Build an infinite list',
-    link: 'https://keajs.ck.page/80aecebec7',
-    comingSoon: true,
-  },
+  // {
+  //   name: 'Build a GitHub API client in 20 minutes',
+  //   link: '/docs/tutorials/github',
+  //   comingSoon: true,
+  // },
+  // {
+  //   name: 'Using props and keys within your logic',
+  //   link: 'https://keajs.ck.page/80aecebec7',
+  //   comingSoon: true,
+  // },
+  // {
+  //   name: 'Build an infinite list',
+  //   link: 'https://keajs.ck.page/80aecebec7',
+  //   comingSoon: true,
+  // },
 ]
 
 export function Tutorials() {
