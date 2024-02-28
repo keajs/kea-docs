@@ -103,6 +103,22 @@ otherLogic.mount() // also mounts userLogic
 otherLogic.values.user == userLogic.values.user
 ```
 
+## Rename when pulling in actions and values
+
+If you wish rename an action or value when connecting, use the format `'oldName as newName'`:
+
+```ts
+import { kea, connect, actions } from 'kea'
+
+const otherLogic = kea([
+  // pull in two actions from userLogic
+  connect({
+    actions: [userLogic, ['reloadUser as reload', 'resetUser as reset']],
+    values: [userLogic, ['user', 'userLoading as loading']],
+  }),
+])
+```
+
 ## Pull in actions and values from keyed logic
 
 ### `connect(props => {})`
