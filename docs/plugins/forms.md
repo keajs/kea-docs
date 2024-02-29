@@ -62,11 +62,13 @@ export const featureFlagLogic = kea<featureFlagLogicType>([
         router.actions.replace(urls.featureFlag(updatedFlag.id))
       },
         
-      // whether we show errors after touch (true) or submit (false)
-      showErrorsOnTouch: true,
-      
-      // show errors even without submitting first
-      alwaysShowErrors: false,
+      options: {
+        // whether we show errors after touch (true) or submit (false)
+        showErrorsOnTouch: true,
+        
+        // show errors even without submitting first
+        alwaysShowErrors: false,
+      }
     },
   })),
 ])
