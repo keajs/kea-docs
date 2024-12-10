@@ -46,7 +46,7 @@ otherLogic.mount() // also mounts teamLogic, userLogic and profileLogic
 
 ### `connect({ logic: [] })`
 
-The above is just a shorthand for `connect({ logic: otherLogic })`:
+The above is just a shorthand for `connect({ logic: [ otherLogic ] })`:
 
 ```ts
 import { kea, connect } from 'kea'
