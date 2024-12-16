@@ -45,16 +45,18 @@ module.exports = {
     posthog:
       process.env.NODE_ENV === 'production'
         ? {
-            apiKey: '6pDQjCoo5w1uvLr9O-TtyrNT67SpnZQ8fLLpR5CqatQ',
-            appUrl: 'https://empty-poetry-475a.tim9316.workers.dev',
-            opt_in_site_apps: true,
-          }
+          apiKey: '6pDQjCoo5w1uvLr9O-TtyrNT67SpnZQ8fLLpR5CqatQ',
+          appUrl: 'https://empty-poetry-475a.tim9316.workers.dev',
+          opt_in_site_apps: true,
+          __preview_remote_config: true,
+        }
         : {
-            apiKey: 'phc_hud5ktzWcxekqM29EnSrlGLd4IljkLUrCSfUQN2gJKe',
-            appUrl: 'http://localhost:8000',
-            enableInDevelopment: true,
-            opt_in_site_apps: true,
-          },
+          apiKey: 'phc_hud5ktzWcxekqM29EnSrlGLd4IljkLUrCSfUQN2gJKe',
+          appUrl: 'http://localhost:8000',
+          enableInDevelopment: true,
+          opt_in_site_apps: true,
+          __preview_remote_config: true,
+        },
   },
   presets: [
     [
