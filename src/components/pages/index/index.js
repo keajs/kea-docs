@@ -71,6 +71,7 @@ const sections = [
       { url: '/docs/plugins/subscriptions', title: 'subscriptions' },
       { url: '/docs/plugins/localstorage', title: 'localstorage' },
       { url: '/docs/plugins/window-values', title: 'window-values' },
+      { url: '/docs/plugins/disposables', title: 'disposables' },
     ],
   },
   {
