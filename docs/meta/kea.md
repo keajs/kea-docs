@@ -11,7 +11,7 @@ To build a logic, you give `kea` an array of logic builders.
 Before a logic is mounted, it is built, and all logic builders are run in succession:
 
 ```ts
-import { kea, actions, BuiltLogic } from 'kea'
+import { kea, actions, reducers, BuiltLogic } from 'kea'
 
 const logic = kea([
   // add `setUsername` action to logic
@@ -39,7 +39,7 @@ const logic = kea([
 
 A logic builder has the format `(logic: BuiltLogic) => { /* anything */ }`, and its job is to modify [any of the properties](/docs/meta/logic#properties) of a `logic`.
 
-Normally you don't manipulate properties of your logic directly, but you use wrap core builders like `actions` and `listeners` instead.
+Inside a custom builder, pass the current logic to each builder you compose. For example, `actions({ setPassword: (password) => ({ password }) })(logic)` creates an action builder with the first call and applies it to this logic with the second. The same applies to `listeners(...)(logic)`. Each listener you register is a callback that runs when its action is dispatched.
 
 :::note
 Technically, functions like `actions` and `reducers` are _logic-builder-builders_, since they return a `LogicBuilder`, but, to keep
